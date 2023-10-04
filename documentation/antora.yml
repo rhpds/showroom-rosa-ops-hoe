@@ -1,7 +1,7 @@
-name: template-tutorial
-title: Showroom base template
+name: rosa-ops-hoe
+title: ROSA Ops Hands-on Experience
 version: master
 nav:
-  - modules/ROOT/nav.adoc
+- modules/ROOT/nav.adoc
 
 start_page: ROOT:index.adoc
