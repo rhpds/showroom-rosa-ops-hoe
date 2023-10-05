@@ -1,4 +1,4 @@
 
-* xref:01-rpm-native-container.adoc[1. RPM Native Container]
-
-* xref:02-github-sourced-container.adoc[2. GitHub Sourced Container]
+* xref:100-environment/lab_1_explore_rosa.adoc[1. Explore the ROSA environment]
+* xref:100-environment/lab_2_access_cluster.adoc[2. Access your ROSA cluster]
+* xref:300-apps/lab_10_deploy_app[3. Deploy an Application with AWS Database]

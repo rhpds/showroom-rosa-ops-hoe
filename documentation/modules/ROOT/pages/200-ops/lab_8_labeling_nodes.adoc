@@ -1,0 +1,198 @@
+== Introduction
+
+Labels are a useful way to select which nodes that an application will run on. These nodes are created by machines which are defined by the MachineSets we worked with in previous sections of this workshop. An example of this would be running a memory intensive application only on a specific node type.
+
+While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the Machine pool itself.
+
+== Set a label for the Machine Pool
+
+. Just like the last section, let's use the default machine pool to add our label.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+rosa edit machinepool -c rosa-${GUID} --labels tier=frontend worker
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Updated machine pool 'worker' on cluster 'rosa-6n4s8'
+----
+
+. Now, let's verify the nodes are properly labeled.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc get nodes --selector='tier=frontend' -o name
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+node/ip-10-0-133-248.us-east-2.compute.internal
+node/ip-10-0-146-31.us-east-2.compute.internal
+node/ip-10-0-187-229.us-east-2.compute.internal
+node/ip-10-0-252-142.us-east-2.compute.internal
+----
++
+You may see between two and four nodes - depending if you did the autoscaling lab recently (if you did the cluster has probably not scaled down yet). This demonstrates that our machine pool and associated nodes are properly annotated!
+
+== Deploy an app to the labeled nodes
+
+Now that we've successfully labeled our nodes, let's deploy a workload to demonstrate app placement using `nodeSelector`.
+This should force our app to only our labeled nodes.
+
+. First, let's create a project (or namespace) for our application.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc new-project nodeselector-ex
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Now using project "nodeselector-ex" on server "https://api.rosa-6n4s8.1c1c.p1.openshiftapps.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
+----
+
+. Next, let's deploy our application and associated resources that will target our labeled nodes.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+cat << EOF | oc apply -f -
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nodeselector-app
+  namespace: nodeselector-ex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeselector-app
+  template:
+    metadata:
+      labels:
+        app: nodeselector-app
+    spec:
+      nodeSelector:
+        tier: frontend
+      containers:
+      - name: hello-openshift
+        image: "docker.io/openshift/hello-openshift"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8888
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+EOF
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+deployment.apps/nodeselector-app created
+----
+
+. Now, let's validate that the application has been deployed to one of the labeled nodes.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc -n nodeselector-ex get pod -l app=nodeselector-app -o json \
+  | jq -r .items[0].spec.nodeName
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+ip-10-0-146-31.us-east-2.compute.internal
+----
+
+. Double check the name of the node to compare it to the output above to ensure the node selector worked to put the pod on the correct node.
++
+[source,sh,role=execute]
+----
+oc get nodes --selector='tier=frontend' -o name
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+node/ip-10-0-133-248.us-east-2.compute.internal
+node/ip-10-0-146-31.us-east-2.compute.internal
+node/ip-10-0-187-229.us-east-2.compute.internal
+node/ip-10-0-252-142.us-east-2.compute.internal
+----
+
+. Next create a `service` using the `oc expose` command
++
+[source,sh,role=execute]
+----
+oc expose deployment nodeselector-app
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+service/nodeselector-app exposed
+----
+
+. Expose the newly created `service` with a `route`
++
+[source,sh,role=execute]
+----
+oc create route edge --service=nodeselector-app  --insecure-policy=Redirect
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+route.route.openshift.io/nodeselector-app created
+----
+
+. Fetch the URL for the newly created `route`
++
+[source,sh,role=execute]
+----
+oc get routes/nodeselector-app -o json | jq -r '.spec.host'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+nodeselector-app-nodeselector-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+----
++
+Then visit the URL presented in a new tab in your web browser.
++
+Note that the application is exposed over the default ingress using a predetermined URL and trusted TLS certificate.
+This is done using the OpenShift `Route` resource which is an extension to the Kubernetes `Ingress` resource.
+
+Congratulations!
+You've successfully demonstrated the ability to label nodes and target those nodes using `nodeSelector`.
+
+== Summary
+
+Here's you learned:
+
+* Add labels to Machine Pools
+* Deploy an application on nodes with certain labels

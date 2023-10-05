@@ -1,20 +1,21 @@
-= Welcome to Template Tutorial
+= Welcome to the ROSA Ops Hands-on Experience
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== Publish Services to Kubernetes
+== Building a Modern Application Platform with AWS & ROSA 
 
-A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.
+Welcome to the Building a Modern Application Platform workshop. In this workshop you will learn the building blocks of modern application platform and leverage Amazon Web Services (AWS) and Red Hat OpenShift Service on AWS (ROSA) to build a modern application platform. 
 
-[.tiles.browse]
-== Browse modules
+*Who this workshop is for:* This workshop is aimed at Platform Engineers, DevOps Engineers, CLoud Operations, Architects, and Developers that wnat to learn what makes a modern application platform, and how they can leverage cloud services to streamline the delivery and operations of their application platforms.
 
-[.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#minikube[Minikube]
+*What to expect:* During the workshop, we will take you through a series of hands on exercises to help you understand some of the concepts of modern application platforms. Attendees will learn:
 
-[.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]
+- How to deploy a Red Hat OpenShift Service on AWS (ROSA) cluster
+- Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
+- Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
+- Make an application on OpenShift scalable and resistant to node failures and upgrades
+- Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
+- Learn how to use OpenShift Service Mesh for application observability and tracing
+
+After completing this workshop, attendees will understand the concepts of modern application platforms, and will have begun to lay the foundations in their provided AWS infrastructure.

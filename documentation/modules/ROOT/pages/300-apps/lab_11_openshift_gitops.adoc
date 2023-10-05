@@ -1,0 +1,216 @@
+== Introduction
+Red Hat® OpenShift® GitOps is an operator that provides a workflow that integrates git repositories, continuous integration/continuous delivery (CI/CD) tools, and Kubernetes to realize faster, more secure, scalable software development, without compromising quality.
+
+OpenShift GitOps enables customers to build and integrate declarative git driven CD workflows directly into their application development platform. 
+
+There's no single tool that converts a development pipeline to "DevOps". By implementing a GitOps framework, updates and changes are pushed through declarative code, automating infrastructure and deployment requirements, and CI/CD.
+
+OpenShift GitOps takes advantage of https://argoproj.github.io/cd[Argo CD] and integrates it into Red Hat OpenShift to deliver a consistent, fully supported, declarative Kubernetes platform to configure and use with GitOps principles.
+
+OpenShift and OpenShift GitOps:
+
+* Apply consistency across cluster and deployment lifecycles
+* Consolidate administration and management of applications across on-premises and cloud environments
+* Check the state of clusters making application constraints known early
+* Rollback code changes across clusters
+* Roll out new changes submitted via Git
+
+== Deploying your Application with OpenShift GitOps
+
+. From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for "openshift gitops" and click *Install*.
++
+For the update channel select *gitops-1.8*. Leave all other defaults and click *Install*.
++
+image::../media/gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
+
+. Wait until the operator shows as successfully installed (*Installed operator - ready for use*).
+
+. In your bastion VM create a new project:
++
+[source,sh,role=execute]
+----
+oc new-project bgd
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Now using project "bgd" on server "https://api.rosa-6n4s8.1c1c.p1.openshiftapps.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
+----
+
+. Deploy ArgoCD into your project
++
+[source,sh,role=execute]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  namespace: bgd
+spec:
+  sso:
+    dex:
+      openShiftOAuth: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+    provider: dex
+  rbac:
+    defaultPolicy: "role:readonly"
+    policy: "g, system:authenticated, role:admin"
+    scopes: "[groups]"
+  server:
+    insecure: true
+    route:
+      enabled: true
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+EOF
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+argocd.argoproj.io/argocd created
+----
+
+. Wait for ArgoCD to be ready
++
+[source,sh,role=execute]
+----
+oc rollout status deploy/argocd-server -n bgd
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+deployment "argocd-server" successfully rolled out
+----
+
+. Apply the GitOps application for your application:
++
+[source,sh,role=execute]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bgd-app
+  namespace: bgd
+spec:
+  destination:
+    namespace: bgd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/bgd/base
+    repoURL: https://github.com/rh-mobb/gitops-bgd-app
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=false
+EOF
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+application.argoproj.io/bgd-app created
+----
+
+. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials (remind yourself what your password for user `admin` is by typing `echo ${COGNITO_ADMIN_PASSWORD}`)
++
+[source,sh,role=execute]
+----
+oc get route argocd-server -n bgd -o jsonpath='{.spec.host}{"\n"}'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+----
++
+image::../media/argo_app1.png[]
+
+. Click on the Application to show its topology
++
+image::../media/argo_sync.png[]
+
+. Verify that OpenShift sees the Deployment as rolled out
++
+[source,sh,role=execute]
+----
+oc rollout status deploy/bgd
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+deployment "bgd" successfully rolled out
+----
+
+. Get the route and browse to it in your browser
++
+[source,sh,role=execute]
+----
+oc get route bgd -n bgd -o jsonpath='{.spec.host}{"\n"}'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+----
+
+. You should see a green box in the website like so
++
+image::../media/bgd_green.png[]
+
+. Patch the OpenShift resource to force it to be out of sync with the github repository:
++
+[source,sh,role=execute]
+----
+oc -n bgd patch deploy/bgd --type='json' \
+  -p='[{"op": "replace", "path":
+  "/spec/template/spec/containers/0/env/0/value", "value":"blue"}]'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+deployment.apps/bgd patched
+----
+
+. Refresh Your browser and you should see a blue box in the website like so
++
+image::../media/app_blue.png[]
+
+. Meanwhile check ArgoCD it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift
++
+image::../media/sync_bgd.png[]
+
+. Check again, you should see a green box in the website like so
++
+image::../media/bgd_green.png[]
+
+Congratulations! You have successfully deployed OpenShift Gitops 
