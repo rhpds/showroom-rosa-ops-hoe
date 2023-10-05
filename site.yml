@@ -1,10 +1,11 @@
+---
 runtime:
   cache_dir: ./.cache/antora
 
 site:
   title: ROSA Ops Hands-on Experience
   url: https://github.com/rhpds/showroom-rosa-ops-hoe.git
-  start_page: template-tutorial::index.adoc
+  start_page: rosa-ops-hoe::index.adoc
 
 content:
   sources:
