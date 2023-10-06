@@ -4,7 +4,7 @@ include::../_attributes.adoc[]
 
 Vars test:
 
-[source]
+[source,subs="attributes"]
 ----
 GUID: {guid}
 rosa_admin_user: {rosa_admin_user}
