@@ -1,5 +1,8 @@
+include::_attributes.adoc[]
+
 = Welcome to the ROSA Ops Hands-on Experience
-:page-layout: home
+// :page-layout: home
+
 :!sectids:
 
 [.text-center.strong]

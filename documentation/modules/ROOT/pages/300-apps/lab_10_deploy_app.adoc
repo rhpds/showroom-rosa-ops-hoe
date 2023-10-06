@@ -1,4 +1,4 @@
-include::../include_vars.adoc[]
+include::../_attributes.adoc[]
 
 == Introduction
 

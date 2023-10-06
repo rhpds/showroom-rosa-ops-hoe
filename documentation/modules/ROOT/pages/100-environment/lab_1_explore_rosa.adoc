@@ -1,7 +1,29 @@
-include::../include_vars.adoc[]
-:markup-in-source: verbatim,attributes,quotes
+include::../_attributes.adoc[]
 
 == Create an Admin User for Cluster Access
+
+Vars test:
+
+GUID: {guid}
+rosa_admin_user: {rosa_admin_user}
+rosa_admin_password: {rosa_admin_password}
+rosa_api_url: {rosa_api_url}
+
+rosa_bastion_user_name: {rosa_bastion_user_name}
+rosa_console_url: {rosa_console_url}
+rosa_console_user_name: {rosa_console_user_name}
+rosa_console_password: {rosa_console_password}
+rosa_sandbox_account_id: {rosa_sandbox_account_id}
+
+rosa_subdomain_base: rosa_subdomain_base
+rosa_token_warning: {rosa_token_warning}
+
+ssh_command: {ssh_command}
+ssh_username: {ssh_username}
+ssh_password: {ssh_password}
+rosa_user_password: {rosa_user_password}
+
+targethost:{targethost}
 
 If you want to be able to access your cluster immediately through a cluster-admin user, you can follow these steps.
 

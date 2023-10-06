@@ -1,6 +1,4 @@
-include::../include_vars.adoc[]
-
-:markup-in-source: verbatim,attributes,quotes
+include::../_attributes.adoc[]
 
 == Create an Admin User for Cluster Access
 
