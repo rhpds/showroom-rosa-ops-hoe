@@ -1,0 +1,7 @@
+include::../_attributes.adoc[]
+
+== Deploy ROSA
+
+In this environment you do not have enough permissions to deploy your own ROSA cluster. Therefore we have included a video that shows how ROSA can be installed.
+
+https://www.youtube.com/watch?v=gAMr3sI5bdY

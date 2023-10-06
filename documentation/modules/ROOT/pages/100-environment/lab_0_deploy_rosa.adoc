@@ -1,7 +1,0 @@
-include::../_attributes.adoc[]
-
-== Deploy ROSA
-
-The following video shows how ROSA can be installed.
-
-https://www.youtube.com/watch?v=gAMr3sI5bdY

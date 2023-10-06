@@ -1,4 +1,7 @@
+include::../_attributes.adoc[]
+
 == Introduction
+
 Red Hat® OpenShift® GitOps is an operator that provides a workflow that integrates git repositories, continuous integration/continuous delivery (CI/CD) tools, and Kubernetes to realize faster, more secure, scalable software development, without compromising quality.
 
 OpenShift GitOps enables customers to build and integrate declarative git driven CD workflows directly into their application development platform. 

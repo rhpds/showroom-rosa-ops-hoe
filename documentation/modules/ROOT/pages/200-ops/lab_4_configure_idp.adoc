@@ -1,3 +1,5 @@
+include::../_attributes.adoc[]
+
 == Introduction
 
 https://aws.amazon.com/cognito/[Amazon Cognito] is a fully managed authentication, authorization, and user management service provided by Amazon Web Services (AWS). It simplifies the process of adding user sign-up, sign-in, and access control to your ROSA Cluster.
