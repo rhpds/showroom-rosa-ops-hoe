@@ -4,6 +4,8 @@ include::../_attributes.adoc[]
 
 Vars test:
 
+[source]
+----
 GUID: {guid}
 rosa_admin_user: {rosa_admin_user}
 rosa_admin_password: {rosa_admin_password}
@@ -24,6 +26,7 @@ ssh_password: {ssh_password}
 rosa_user_password: {rosa_user_password}
 
 targethost:{targethost}
+----
 
 If you want to be able to access your cluster immediately through a cluster-admin user, you can follow these steps.
 
