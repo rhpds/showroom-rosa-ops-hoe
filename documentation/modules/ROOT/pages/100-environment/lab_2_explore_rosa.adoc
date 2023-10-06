@@ -1,12 +1,9 @@
 include::../_attributes.adoc[]
 
-== Create an Admin User for Cluster Access
-
-Vars test:
+== VARS test
 
 [source,subs="attributes"]
 ----
-GUID: {guid}
 rosa_admin_user: {rosa_admin_user}
 rosa_admin_password: {rosa_admin_password}
 rosa_api_url: {rosa_api_url}
@@ -28,58 +25,132 @@ rosa_user_password: {rosa_user_password}
 targethost:{targethost}
 ----
 
-If you want to be able to access your cluster immediately through a cluster-admin user, you can follow these steps.
+== Explore your ROSA environment
 
-This is good if you need quick access to the cluster, which is great for this workshop.
+As you have seen in the video your ROSA cluster has already been deployed for you. This is both to speed things up for this lab and because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions.
 
-Though the recommended approach is to use a formal identity provider to access the cluster (and then grant that user admin privileges, if desired).
+All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
-. Run this command to create the admin user
+. List all deployed ROSA clusters in the AWS account:
 +
 [source,sh,role=execute]
 ----
-rosa create admin --cluster rosa-${GUID}
+rosa list clusters
 ----
 +
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
-I: Admin account has been added to cluster 'rosa-4fgbq'.
-I: Please securely store this generated password. If you lose this password you can delete and recreate the cluster admin user.
-I: To login, run the following command:
-
-   oc login https://api.rosa-4fgbq.qrdf.p1.openshiftapps.com:6443 --username cluster-admin --password cD4xo-AnanH-DvB6L-6yndM
-
-I: It may take up to 5 minutes for the account to become active.
+ID                                NAME         STATE  TOPOLOGY
+26mpkbt35pras0n6867p732qeb1l7tmm  rosa-wkrh33  ready  Hosted CP
 ----
 +
 [TIP]
 ====
-Save the login command somewhere. Also take note of the password for your `cluster-admin` user.
+The ID and Name of your cluster will be different than in the sample output above.
 
-*Make sure to use the entire password when copying and pasting the command!*
+Also notice the Topology and state. State should be *ready* and Topology could be either *Classic (STS)* or *Hosted CP* which stands for Hosted Control Plane - a new, resource saving way of deploying a ROSA cluster.
 ====
 
-. Save an environment variable for your admin password (copy the password from above making sure to copy the *entire* password):
+. Now let's examine this cluster a bit more by describing the cluster (the `$GUID` environment variable is already set for you so you can immediately describe your individual cluster):
 +
-.Note this box will not automatically copy the command for you. You need to write the command yourself.
 [source,sh]
 ----
-export ADMIN_PASSWORD=cD4xo-AnanH-DvB6L-6yndM
+rosa describe cluster --cluster rosa-$GUID
 ----
 +
-Save the admin password in your `.bashrc`
-+
-[source,sh,role=execute]
+.Sample Output
+[source,texinfo,subs="attributes"]
 ----
-echo "export ADMIN_PASSWORD=${ADMIN_PASSWORD}" >>$HOME/.bashrc
+Name:                       rosa-wkrh33
+ID:                         26mpkbt35pras0n6867p732qeb1l7tmm
+External ID:                45f44186-94a7-4444-a6ce-2f82c1afe09a
+Control Plane:              ROSA Service Hosted
+OpenShift Version:          4.12.35
+Channel Group:              stable
+DNS:                        rosa-wkrh33.8jh1.p3.openshiftapps.com
+AWS Account:                551773360602
+API URL:                    {rosa_api_url}
+Console URL:                {rosa_console_url}
+Region:                     eu-central-1
+Availability:
+ - Control Plane:           MultiAZ
+ - Data Plane:              SingleAZ
+Nodes:
+ - Compute (desired):       2
+ - Compute (current):       2
+Network:
+ - Type:                    OVNKubernetes
+ - Service CIDR:            172.30.0.0/16
+ - Machine CIDR:            10.0.0.0/16
+ - Pod CIDR:                10.128.0.0/14
+ - Host Prefix:             /23
+Workload Monitoring:        Enabled
+Ec2 Metadata Http Tokens:   optional
+STS Role ARN:               arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Installer-Role
+Support Role ARN:           arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Support-Role
+Instance IAM Roles:
+ - Worker:                  arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Worker-Role
+Operator IAM Roles:
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-capa-controller-manager
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-control-plane-operator
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-kms-provider
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-image-registry-installer-cloud-credentials
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-cluster-csi-drivers-ebs-cloud-credentials
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-cloud-network-config-controller-cloud-cred
+ - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-kube-controller-manager
+Managed Policies:           Yes
+State:                      ready 
+Private:                    No
+Created:                    Oct  6 2023 10:57:55 UTC
+Details Page:               https://console.redhat.com/openshift/details/s/2WO3c1TcyGrdKPznnS51HYdL6dn
+OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26mpk4vkj1n1phqpb6ai7hf5c5oavold (Managed)
+Audit Log Forwarding:       disabled
+----
++
+Note that not all values in the sample output will match exactly your environment.
+
+. Get the API URL for your cluster:
++
+[source,sh]
+----
+rosa describe cluster --cluster rosa-$GUID --output json | jq .api.url
+----
++
+.Sample Output
+[source,texinfo,subs="attributes"]
+----
+{rosa_api_url}
 ----
 
-. Copy the login command returned to you in the previous step and paste that into your terminal. This should log you into the cluster via the CLI so you can start using the cluster (answer `y` when promted if you want to accept the certificate).
+. Get the OpenShift Console URL for your cluster:
 +
 [source,sh]
 ----
-oc login https://api.rosa-4fgbq.qrdf.p1.openshiftapps.com:6443 --username cluster-admin --password cD4xo-AnanH-DvB6L-6yndM
+rosa describe cluster --cluster rosa-$GUID --output json | jq .console.url
+----
++
+.Sample Output
+[source,texinfo,subs="attributes"]
+----
+{rosa_console_url}
+----
+
+. A temporary admin user has already been created for you on the ROSA OpenShift cluster.
++
+[source,texinfo,subs="attributes"]
+====
+Admin user ID: {rosa_admin_user}
+Admin user Password: {rosa_admin_password}
+====
+
+. Now that you have the information about the Admin credentials and the API URL for your cluster you can log into your cluster:
+cmdo
++
+[source,sh,subs="attributes"]
+----
+oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
 ----
 +
 .Sample Output

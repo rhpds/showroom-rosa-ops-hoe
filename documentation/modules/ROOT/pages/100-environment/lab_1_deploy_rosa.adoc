@@ -1,6 +1,6 @@
 include::../_attributes.adoc[]
 
-== Deploy ROSA
+== Deploy a ROSA Cluster - Review
 
 In this environment you do not have enough AWS permissions to deploy your own ROSA cluster.
 
