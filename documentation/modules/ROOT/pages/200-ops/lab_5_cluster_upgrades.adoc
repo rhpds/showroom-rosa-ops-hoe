@@ -112,7 +112,7 @@ Congratulations! You've successfully scheduled an upgrade of your cluster for to
 
 Occasionally, you may be not be able to go directly from your current version to a desired version. In these cases, you must first upgrade your cluster from your current version, to an intermediary version, and then to your desired version. To help you navigate these decisions, you can take advantage of the https://access.redhat.com/labs/ocpupgradegraph/update_path_rosa[Red Hat OpenShift Upgrade Graph Tool].
 
-image:../media/rosa_upgrade_graph.png[ROSA Upgrade Graph Tool Screenshot]
+image:../../assets/images/rosa_upgrade_graph.png[ROSA Upgrade Graph Tool Screenshot]
 
 In this scenario to upgrade your cluster from version 4.11.0 to 4.12.15, you must first upgrade to 4.11.39, then you can upgrade to 4.12.15. The ROSA Upgrade Graph Tool helps you easily see which version you should upgrade to.
 
@@ -140,30 +140,30 @@ This section is for your information only. You do *not* have access to the OpenS
 . Log back into the OpenShift Cluster Manager by https://console.redhat.com/openshift[clicking here].
 . In the _Clusters_ section, locate your cluster and click on it.
 +
-image::../media/ocm-cluster-list.png[OCM - Cluster List]
+image::../../assets/images/ocm-cluster-list.png[OCM - Cluster List]
 
 . Next, click on the _Settings_ tab.
 +
-image::../media/ocm-cluster-detail-overview-settings.png[OCM - Cluster Detail Overview Settings]
+image::../../assets/images/ocm-cluster-detail-overview-settings.png[OCM - Cluster Detail Overview Settings]
 
 . Next, select the _Update_ button in the _Update status_ sidebar.
 +
-image::../media/ocm-update-status.png[OCM - Update Status]
+image::../../assets/images/ocm-update-status.png[OCM - Update Status]
 
 . Now, you're presented with a number of versions.
 For this exercise, we'll select the recommended version, and then hit _Next_.
 +
-image::../media/ocm-update-version-select.png[OCM - Update Version Select]
+image::../../assets/images/ocm-update-version-select.png[OCM - Update Version Select]
 
 . Next, choose to _Schedule a different time_ and change the date box to 1 day from now, then select _Next_.
 +
-image::../media/ocm-update-schedule-select.png[OCM - Update Schedule Select]
+image::../../assets/images/ocm-update-schedule-select.png[OCM - Update Schedule Select]
 
 . Finally, select the _Confirm Update_ button and then the _Close_ button.
 +
-image::../media/ocm-update-confirm.png[OCM - Update Confirm]
+image::../../assets/images/ocm-update-confirm.png[OCM - Update Confirm]
 +
-image::../media/ocm-update-close.png[OCM - Update Close]
+image::../../assets/images/ocm-update-close.png[OCM - Update Close]
 
 Congratulations!
 

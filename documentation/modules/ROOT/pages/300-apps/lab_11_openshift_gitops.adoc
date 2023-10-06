@@ -24,7 +24,7 @@ OpenShift and OpenShift GitOps:
 +
 For the update channel select *gitops-1.8*. Leave all other defaults and click *Install*.
 +
-image::../media/gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
+image::../../assets/images/gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
 
 . Wait until the operator shows as successfully installed (*Installed operator - ready for use*).
 
@@ -140,7 +140,7 @@ EOF
 application.argoproj.io/bgd-app created
 ----
 
-. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials (remind yourself what your password for user `admin` is by typing `echo ${COGNITO_ADMIN_PASSWORD}`)
+. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials).
 +
 [source,sh,role=execute]
 ----
@@ -153,11 +153,11 @@ oc get route argocd-server -n bgd -o jsonpath='{.spec.host}{"\n"}'
 argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
 +
-image::../media/argo_app1.png[]
+image::../../assets/images/argo_app1.png[]
 
 . Click on the Application to show its topology
 +
-image::../media/argo_sync.png[]
+image::../../assets/images/argo_sync.png[]
 
 . Verify that OpenShift sees the Deployment as rolled out
 +
@@ -187,7 +187,7 @@ bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 
 . You should see a green box in the website like so
 +
-image::../media/bgd_green.png[]
+image::../../assets/images/bgd_green.png[]
 
 . Patch the OpenShift resource to force it to be out of sync with the github repository:
 +
@@ -206,14 +206,14 @@ deployment.apps/bgd patched
 
 . Refresh Your browser and you should see a blue box in the website like so
 +
-image::../media/app_blue.png[]
+image::../../assets/images/app_blue.png[]
 
 . Meanwhile check ArgoCD it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift
 +
-image::../media/sync_bgd.png[]
+image::../../assets/images/sync_bgd.png[]
 
 . Check again, you should see a green box in the website like so
 +
-image::../media/bgd_green.png[]
+image::../../assets/images/bgd_green.png[]
 
 Congratulations! You have successfully deployed OpenShift Gitops 

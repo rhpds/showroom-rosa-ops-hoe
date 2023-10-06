@@ -1,3 +1,4 @@
+:lab_name: Deploy a ROSA Cluster - Review
 include::../_attributes.adoc[]
 
 == Deploy a ROSA Cluster - Review

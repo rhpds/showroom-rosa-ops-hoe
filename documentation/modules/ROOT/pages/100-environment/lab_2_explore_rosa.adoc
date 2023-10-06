@@ -1,3 +1,4 @@
+:lab_name: Explore your ROSA environment
 include::../_attributes.adoc[]
 
 == VARS test
@@ -22,7 +23,7 @@ ssh_username: {ssh_username}
 ssh_password: {ssh_password}
 rosa_user_password: {rosa_user_password}
 
-targethost:{targethost}
+targethost: {targethost}
 ----
 
 == Explore your ROSA environment
@@ -115,7 +116,7 @@ Note that not all values in the sample output will match exactly your environmen
 +
 [source,sh]
 ----
-rosa describe cluster --cluster rosa-$GUID --output json | jq .api.url
+rosa describe cluster --cluster rosa-$GUID --output json | jq -r .api.url
 ----
 +
 .Sample Output
@@ -128,7 +129,7 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq .api.url
 +
 [source,sh]
 ----
-rosa describe cluster --cluster rosa-$GUID --output json | jq .console.url
+rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 ----
 +
 .Sample Output
@@ -139,10 +140,10 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq .console.url
 
 . A temporary admin user has already been created for you on the ROSA OpenShift cluster.
 +
-[source,texinfo,subs="attributes"]
+[subs="attributes"]
 ====
-Admin user ID: {rosa_admin_user}
-Admin user Password: {rosa_admin_password}
+* *Admin user ID:* {rosa_admin_user}
+* *Admin user Password:* {rosa_admin_password}
 ====
 
 . Now that you have the information about the Admin credentials and the API URL for your cluster you can log into your cluster:
@@ -156,24 +157,13 @@ oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
-The server uses a certificate signed by an unknown authority.
-You can bypass the certificate check, but any data you send to the server could be intercepted by others.
-Use insecure connections? (y/n): y
-
-WARNING: Using insecure TLS client config. Setting this option is not supported!
-
 Login successful.
 
-You have access to 101 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 75 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "default".
 Welcome! See 'oc help' to get started.
 ----
-+
-[TIP]
-====
-If you get an error that the *Login failed (401 Unauthorized)* wait a few seconds and then try again. It takes a few minutes for the cluster authentication operator to update itself after creating the cluster admin user.
-====
 
 . To check that you are logged in as the admin user you can run `oc whoami`:
 +
@@ -183,73 +173,21 @@ oc whoami
 ----
 +
 .Sample Output
-[source,texinfo,options=nowrap]
+[source,texinfo,options=nowrap,subs="attributes"]
 ----
-cluster-admin
-----
-
-. You can also confirm by running the following command. Only a cluster-admin user can run this without errors.
-// +
-// Also these pods may not yet exist or be in `Pending` status depending on how long it's been since your control plane finished installing.
-+
-[source,sh,role=execute]
-----
-oc get pod -n openshift-ingress
-----
-+
-.Sample Output
-[source,texinfo,options=nowrap]
-----
-NAME                              READY   STATUS    RESTARTS   AGE
-router-default-7994f6fd58-8cl45   1/1     Running   0          102s
-router-default-7994f6fd58-z6gpm   1/1     Running   0          102s
+{rosa_admin_user}
 ----
 
 . You can now use the cluster as an admin user, which will suffice for this workshop. Though, for any other use, it is highly recommended to set up an IdP.
 
-// === Wait for Cluster Operators to finish rolling out
-
-// Once your cluster has worker nodes available the cluster operators can deploy their operands to these worker nodes. These include the console and ingress controllers for example. Without those it will be impossible to access the cluster.
-
-// . Repeat the following command every few minutes until the output looks like the example below (all operators should show as available, not progressing and certainly not degraded):
-// +
-// [source,sh,role=execute]
-// ----
-// oc get co
-// ----
-// +
-// .Sample Output
-// [source,texinfo,options=nowrap]
-// ----
-// NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-// console                                    4.12.18   True        False         False      2m41s
-// csi-snapshot-controller                    4.12.18   True        False         False      16m
-// dns                                        4.12.18   True        False         False      5m30s
-// image-registry                             4.12.18   True        False         False      4m51s
-// ingress                                    4.12.18   True        False         False      4m56s
-// insights                                   4.12.18   True        False         False      6m8s
-// kube-apiserver                             4.12.18   True        False         False      16m
-// kube-controller-manager                    4.12.18   True        False         False      16m
-// kube-scheduler                             4.12.18   True        False         False      16m
-// kube-storage-version-migrator              4.12.18   True        False         False      6m3s
-// monitoring                                 4.12.18   True        False         False      3m40s
-// network                                    4.12.18   True        False         False      16m
-// node-tuning                                4.12.18   True        False         False      6m37s
-// openshift-apiserver                        4.12.18   True        False         False      16m
-// openshift-controller-manager               4.12.18   True        False         False      16m
-// openshift-samples                          4.12.18   True        False         False      5m6s
-// operator-lifecycle-manager                 4.12.18   True        False         False      16m
-// operator-lifecycle-manager-catalog         4.12.18   True        False         False      16m
-// operator-lifecycle-manager-packageserver   4.12.18   True        False         False      16m
-// service-ca                                 4.12.18   True        False         False      6m5s
-// storage                                    4.12.18   True        False         False      6m27s
-// ----
 
 === Login to the OpenShift Web Console
 
-Next, let's log in to the OpenShift Web Console. To do so, follow the below steps:
+Next, let's log in to the OpenShift Web Console. Remember that you used the `rosa` command before to retrieve the console URL.
 
-. First, we'll need to grab your cluster's web console URL. To do so, run the following command:
+However once you are logged into the cluster you can also use the OpenShift command to find out the console URL.
+
+. Grab your cluster's web console URL. To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
@@ -259,11 +197,10 @@ oc whoami --show-console
 .Sample Output
 [source,text,options=nowrap]
 ----
-https://console-openshift-console.%rosa_subdomain_base%
+{rosa_console_url}
 ----
 
 . Next, open the printed URL in a web browser.
-//. Click on the `htpasswd` identity provider.
-. Enter the username (`cluster-admin`) and password from the previous section (use `echo ${ADMIN_PASSWORD}` to remind yourself what the password is in case you forgot).
-+
+. Enter the username (`{rosa_admin_user}`) and password from the previous section (`{rosa_admin_password}`.
+
 If you don't see an error, congratulations! You're now logged into the cluster and ready to move on to the workshop content.

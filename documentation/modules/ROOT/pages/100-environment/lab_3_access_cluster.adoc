@@ -1,3 +1,4 @@
+:lab_name: Create an Admin User for Cluster Access
 include::../_attributes.adoc[]
 
 == Create an Admin User for Cluster Access

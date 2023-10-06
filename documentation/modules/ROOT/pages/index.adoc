@@ -9,7 +9,7 @@ Welcome to the ROSA Ops Hands-on Experience. In this environment you will learn 
 *What to expect:* During the workshop, we will take you through a series of hands on exercises to help you understand some of the concepts of modern application platforms. Attendees will learn:
 
 - How to deploy a Red Hat OpenShift Service on AWS (ROSA) cluster (video)
-- Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
+- Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Red Hat SSO, and forwarding logs to Amazon CloudWatch.
 - Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
 - Make an application on OpenShift scalable and resistant to node failures and upgrades
 - Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
