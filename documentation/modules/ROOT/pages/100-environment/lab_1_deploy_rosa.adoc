@@ -2,7 +2,11 @@ include::../_attributes.adoc[]
 
 == Deploy ROSA
 
-In this environment you do not have enough permissions to deploy your own ROSA cluster. Therefore we have included a video that shows how ROSA can be installed.
+In this environment you do not have enough AWS permissions to deploy your own ROSA cluster.
 
+Therefore we have included a video that shows how ROSA can be installed.
+
+====
 .How to deploy a Red Hat OpenShift Service on AWS
-video::gAMr3sI5bdY[youtube,width=100%]
+video::gAMr3sI5bdY[youtube,width=800,height=600]
+====
