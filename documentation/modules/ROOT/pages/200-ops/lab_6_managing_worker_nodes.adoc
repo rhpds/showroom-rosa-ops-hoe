@@ -13,7 +13,7 @@ Here are some of the advantages of using ROSA Machine Pools to manage the size o
 * Infrastructure Diversity - ROSA Machine Pool allow you to provision worker nodes of different instance type. This enables you you leverage the best kind of instance family for different workloads.
 * Integration with Cluster Autoscaler - ROSA Machine Pool seamlessly integrate with the Cluster Autoscaler feature, which automatically adjusts the number of worker nodes based on the current demand. This integration ensures efficient resource utilization by scaling the cluster up or down as needed, optimizing costs and performance.
 
-image:../../assets/images/scale_machinepool.png[scale_machinepool]
+image:scale_machinepool.png[scale_machinepool]
 
 == Scaling worker nodes
 

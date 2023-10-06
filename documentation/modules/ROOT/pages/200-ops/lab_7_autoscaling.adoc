@@ -4,7 +4,7 @@ include::../_attributes.adoc[]
 
 ROSA Cluster Autoscaler is a feature that helps automatically adjust the size of an ROSA cluster based on the current workload and resource demands. Cluster Autoscaler offers automatic and intelligent scaling of ROSA clusters, leading to efficient resource utilization, improved application performance, high availability, and simplified cluster management. By dynamically adjusting the cluster size based on workload demands, it helps organizations optimize their infrastructure costs while ensuring optimal application performance and scalability. The cluster autoscaler does not increase the cluster resources beyond the limits that you specify.
 
-image:../../assets/images/diagram-cluster-autoscaler.png[Diagram illustrating the cluster autoscaler process]
+image:diagram-cluster-autoscaler.png[Diagram illustrating the cluster autoscaler process]
 
 To learn more about cluster autoscaling, visit the https://docs.openshift.com/rosa/rosa_cluster_admin/rosa_nodes/rosa-nodes-about-autoscaling-nodes.html[Red Hat documentation for cluster autoscaling].
 
@@ -250,16 +250,16 @@ This section is for your information only. You do *not* have access to the OpenS
 . Log back into the https://console.redhat.com/openshift[OpenShift Cluster Manager].
 . In the Cluster section, locate your cluster and click on it.
 +
-image::../../assets/images/ocm-cluster-list.png[OCM - Cluster List]
+image::ocm-cluster-list.png[OCM - Cluster List]
 
 . Next, click on the _Machine pools_ tab.
 +
-image::../../assets/images/ocm-cluster-detail-overview.png[OCM - Cluster Detail Overview]
+image::ocm-cluster-detail-overview.png[OCM - Cluster Detail Overview]
 
 . Next, click on the ⋮ icon beside the _Default_ machine pool, and select _Scale_.
 +
-image::../../assets/images/ocm-machine-pool-three-dots.png[OCM - Machine Pool Menu]
+image::ocm-machine-pool-three-dots.png[OCM - Machine Pool Menu]
 
 . Finally, check the _Enable autoscaling_ checkbox, and set the minimum to `1` and maximum to `2`, then click _Apply_.
 +
-image::../../assets/images/ocm-machine-pool-scale-menu.png[OCM - Machine Pool Scale Menu]
+image::ocm-machine-pool-scale-menu.png[OCM - Machine Pool Scale Menu]
