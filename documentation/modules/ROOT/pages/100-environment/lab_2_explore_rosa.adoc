@@ -1,31 +1,6 @@
 :lab_name: Explore your ROSA environment
 include::../_attributes.adoc[]
 
-== VARS test
-
-[source,subs="attributes"]
-----
-rosa_admin_user: {rosa_admin_user}
-rosa_admin_password: {rosa_admin_password}
-rosa_api_url: {rosa_api_url}
-
-rosa_bastion_user_name: {rosa_bastion_user_name}
-rosa_console_url: {rosa_console_url}
-rosa_console_user_name: {rosa_console_user_name}
-rosa_console_password: {rosa_console_password}
-rosa_sandbox_account_id: {rosa_sandbox_account_id}
-
-rosa_subdomain_base: rosa_subdomain_base
-rosa_token_warning: {rosa_token_warning}
-
-ssh_command: {ssh_command}
-ssh_username: {ssh_username}
-ssh_password: {ssh_password}
-rosa_user_password: {rosa_user_password}
-
-targethost: {targethost}
-----
-
 == Explore your ROSA environment
 
 As you have seen in the video your ROSA cluster has already been deployed for you. This is both to speed things up for this lab and because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions.
@@ -180,7 +155,6 @@ oc whoami
 
 . You can now use the cluster as an admin user, which will suffice for this workshop. Though, for any other use, it is highly recommended to set up an IdP.
 
-
 === Login to the OpenShift Web Console
 
 Next, let's log in to the OpenShift Web Console. Remember that you used the `rosa` command before to retrieve the console URL.
@@ -195,7 +169,7 @@ oc whoami --show-console
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 {rosa_console_url}
 ----

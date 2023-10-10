@@ -13,7 +13,7 @@ To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-rosa edit machinepool -c rosa-${GUID} --labels tier=frontend worker
+rosa edit machinepool -c rosa-$GUID --labels tier=frontend workers
 ----
 +
 .Sample Output

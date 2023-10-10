@@ -1,0 +1,603 @@
+:lab_name: Configure ROSA to use Red Hat SSO (Keycloak) for authentication
+include::../_attributes.adoc[]
+
+== Introduction
+
+As part of your pre-defined environment a temporary cluster-admin user has been created using the `rosa create admin` command.
+This uses htpasswd as a local identity provider to allow you to access the cluster.
+Most ROSA users will want to connect ROSA to a single-sign-on provider, such as Red Hat SSO.
+In this section of the workshop, we'll deploy Red Hat SSO on your cluster and configure ROSA to use it for identity management.
+
+Now in the real world you would obviously use an already existing keycloak environment - but the basic steps are the same regardless if your keycloak already exists or not.
+
+== Deploy Red Hat SSO
+
+=== Deploy the operator
+
+. Set up a few variables
++
+[source,sh,role=copy]
+----
+export SSO_NAMESPACE=keycloak
+----
+
+. Create a project where your operator will be installed to:
++
+[source,sh,role=copy]
+----
+oc new-project $SSO_NAMESPACE
+----
++
+.Sample Output
+[source,texinfo]
+----
+Now using project "keycloak" on server "https://api.rosa-dhqc7.auhp.p1.openshiftapps.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.43 -- /agnhost serve-hostname
+----
+
+. To install, first create an Operator Group for the operator:
++
+[source,sh,role=copy]
+----
+cat << EOF | oc apply -f -
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: keycloak-operator
+  namespace: $SSO_NAMESPACE
+spec:
+  targetNamespaces:
+  - $SSO_NAMESPACE
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+operatorgroup.operators.coreos.com/keycloak-operator created
+----
+
+. Next, install the subscription:
++
+[source,sh,role=copy]
+----
+cat << EOF | oc apply -f -
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: rhsso-operator
+  namespace: $SSO_NAMESPACE
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: rhsso-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+subscription.operators.coreos.com/rhsso-operator created
+----
+
+. Wait until the operator is running (repeat until it is and your output looks similar to the one below):
++
+[source,sh,role=copy]
+----
+oc get pod -n $SSO_NAMESPACE
+----
++
+.Sample Output
+[source,texinfo]
+----
+NAME                              READY   STATUS    RESTARTS   AGE
+rhsso-operator-74d7955b8c-77jnb   1/1     Running   0          2m
+----
+
+=== Deploy Red Hat SSO
+
+Now you can deploy the Red Hat SSO server:
+
+. Create the `Keycloak` object:
++
+[source,sh,role=copy]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  namespace: $SSO_NAMESPACE
+  labels:
+    app: sso
+spec:
+  instances: 2
+  externalAccess:
+    enabled: True
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+keycloak.keycloak.org/keycloak created
+----
+
+. Wait until Keycloak is fully deployed (repeat until the output looks like the example output):
++
+[source,sh,role=copy]
+----
+oc get pod -n $SSO_NAMESPACE
+----
++
+.Sample Output
+[source,texinfo]
+----
+NAME                                   READY   STATUS    RESTARTS   AGE
+keycloak-0                             1/1     Running   0          5m5s
+keycloak-1                             1/1     Running   0          3m34s
+keycloak-postgresql-5f4854fc5c-smdvz   1/1     Running   0          5m5s
+rhsso-operator-74d7955b8c-77jnb        1/1     Running   0          7m25s
+----
+
+. Validate that in fact the Keycloak server is ready (if you get `false` then wait a few seconds and retry the command - eventually it will be ready):
++
+[source,sh,role=copy]
+----
+oc get keycloak keycloak -o json | jq .status.ready
+----
++
+.Sample Output
+[source,texinfo]
+----
+true
+----
+
+=== Retrieve Information about your Red Hat SSO Installation
+
+. Set some Environment Variables:
++
+[source,sh,role=copy]
+----
+export SSO_ADMIN_CONSOLE=https://$(oc -n $SSO_NAMESPACE get route keycloak -o json | jq -r '.status.ingress[0].host')
+
+export SSO_ADMIN_USERNAME=$(oc -n $SSO_NAMESPACE -c keycloak exec -it keycloak-0 -- printenv SSO_ADMIN_USERNAME)
+
+export SSO_ADMIN_PASSWORD=$(oc -n $SSO_NAMESPACE -c keycloak exec -it keycloak-0 -- printenv SSO_ADMIN_PASSWORD)
+
+export CLUSTER_DOMAIN=$(rosa describe cluster -c rosa-$GUID | grep "DNS" | grep -oE '\S+.openshiftapps.com')
+----
+
+. Set your OAuth Callback URL base variable.
+ifeval::["{rosa_deploy_hcp}" == "false"]
+.. Your cluster is a classic ROSA cluster. Therefore the command to determine the OAuth Callback URL is the following:
++
+[source,sh,role=copy]
+----
+export CALLBACK_URL_BASE=https://oauth-openshift.apps.$CLUSTER_DOMAIN/oauth2callback
+----
+endif::[]
+
+ifeval::["{rosa_deploy_hcp}" == "true"]
+.. Your cluster is a ROSA cluster using a hosted control plane. Therefore the command to determine the OAuth Callback URL is the following:
++
+[source,sh,role=copy]
+----
+export CALLBACK_URL_BASE=https://oauth.$CLUSTER_DOMAIN/oauth2callback
+----
+endif::[]
+
+=== Configure Red Hat SSO
+
+. Create Realm:
++
+[source,sh,role=copy]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: rosa
+  namespace: $SSO_NAMESPACE
+  labels:
+    app: sso
+spec:
+  instanceSelector:
+    matchLabels:
+      app: sso
+  realm:
+    realm: rosa
+    enabled: true
+    loginTheme: rh-sso
+# NOTE: you can set unmanaged to 'true' if you intend to manage this realm via the UI
+# unmanaged: true
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+keycloakrealm.keycloak.org/rosa created
+----
+
+. Create Client:
++
+[source,sh,role=copy]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: rosa
+  namespace: $SSO_NAMESPACE
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  client:
+    clientId: rosa
+    name: rosa
+    description: "Red Hat OpenShift on AWS"
+    protocol: openid-connect
+    enabled: true
+    publicClient: false
+    directAccessGrantsEnabled: true
+    implicitFlowEnabled: true
+    standardFlowEnabled: true
+    serviceAccountsEnabled: true
+    loginTheme: rh-sso
+    redirectUris:
+    - $CALLBACK_URL_BASE/RosaKeycloak
+    webOrigins:
+    - "/*"
+    defaultClientScopes:
+    - acr
+    - email
+    - profile
+    - roles
+    - web-origins
+    optionalClientScopes:
+    - address
+    - microprofile-jwt
+    - offline_access
+    - phone
+  serviceAccountRealmRoles:
+  - default-roles-rosa
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+keycloakclient.keycloak.org/rosa created
+----
+
+. Create a user which will become the ROSA admin:
++
+[source,sh,role=copy]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: rosa-admin
+  namespace: $SSO_NAMESPACE
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  user:
+    enabled: true
+    username: rosa-admin
+    firstName: ROSA
+    lastName: Admin
+    email: rosa-admin@example.com
+    credentials:
+    - temporary: false
+      type: password
+      value: 'RosaIsGre@t'
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+keycloakuser.keycloak.org/rosa-admin created
+----
+
+. Create a user which will become the just a regular developer user:
++
+[source,sh,role=copy]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: rosa-developer
+  namespace: $SSO_NAMESPACE
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  user:
+    enabled: true
+    username: rosa-developer
+    firstName: ROSA
+    lastName: Developer
+    email: rosa-developer@example.com
+    credentials:
+    - temporary: false
+      type: password
+      value: 'RosaIsGre@t'
+EOF
+----
++
+.Sample Output
+[source,texinfo]
+----
+keycloakuser.keycloak.org/rosa-developer created
+----
+
+== Set up OpenShift authentication to use Red Hat SSO
+
+. Retrieve the client secret:
++
+[source,sh,role=copy]
+----
+export SSO_CLIENT_SECRET=$(oc get secret keycloak-client-secret-rosa -o json | jq -r '.data.CLIENT_SECRET' | base64 -d)
+----
+
+. Set up the identity provider in ROSA:
++
+[source,sh,role=copy]
+----
+rosa create idp \
+--cluster rosa-$GUID \
+--type openid \
+--name RosaKeycloak \
+--client-id rosa \
+--client-secret $SSO_CLIENT_SECRET \
+--issuer-url $SSO_ADMIN_CONSOLE/auth/realms/rosa \
+--email-claims email \
+--name-claims name \
+--username-claims preferred_username
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Configuring IDP for cluster 'rosa-9zlx8'
+I: Identity Provider 'RosaKeycloak' has been created.
+   It may take several minutes for this access to become active.
+   To add cluster administrators, see 'rosa grant user --help'.
+
+I: Callback URI: https://oauth-openshift.apps.rosa-9zlx8.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
+I: To log in to the console, open https://console-openshift-console.apps.rosa-9zlx8.999y.p1.openshiftapps.com and click on 'RosaKeycloak'.
+----
+
+ifeval::["{rosa_deploy_hcp}" == "false"]
+
++
+[WARNING]
+====
+The following three commands will *not* work on a cluster with Hosted Control Planes. Authentication is managed differently on HCP so the `OAuth` object is empty. Which also means that the `rosa` CLI is the only way to update authentication mechanisms. Just go to the section where you log in with the new provider.
+====
+
+. Validate that the cluster's `OAuth` resource has been updated (you may need to retry this command a few times until ROSA has updated the configuration):
++
+[source,sh,role=copy]
+----
+oc get oauth cluster -o json | jq .spec.identityProviders
+----
++
+.Sample Output
+[source,json,options=nowrap]
+----
+[
+  {
+    "mappingMethod": "claim",
+    "name": "RosaKeycloak",
+    "openID": {
+      "ca": {
+        "name": ""
+      },
+      "claims": {
+        "email": [
+          "email"
+        ],
+        "name": [
+          "name"
+        ],
+        "preferredUsername": [
+          "username"
+        ]
+      },
+      "clientID": "rosa",
+      "clientSecret": {
+        "name": "idp-client-secret-256k0s8qbum3tr7g77s4j3rrfjngeg5v"
+      },
+      "issuer": "https://keycloak-keycloak.apps.rosa-9zlx8.999y.p1.openshiftapps.com/auth/realms/rosa"
+    },
+    "type": "OpenID"
+  },
+  {
+    "htpasswd": {
+      "fileData": {
+        "name": "htpasswd-secret-256is6i9vt46rsp2onu4htcv0vitkob8"
+      }
+    },
+    "mappingMethod": "claim",
+    "name": "htpasswd",
+    "type": "HTPasswd"
+  }
+]
+----
++
+You will notice that there are two authentication providers configured: RosaKeycloak and htpasswd. The htpasswd authentication provider got added when you added the admin user in a previous lab. In the last step of this lab you will clean that up.
+
+. To display just the names of the configured identity providers use this command:
++
+[source,sh,role=copy]
+----
+oc get oauth cluster -o json | jq -r '.spec.identityProviders[].name'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+RosaKeycloak
+htpasswd
+----
+
+. It will take a few minutes for the authentication operator to redeploy the authentication pods. Watch the pods until all three pods have been updated - when all three pods are running again (with an age of less than a few minutes) hit `Ctrl-C` to stop the watch:
++
+[source,sh,role=copy]
+----
+watch oc get pod -n openshift-authentication
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Every 2.0s: oc get pod -n openshift-authentication                                          bastion.6n4s8.internal: Thu Apr 20 18:17:28 2023
+
+NAME                               READY   STATUS    RESTARTS   AGE
+oauth-openshift-7766df68c8-5dj95   1/1     Running   0    	84s
+oauth-openshift-7766df68c8-5zdnc   1/1     Running   0    	30s
+oauth-openshift-7766df68c8-bj777   1/1     Running   0    	58s
+----
+endif::[]
+
+=== Log in with Red Hat SSO
+
+. Logout from your OpenShift Web Console and browse back to the Console URL (`rosa describe cluster -c ${CLUSTER_NAME} -o json | jq -r '.console.url'` if you have forgotten it) and you should see a new option to login called *RosaKeycloak*.
++
+[TIP]
+====
+If you do not see the *RosaKeycloak* option wait a few seconds and refresh the screen.
+====
+
+. Click on *RosaKeycloak* and use the userid `rosa-admin` with password `RosaIsGre@t`.
+
+. Let's give Cluster Admin permissions to your RosaKeycloak admin.
++
+Find out the existing users in OpenShift (note for this to work you *must* have logged in via the web console before - OpenShift does not create user objects until a user has logged in).
++
+[source,sh,role=copy]
+----
+oc get users
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                      UID                                    FULL NAME        IDENTITIES
+backplane-cluster-admin   43481904-a0ae-4849-8c0b-0dcccd3769d5
+cluster-admin             b5fbb4e8-cdf1-4e1e-8989-e33d6e2ec8ff                    htpasswd:cluster-admin
+rosa-admin                bc530c3d-26f1-4d6f-a1a8-cf74311d9156   ROSA Admin       RosaKeycloak:34b868e4-6f63-4818-86e2-d642f2ea967a
+----
++
+In the example above you can see the two admin users that we have created: the `cluster-admin` which is managed by htpasswd and the `34b868e4-6f63-4818-86e2-d642f2ea967a` user that is managed by Red Hat SSO. You will also see the `backplane-cluster-admin` that Red Hat SREs are using.
+
+. Since this is ROSA you can't just use `oc adm policy` to grant `cluster-admin` permissions to your `rosa-admin` user. You have to use the `rosa` CLI instead. If you don't then you may run into issues later on where some commands are prohibited by the ROSA web hook. So use the rosa CLI:
++
+[source,sh,role=copy]
+----
+rosa grant user cluster-admin \
+  --user=rosa-admin \
+  --cluster=rosa-$GUID
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-tfbjn'
+----
+
+. Refresh the OpenShift web console - you should now be able to switch to the Administrator view.
+. Log into the API using the new user:
++
+[source,sh,role=copy]
+----
+oc login -u rosa-admin -p RosaIsGre@t
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Login successful.
+
+You have access to 102 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "keycloak".
+----
+
+. The final step is to delete the temporary ROSA admin user:
++
+[source,sh,role=copy]
+----
+rosa delete admin -c rosa-$GUID --yes
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Admin user 'cluster-admin' has been deleted from cluster 'rosa-s8j4w'
+----
+
+ifeval::["{rosa_deploy_hcp}" == "false"]
+. Validate that only the RosaKeycloak authentication provider is left in the OpenShift OAuth configuration:
++
+[source,sh,role=copy]
+----
+oc get oauth cluster -o json | jq -r '.spec.identityProviders[].name'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+RosaKeycloak
+----
++
+Now all of your users are managed in Red Hat SSO.
+endif::[]
+
+. You can delete the `cluster-admin` user object and it's associated identity:
++
+[source,sh,role=copy]
+----
+oc delete user cluster-admin
+oc delete identity htpasswd:cluster-admin
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+user.user.openshift.io "cluster-admin" deleted
+identity.user.openshift.io "htpasswd:cluster-admin" deleted
+----
+
+Congratulations!
+You've successfully configured your Red Hat OpenShift Service on AWS (ROSA) cluster to authenticate with Red Hat SSO.

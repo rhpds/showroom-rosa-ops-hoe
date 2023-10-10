@@ -10,14 +10,14 @@ In this section of the workshop, we'll configure ROSA to forward logs to Amazon 
 
 == Prepare Amazon CloudWatch
 
-. Validate that a policy `RosaCloudWatch-${GUID}` already exists:
+. Validate that a policy `RosaCloudWatch-$GUID` already exists:
 +
 [source,sh,role=copy]
 ----
-POLICY_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='RosaCloudWatch-${GUID}'].{ARN:Arn}" --output text
+POLICY_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='RosaCloudWatch-$GUID'].{ARN:Arn}" --output text
 )
 
-echo ${POLICY_ARN}
+echo $POLICY_ARN
 ----
 +
 .Sample Output
@@ -32,7 +32,7 @@ Examine the role that has been created:
 +
 [source,sh]
 ----
-aws iam get-role --role-name RosaCloudWatch-${GUID} --output json
+aws iam get-role --role-name RosaCloudWatch-$GUID --output json
 ----
 +
 .Sample Output
@@ -83,7 +83,7 @@ Note that the role allows the service account `logcollector` in the `openshift-l
 ----
 ROLE_ARN=$(aws iam get-role --role-name RosaCloudWatch-$GUID --output json | jq -r .Role.Arn)
 
-echo ${ROLE_ARN}
+echo $ROLE_ARN
 ----
 +
 .Sample Output
@@ -159,7 +159,7 @@ metadata:
   name: cloudwatch-credentials
   namespace: openshift-logging
 stringData:
-  role_arn: ${ROLE_ARN}
+  role_arn: $ROLE_ARN
 EOF
 ----
 +
@@ -187,7 +187,7 @@ spec:
     type: cloudwatch
     cloudwatch:
       groupBy: namespaceName
-      groupPrefix: rosa-${GUID}
+      groupPrefix: rosa-$GUID
       region: $(aws configure get region)
     secret:
       name: cloudwatch-credentials
@@ -240,7 +240,7 @@ clusterlogging.logging.openshift.io/instance created
 [source,sh,role=copy]
 ----
 aws logs describe-log-groups \
-  --log-group-name-prefix rosa-${GUID}
+  --log-group-name-prefix rosa-$GUID
 ----
 +
 .Sample Output

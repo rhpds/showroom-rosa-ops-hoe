@@ -23,7 +23,7 @@ image:scale_machinepool.png[scale_machinepool]
 +
 [source,sh,role=execute]
 ----
-rosa list machinepools -c rosa-${GUID}
+rosa list machinepools -c rosa-$GUID
 ----
 +
 .Sample Output
@@ -33,6 +33,9 @@ ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY 
 Default  No           2         m5.xlarge                          us-east-2a                       N/A
 ----
 +
+Note that the output may be different in your particular environment.
+
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now, let's take a look at the MachineSets inside of the ROSA cluster that have been created according to the instructions provided by the above MachinePools. To do so, run the following command:
 +
 [source,sh,role=execute]
@@ -72,41 +75,43 @@ rosa-6n4s8-7hbhw-worker-us-east-2a-zxm8j   Running   m5.xlarge    us-east-2   us
 ----
 +
 For this workshop, we've deployed your ROSA cluster with seven total machines (two workers, three control planes, and two infrastructure nodes).
+endif::[]
 
-. Now that we know that we have two worker nodes, let's create a MachinePool to add a new worker node using the ROSA CLI.
-To do so, run the following command:
+// . Now that we know that we have two worker nodes, let's create a MachinePool to add a new worker node using the ROSA CLI.
+// To do so, run the following command:
+// +
+// [source,sh,role=execute]
+// ----
+// rosa create machinepool -c rosa-$GUID --replicas 1 --name workshop --instance-type m5.xlarge
+// ----
+// +
+// .Sample Output
+// [source,text,options=nowrap]
+// ----
+// I: Fetching instance types
+// I: Machine pool 'workshop' created successfully on cluster 'rosa-6n4s8'
+// I: To view all machine pools, run 'rosa list machinepools -c rosa-6n4s8'
+// ----
+// +
+// This command adds a single m5.xlarge instance to the first AWS availability zone in the region your cluster is deployed in.
+
+// rosa create machinepool -c rosa-$GUID --replicas 1 --name workshop --instance-type m5.xlarge --use-spot-instances
+
+. Now, let's scale up our selected MachinePool from two to three machines.
+To do so, run the following command (make sure to use the `ID` that was printed for your list machinepool command. It may not be `workers`):
 +
 [source,sh,role=execute]
 ----
-rosa create machinepool -c rosa-${GUID} --replicas 1 --name workshop --instance-type m5.xlarge
+rosa update machinepool -c rosa-$GUID --replicas 3 workers
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-I: Fetching instance types
-I: Machine pool 'workshop' created successfully on cluster 'rosa-6n4s8'
-I: To view all machine pools, run 'rosa list machinepools -c rosa-6n4s8'
-----
-+
-This command adds a single m5.xlarge instance to the first AWS availability zone in the region your cluster is deployed in.
-
-// rosa create machinepool -c rosa-${GUID} --replicas 1 --name workshop --instance-type m5.xlarge --use-spot-instances
-
-. Now, let's scale up our selected MachinePool from one to two machines.
-To do so, run the following command:
-+
-[source,sh,role=execute]
-----
-rosa update machinepool -c rosa-${GUID} --replicas 2 workshop
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-I: Updated machine pool 'workshop' on cluster 'rosa-6n4s8'
+I: Updated machine pool 'workers' on cluster 'rosa-6n4s8'
 ----
 
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now that we've scaled the MachinePool to two machines, we can see that the machine is already being created.
 First, let's quickly check the output of the `oc get machinesets` command we ran earlier:
 +
@@ -149,15 +154,17 @@ rosa-6n4s8-7hbhw-workshop-us-east-2a-pxnvd   Provisioned   m5.xlarge    us-east-
 ----
 
 . Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit CTRL-C to exit the `oc` command.
+endif::[]
 
-. We don't actually need these extra worker nodes so let's scale the cluster back down to a total of 3 worker nodes by scaling down the "Workshop" Machine Pool.
+. We don't actually need these extra worker nodes so let's scale the cluster back down to a total of 3 worker nodes by scaling down the Machine Pool.
 To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-rosa update machinepool -c rosa-${GUID} --replicas 1 workshop
+rosa update machinepool -c rosa-$GUID --replicas 2 workers
 ----
 
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now that we've scaled the MachinePool (and therefore the MachineSet) back down to one machine, we can see the change reflected in the cluster almost immediately.
 Let's quickly check the output of the same command we ran before:
 +
@@ -174,32 +181,32 @@ rosa-6n4s8-7hbhw-infra-us-east-2a      2         2         2       2           2
 rosa-6n4s8-7hbhw-worker-us-east-2a     2         2         2       2           23h
 rosa-6n4s8-7hbhw-workshop-us-east-2a   1         1         1       1           6m49s
 ----
-
-. Now let's scale the cluster back down to a total of 2 worker nodes by deleting the "Workshop" Machine Pool.
-To do so, run the following command:
-+
-[source,sh,role=execute]
-----
-rosa delete machinepool -c rosa-${GUID} workshop --yes
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-I: Successfully deleted machine pool 'workshop' from cluster 'rosa-6n4s8'
-----
-+
-. You can validate that the MachinePool has been deleted by using the `rosa` cli:
-[source,sh,role=execute]
-----
-rosa list machinepools -c rosa-${GUID}
-----
-.Sample Output
-[source,text,options=nowrap]
-----
-ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES
-Default  No           2         m5.xlarge                          us-east-2a                       N/A
-----
+endif::[]
+// . Now let's scale the cluster back down to a total of 2 worker nodes by deleting the "Workshop" Machine Pool.
+// To do so, run the following command:
+// +
+// [source,sh,role=execute]
+// ----
+// rosa delete machinepool -c rosa-$GUID workshop --yes
+// ----
+// +
+// .Sample Output
+// [source,text,options=nowrap]
+// ----
+// I: Successfully deleted machine pool 'workshop' from cluster 'rosa-6n4s8'
+// ----
+// +
+// . You can validate that the MachinePool has been deleted by using the `rosa` cli:
+// [source,sh,role=execute]
+// ----
+// rosa list machinepools -c rosa-$GUID
+// ----
+// .Sample Output
+// [source,text,options=nowrap]
+// ----
+// ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES
+// Default  No           2         m5.xlarge                          us-east-2a                       N/A
+// ----
 
 Congratulations!
 You've successfully scaled your cluster up and back down to two worker nodes.
@@ -208,6 +215,6 @@ You've successfully scaled your cluster up and back down to two worker nodes.
 
 Here you learned:
 
-* Creating new Machine Pool for your ROSA cluster to add additional nodes to the cluster
+// * Creating new Machine Pool for your ROSA cluster to add additional nodes to the cluster
 * Scaling your new Machine Pool up to add more nodes to the cluster
 * Scaling your Machine Pool down to remove worker nodes from the cluster
