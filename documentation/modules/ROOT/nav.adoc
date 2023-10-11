@@ -15,15 +15,15 @@
 
 *Deploy an Application to ROSA*
 
-* xref:300-apps/lab_1_deploy_app[Deploy an Application with AWS Database]
-* xref:300-apps/lab_2_openshift_gitops[Deploy an Application with Red Hat OpenShift Gitops]
-* xref:300-apps/lab_3_network_policy[Secure your applications with Network Policies]
-* xref:300-apps/lab_4_resilient_app[Make your application resilient]
+* xref:300-apps/lab_1_deploy_app.adoc[Deploy an Application with AWS Database]
+* xref:300-apps/lab_2_openshift_gitops.adoc[Deploy an Application with Red Hat OpenShift Gitops]
+* xref:300-apps/lab_3_network_policy.adoc[Secure your applications with Network Policies]
+* xref:300-apps/lab_4_resilient_app.adoc[Make your application resilient]
 
 *Red Hat OpenShift Service Mesh*
 
-* xref:400-service-mesh/lab_1_service_mesh_introduction[Service Mesh Introduction]
-* xref:400-service-mesh/lab_2_service_mesh_deploy_operator[Install Service Mesh Operator]
-* xref:400-service-mesh/lab_3_service_mesh_deploy_control_plane[Deploy Service Mesh Control Plane]
-* xref:400-service-mesh/lab_4_service_mesh_deploy_app[Deploy a Service Mesh example application]
-* xref:400-service-mesh/lab_5_service_mesh_observe[Configure and observe Service Mesh traffic]
+* xref:400-service-mesh/lab_1_service_mesh_introduction.adoc[Service Mesh Introduction]
+* xref:400-service-mesh/lab_2_service_mesh_deploy_operator.adoc[Install Service Mesh Operator]
+* xref:400-service-mesh/lab_3_service_mesh_deploy_control_plane.adoc[Deploy Service Mesh Control Plane]
+* xref:400-service-mesh/lab_4_service_mesh_deploy_app.adoc[Deploy a Service Mesh example application]
+* xref:400-service-mesh/lab_5_service_mesh_observe.adoc[Configure and observe Service Mesh traffic]
