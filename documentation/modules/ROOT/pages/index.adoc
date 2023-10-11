@@ -1,18 +1,20 @@
 include::_attributes.adoc[]
 
-== Welcome to the ROSA Ops Hands-on Experience
+== ROSA Hands-on Experience: Building a Modern Application Platform with ROSA
 
-Welcome to the ROSA Ops Hands-on Experience. In this environment you will learn the building blocks of modern application platform and leverage Amazon Web Services (AWS) and Red Hat OpenShift Service on AWS (ROSA) to build a modern application platform. 
+In this experience, you will learn how you can take advantage of Red Hat OpenShift Service on AWS (ROSA) as a turnkey application platform and integrate with other AWS services to build, deploy, scale and manage applications in a native AWS environment. 
 
-*Who this workshop is for:* This workshop is aimed at Platform Engineers, DevOps Engineers, CLoud Operations, Architects, and Developers that wnat to learn what makes a modern application platform, and how they can leverage cloud services to streamline the delivery and operations of their application platforms.
+*Who this workshop is for:* This experience is aimed at Platform Engineers, DevOps Engineers, Cloud Operations, Architects, and Developers that want to learn what makes a modern application platform, and how they can leverage cloud services to streamline the delivery and operations of their application platforms.
 
-*What to expect:* During the workshop, we will take you through a series of hands on exercises to help you understand some of the concepts of modern application platforms. Attendees will learn:
+*What to expect:* During the workshop, we will take you through a series of hands on exercises to help you understand some of the concepts of modern application platforms.
 
-- How to deploy a Red Hat OpenShift Service on AWS (ROSA) cluster (video)
-- Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Red Hat SSO, and forwarding logs to Amazon CloudWatch.
-- Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
-- Make an application on OpenShift scalable and resistant to node failures and upgrades
-- Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
-- Learn how to use OpenShift Service Mesh for application observability and tracing
+*Attendees will learn:*
 
-After completing this workshop, attendees will understand the concepts of modern application platforms, and will have begun to lay the foundations in their provided AWS infrastructure.
+.  How to deploy a Red Hat OpenShift Service on AWS (ROSA) cluster (video)
+. Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
+. Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
+. Make an application on OpenShift scalable and resistant to node failures and upgrades
+. Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
+. Learn how to use OpenShift Service Mesh for application observability and tracing
+
+After completing this workshop, attendees will understand the concepts of modern application platforms, and will have begun to lay the foundations with Red Hat OpenShift.

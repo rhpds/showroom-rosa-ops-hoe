@@ -1,13 +1,29 @@
-* xref:100-environment/lab_0_debug_vars.adoc[0. Debug available AgnosticD Vars]
-* xref:100-environment/lab_1_deploy_rosa.adoc[1. Deploy a ROSA Cluster - Review]
-* xref:100-environment/lab_2_explore_rosa.adoc[2. Explore the ROSA environment]
-* xref:200-ops/lab_1_configure_idp_keycloak.adoc[4. Configure Red Hat SSO IDP for ROSA]
-* xref:200-ops/lab_2_cluster_upgrades.adoc[5. Upgrade your ROSA cluster]
-* xref:200-ops/lab_3_managing_worker_nodes.adoc[6. Managing Worker Nodes]
-* xref:200-ops/lab_4_autoscaling.adoc[7. Autoscale your ROSA Cluster]
-* xref:200-ops/lab_5_labeling_nodes.adoc[8. Labeling your Worker Nodes]
-* xref:200-ops/lab_6_cloudwatch.adoc[9. Configure Red Hat OpenShift Logging with AWS Cloudwatch]
-* xref:300-apps/lab_1_deploy_app[10. Deploy an Application with AWS Database]
-* xref:300-apps/lab_2_openshift_gitops[11. Deploy an Application with Red Hat OpenShift Gitops]
-* xref:300-apps/lab_3_network_policy[12. Secure your applications with Network Policies]
-* xref:300-apps/lab_4_resilient_app[13. Make your application resilient]
+*Introduction*
+
+* xref:100-environment/lab_0_debug_vars.adoc[Debug available AgnosticD Vars]
+* xref:100-environment/lab_1_deploy_rosa.adoc[Deploy a ROSA Cluster - Review]
+* xref:100-environment/lab_2_explore_rosa.adoc[Explore the ROSA environment]
+
+*Basic Operational Tasks*
+
+* xref:200-ops/lab_1_configure_idp_keycloak.adoc[Configure Red Hat SSO IDP for ROSA]
+* xref:200-ops/lab_2_cluster_upgrades.adoc[Upgrade your ROSA cluster]
+* xref:200-ops/lab_3_managing_worker_nodes.adoc[Managing Worker Nodes]
+* xref:200-ops/lab_4_autoscaling.adoc[Autoscale your ROSA Cluster]
+* xref:200-ops/lab_5_labeling_nodes.adoc[Labeling your Worker Nodes]
+* xref:200-ops/lab_6_cloudwatch.adoc[Configure Red Hat OpenShift Logging with AWS Cloudwatch]
+
+*Deploy an Application to ROSA*
+
+* xref:300-apps/lab_1_deploy_app[Deploy an Application with AWS Database]
+* xref:300-apps/lab_2_openshift_gitops[Deploy an Application with Red Hat OpenShift Gitops]
+* xref:300-apps/lab_3_network_policy[Secure your applications with Network Policies]
+* xref:300-apps/lab_4_resilient_app[Make your application resilient]
+
+*Red Hat OpenShift Service Mesh*
+
+* xref:400-service-mesh/lab_1_service_mesh_introduction[Service Mesh Introduction]
+* xref:400-service-mesh/lab_2_service_mesh_deploy_operator[Install Service Mesh Operator]
+* xref:400-service-mesh/lab_3_service_mesh_deploy_control_plane[Deploy Service Mesh Control Plane]
+* xref:400-service-mesh/lab_4_service_mesh_deploy_app[Deploy a Service Mesh example application]
+* xref:400-service-mesh/lab_5_service_mesh_observe[Configure and observe Service Mesh traffic]

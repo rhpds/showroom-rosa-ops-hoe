@@ -8,6 +8,7 @@ During ROSA upgrades, one node is upgraded at a time. This is done to ensure cus
 
 There are two ways to upgrade a ROSA cluster - using OpenShift Cluster Manager or using the `rosa` CLI. In this lab environment we do not have access to the OpenShift Cluster Manager so we will use the `rosa` CLI.
 
+:numbered:
 == Upgrade using the `rosa` command line interface
 
 . Remind yourself of the version of your cluster:

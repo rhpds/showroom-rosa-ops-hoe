@@ -8,6 +8,7 @@ Amazon CloudWatch is a monitoring and observability service provided by Amazon W
 
 In this section of the workshop, we'll configure ROSA to forward logs to Amazon CloudWatch.
 
+:numbered:
 == Prepare Amazon CloudWatch
 
 . Validate that a policy `RosaCloudWatch-$GUID` already exists:

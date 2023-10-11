@@ -13,8 +13,9 @@ Here are some of the advantages of using ROSA Machine Pools to manage the size o
 * Infrastructure Diversity - ROSA Machine Pool allow you to provision worker nodes of different instance type. This enables you you leverage the best kind of instance family for different workloads.
 * Integration with Cluster Autoscaler - ROSA Machine Pool seamlessly integrate with the Cluster Autoscaler feature, which automatically adjusts the number of worker nodes based on the current demand. This integration ensures efficient resource utilization by scaling the cluster up or down as needed, optimizing costs and performance.
 
-image:scale_machinepool.png[scale_machinepool]
+image::scale_machinepool.png[scale_machinepool]
 
+:numbered:
 == Scaling worker nodes
 
 === Via the CLI
@@ -35,7 +36,7 @@ Default  No           2         m5.xlarge                          us-east-2a   
 +
 Note that the output may be different in your particular environment.
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 . Now, let's take a look at the MachineSets inside of the ROSA cluster that have been created according to the instructions provided by the above MachinePools. To do so, run the following command:
 +
 [source,sh,role=execute]
@@ -111,7 +112,7 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workers
 I: Updated machine pool 'workers' on cluster 'rosa-6n4s8'
 ----
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 . Now that we've scaled the MachinePool to two machines, we can see that the machine is already being created.
 First, let's quickly check the output of the `oc get machinesets` command we ran earlier:
 +
@@ -164,7 +165,7 @@ To do so, run the following command:
 rosa update machinepool -c rosa-$GUID --replicas 2 workers
 ----
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 . Now that we've scaled the MachinePool (and therefore the MachineSet) back down to one machine, we can see the change reflected in the cluster almost immediately.
 Let's quickly check the output of the same command we ran before:
 +

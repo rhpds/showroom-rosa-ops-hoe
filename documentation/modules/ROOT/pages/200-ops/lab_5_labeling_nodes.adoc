@@ -6,6 +6,7 @@ Labels are a useful way to select which nodes that an application will run on. T
 
 While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the Machine pool itself.
 
+:numbered:
 == Set a label for the Machine Pool
 
 . Just like the last section, let's use the default machine pool to add our label.

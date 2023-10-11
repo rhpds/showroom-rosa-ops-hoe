@@ -18,6 +18,7 @@ OpenShift and OpenShift GitOps:
 * Rollback code changes across clusters
 * Roll out new changes submitted via Git
 
+:numbered:
 == Deploying your Application with OpenShift GitOps
 
 . From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for "openshift gitops" and click *Install*.

@@ -8,6 +8,7 @@ Limits and Requests can be used to both allocate and restrict the amount of reso
 
 In this section of the workshop, we will use the previously deployed microsweeper application, ensure the application is resilient to node failure, and scale the application when under load.
 
+:numbered:
 == Setting Limits & Requests on an Application
 
 . First, let's set limits and requests on the previously deployed microsweeper application.

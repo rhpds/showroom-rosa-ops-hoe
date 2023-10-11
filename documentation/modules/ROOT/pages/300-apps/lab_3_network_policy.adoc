@@ -6,6 +6,9 @@ NetworkPolicies are used to control and secure communication between pods within
 
 For this module we will be applying networkpolices to the previously created 'microsweeper-ex' namespace and using the 'microsweeper' app to test these policies. In addition, we will deploy two new applications to test against the 'microsweeper app
 
+:numbered:
+== Create Networkpolicies
+
 . Create a new project and a new app. We will be using this pod for testing network connectivity to the microsweeper application
 +
 [source,sh,role=execute]
