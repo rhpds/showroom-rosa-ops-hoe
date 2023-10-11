@@ -493,7 +493,7 @@ endif::[]
 
 === Log in with Red Hat SSO
 
-. Logout from your OpenShift Web Console and browse back to the Console URL (`rosa describe cluster -c ${CLUSTER_NAME} -o json | jq -r '.console.url'` if you have forgotten it) and you should see a new option to login called *RosaKeycloak*.
+. Logout from your OpenShift Web Console and browse back to the Console URL (`rosa describe cluster -c rosa-$GUID -o json | jq -r '.console.url'` if you have forgotten it) and you should see a new option to login called *RosaKeycloak*.
 +
 [TIP]
 ====
