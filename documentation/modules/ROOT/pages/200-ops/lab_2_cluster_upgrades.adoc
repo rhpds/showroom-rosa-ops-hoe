@@ -21,10 +21,10 @@ oc version
 .Sample Output
 [source,text,options=nowrap]
 ----
-Client Version: 4.13.1
+Client Version: 4.12.35
 Kustomize Version: v4.5.7
-Server Version: 4.13.0
-Kubernetes Version: v1.26.3+b404935
+Server Version: 4.12.35
+Kubernetes Version: v1.25.12+ba5cc25
 ----
 
 . Find out the available versions:
@@ -37,32 +37,33 @@ oc adm upgrade
 .Sample Output
 [source,text,options=nowrap]
 ----
-Cluster version is 4.13.0
+Cluster version is 4.12.35
 
 Upgradeable=False
 
-  Reason: MultipleReasons
-  Message: Cluster should not be upgraded between minor versions for multiple reasons: AdminAckRequired,MissingUpgradeableAnnotatio
-n
-  * Kubernetes 1.26 and therefore OpenShift 4.13 remove several APIs which require admin consideration. Please see the knowledge ar
-ticle https://access.redhat.com/articles/6958394 for details and instructions.
-  * Cluster operator cloud-credential should not be upgraded between minor versions: Upgradeable annotation cloudcredential.openshi
-ft.io/upgradeable-to on cloudcredential.operator.openshift.io/cluster object needs updating before upgrade. See Manually Creating I
-AM documentation for instructions on preparing a cluster for upgrade.
+  Reason: AdminAckRequired
+  Message: Kubernetes 1.26 and therefore OpenShift 4.13 remove several APIs which require admin consideration. Please see the knowledge article https://access.redhat.com/articles/6958394 for details and instructions.
 
 Upstream is unset, so the cluster will use an appropriate default.
-Channel: stable-4.12 (available channels: candidate-4.12, candidate-4.13, eus-4.12, fast-4.12, stable-4.12)
+Channel: stable-4.12 (available channels: candidate-4.12, candidate-4.13, eus-4.12, fast-4.12, fast-4.13, stable-4.12)
 
 Recommended updates:
 
   VERSION     IMAGE
-  4.13.1     quay.io/openshift-release-dev/ocp-release@sha256:db976910d909373b1136261a5479ed18ec08c93971285ff760ce75c6217d3943
+  4.12.36     quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
 ----
 +
 [NOTE]
 ====
-Depending on when you run this command the available version list may be longer than just the next release.
+Depending on when you run this command the available version list may be longer than just the next release. Or it may have no available upgrades available. In that case you are already on the latest release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
 ====
+
+. Set a variable for the cluster version you want to upgrade to. For the example above this would be:
++
+[source,sh]
+----
+export CLUSTER_VERSION=4.12.36
+----
 
 . You probably don't want to actually upgrade the cluster right now since that may disrupt your lab environment. Luckily it is possible to schedule an update at a less inconvenient time.
 +
@@ -73,7 +74,7 @@ Get a date and time that is 24 hours from now:
 export UPGRADE_DATE=$(date -d "+24 hours" '+%Y-%m-%d')
 export UPGRADE_TIME=$(date '+%H:%M')
 
-echo Date: ${UPGRADE_DATE}, Time: ${UPGRADE_TIME}
+echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 ----
 +
 .Sample Output
@@ -87,22 +88,23 @@ Date: 2023-04-18, Time: 19:51
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \
-  -c rosa-${GUID} \
-  --version 4.13.1 \
+  -c rosa-$GUID \
+  --version $CLUSTER_VERSION \
   --mode auto \
-  --schedule-date ${UPGRADE_DATE} \
-  --schedule-time ${UPGRADE_TIME}
+  --schedule-date $UPGRADE_DATE \
+  --schedule-time $UPGRADE_TIME \
+  --control-plane \
+  --yes
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-I: Ensuring account and operator role policies for cluster '235ftpmaq3oavfin8mt600af4sar9oej' are compatible with upgrade.
-I: Account roles/policies for cluster '235ftpmaq3oavfin8mt600af4sar9oej' are already up-to-date.
-I: Operator roles/policies associated with the cluster '235ftpmaq3oavfin8mt600af4sar9oej' are already up-to-date.
-I: Account and operator roles for cluster 'rosa-6n4s8' are compatible with upgrade
-? Are you sure you want to upgrade cluster to version '4.13.1'? Yes
-I: Upgrade successfully scheduled for cluster 'rosa-6n4s8'
+I: Ensuring account and operator role policies for cluster '26pgsg3i77d9f85p7t6r89aar58liqpe' are compatible with upgrade.
+I: Account roles with the prefix 'ManagedOpenShift' have attached managed policies.
+I: Cluster 'rosa-6lzvq' operator roles have attached managed policies. An upgrade isn't needed
+I: Account and operator roles for cluster 'rosa-6lzvq' are compatible with upgrade
+I: Upgrade successfully scheduled for cluster 'rosa-6lzvq'
 ----
 
 Congratulations! You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.

@@ -223,8 +223,6 @@ spec:
     realm: rosa
     enabled: true
     loginTheme: rh-sso
-# NOTE: you can set unmanaged to 'true' if you intend to manage this realm via the UI
-# unmanaged: true
 EOF
 ----
 +
