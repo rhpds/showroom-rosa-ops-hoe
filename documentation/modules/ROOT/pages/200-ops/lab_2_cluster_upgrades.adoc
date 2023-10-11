@@ -123,7 +123,6 @@ In this scenario to upgrade your cluster from version 4.11.0 to 4.12.15, you mus
 
 * https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html[Upgrading ROSA clusters with STS]
 * https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html#rosa-upgrade-ocm_rosa-upgrading-sts[Scheduling individual upgrades through the OpenShift Cluster Manager console]
-* https://docs.openshift.com/container-platform/{{ rosa_version }}/updating/understanding-openshift-updates.html#update-service-about_understanding-openshift-updates[About the OpenShift Update Service]
 
 == Summary
 
@@ -168,6 +167,6 @@ image::ocm-update-confirm.png[OCM - Update Confirm]
 +
 image::ocm-update-close.png[OCM - Update Close]
 
-Congratulations!
+*Congratulations!*
 
 You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.

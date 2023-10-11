@@ -588,15 +588,16 @@ endif::[]
 [source,sh,role=copy]
 ----
 oc delete user cluster-admin
-oc delete identity htpasswd:cluster-admin
+oc delete identity cluster-admin:cluster-admin
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
 user.user.openshift.io "cluster-admin" deleted
-identity.user.openshift.io "htpasswd:cluster-admin" deleted
+identity.user.openshift.io "cluster-admin:cluster-admin" deleted
 ----
 
-Congratulations!
+*Congratulations!*
+
 You've successfully configured your Red Hat OpenShift Service on AWS (ROSA) cluster to authenticate with Red Hat SSO.

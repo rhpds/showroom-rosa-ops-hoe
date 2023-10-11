@@ -14,12 +14,22 @@ All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Cons
 rosa list clusters
 ----
 +
+ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
 ID                                NAME         STATE  TOPOLOGY
 26mpkbt35pras0n6867p732qeb1l7tmm  rosa-wkrh33  ready  Hosted CP
 ----
+endif::[]
+ifeval::["{rosa_deploy_hcp}" == "False"]
+.Sample Output
+[source,texinfo,options=nowrap]
+----
+ID                                NAME        STATE  TOPOLOGY
+26q1nc3k2g65jvfdti0suass82df2pk6  rosa-8922k  ready  Classic (STS)
+----
+endif::[]
 +
 [TIP]
 ====
