@@ -384,7 +384,7 @@ rosa create idp \
 --username-claims preferred_username
 ----
 +
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -397,7 +397,7 @@ I: Callback URI: https://oauth-openshift.apps.rosa-9zlx8.999y.p1.openshiftapps.c
 I: To log in to the console, open https://console-openshift-console.apps.rosa-9zlx8.999y.p1.openshiftapps.com and click on 'RosaKeycloak'.
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -552,7 +552,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 oc login -u rosa-admin -p RosaIsGre@t {rosa_api_url}
 ----
 +
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -563,7 +563,7 @@ You have access to 101 projects, the list has been suppressed. You can list all 
 Using project "keycloak".
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,text,options=nowrap]
 ----

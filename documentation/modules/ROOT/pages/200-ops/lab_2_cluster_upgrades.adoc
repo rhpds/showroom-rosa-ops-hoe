@@ -85,7 +85,7 @@ echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 Date: 2023-04-18, Time: 19:51
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.36`) - answer `y` when prompted if you really want to upgrade.
+. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.36`).
 +
 ifeval::["{rosa_deploy_hcp}" == "True"]
 [source,sh,role=execute]

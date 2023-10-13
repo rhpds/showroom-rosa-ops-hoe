@@ -191,7 +191,7 @@ cmdo
 oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
 ----
 +
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
@@ -203,7 +203,7 @@ Using project "default".
 Welcome! See 'oc help' to get started.
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----

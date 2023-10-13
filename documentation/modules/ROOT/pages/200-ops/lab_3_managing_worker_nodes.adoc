@@ -27,7 +27,7 @@ image::scale_machinepool.png[scale_machinepool]
 rosa list machinepools -c rosa-$GUID
 ----
 +
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -35,7 +35,7 @@ ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY Z
 worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -107,7 +107,7 @@ endif::[]
 
 . Now, let's scale up our MachinePool from two to three machines.
 To do so, run the following command:
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 +
 [source,sh,role=execute]
 ----
@@ -120,7 +120,7 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workshop
 I: Updated machine pool 'workshop' on cluster 'rosa-6n4s8'
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 +
 [source,sh,role=execute]
 ----
@@ -184,13 +184,13 @@ endif::[]
 +
 To do so, run the following command:
 +
-ifeval::[{rosa_deploy_hcp} == False]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workshop
 ----
 endif::[]
-ifeval::[{rosa_deploy_hcp} == True]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workers
