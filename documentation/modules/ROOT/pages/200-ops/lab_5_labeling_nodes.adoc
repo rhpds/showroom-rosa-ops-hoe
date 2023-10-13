@@ -6,22 +6,43 @@ Labels are a useful way to select which nodes that an application will run on. T
 
 While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the Machine pool itself.
 
+ifeval::["{rosa_deploy_hcp}" == "True"]
+[WARNING]
+====
+You are on a cluster using a Hosted Control Plane - there is currently a bug where nodes do not receive the label. Feel free to read through the lab - but the part where you deploy an application will unfortunately not work. So please proceed to the next lab.
+====
+endif::[]
+
 :numbered:
 == Set a label for the Machine Pool
 
 . Just like the last section, let's use the default machine pool to add our label.
 To do so, run the following command:
 +
+ifeval::[{"rosa_deploy_hcp}" == "False"]
 [source,sh,role=execute]
 ----
-rosa edit machinepool -c rosa-$GUID --labels tier=frontend workers
+rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-I: Updated machine pool 'worker' on cluster 'rosa-6n4s8'
+I: Updated machine pool 'worker' on cluster 'rosa-82prr'
 ----
+endif::[]
+ifeval::[{"rosa_deploy_hcp}" == "True"]
+[source,sh,role=execute]
+----
+rosa edit machinepool -c rosa-$GUID --labels tier=frontend --min-replicas=2 --max-replicas=4 workers 
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Updated machine pool 'workers' on hosted cluster 'rosa-zwrzl'
+----
+endif::[]
 
 . Now, let's verify the nodes are properly labeled.
 To do so, run the following command:
@@ -34,13 +55,20 @@ oc get nodes --selector='tier=frontend' -o name
 .Sample Output
 [source,text,options=nowrap]
 ----
-node/ip-10-0-133-248.us-east-2.compute.internal
-node/ip-10-0-146-31.us-east-2.compute.internal
-node/ip-10-0-187-229.us-east-2.compute.internal
-node/ip-10-0-252-142.us-east-2.compute.internal
+node/ip-10-0-138-29.us-east-2.compute.internal
+node/ip-10-0-177-82.us-east-2.compute.internal
+node/ip-10-0-198-240.us-east-2.compute.internal
+node/ip-10-0-249-69.us-east-2.compute.internal
 ----
 +
 You may see between two and four nodes - depending if you did the autoscaling lab recently (if you did the cluster has probably not scaled down yet). This demonstrates that our machine pool and associated nodes are properly annotated!
+ifeval::["{rosa_deploy_hcp}" == "True"]
++
+[TIP]
+====
+If you don't see any nodes yet when you run the previous command then wait a minute and try it again - until you see the nodes. It takes a while for the labels to be applied to the nodes.
+====
+endif::[]
 
 == Deploy an app to the labeled nodes
 

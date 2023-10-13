@@ -6,7 +6,7 @@ ROSA Cluster Autoscaler is a feature that helps automatically adjust the size of
 
 image::diagram-cluster-autoscaler.png[Diagram illustrating the cluster autoscaler process]
 
-To learn more about cluster autoscaling, visit the https://docs.openshift.com/rosa/rosa_cluster_admin/rosa_nodes/rosa-nodes-about-autoscaling-nodes.html[Red Hat documentation for cluster autoscaling].
+To learn more about cluster autoscaling, visit the https://docs.openshift.com/rosa/rosa_cluster_admin/rosa_nodes/rosa-nodes-about-autoscaling-nodes.html[Red Hat documentation for cluster autoscaling,window=_blank].
 
 :numbered:
 == Enable Autoscaling on the Default MachinePool
@@ -22,17 +22,42 @@ You will need to set up autoscaling for each MachinePool in the cluster separate
 rosa list machinepools --cluster rosa-$GUID
 ----
 +
+ifeval::[{"rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,text,options=nowrap]
 ----
-ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES
-Default  No           2         m5.xlarge                          us-east-2a                       N/A
+ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE  
+worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
 ----
 +
-The *ID* of the MachinePool that you want to add autoscaling to is `Default` - note that in your environment it may be called something different like `workers`.
+The *ID* of the MachinePool that you want to add autoscaling to is `worker`.
+endif::[]
+ifeval::[{"rosa_deploy_hcp}" == "True"]
+.Sample Output
+[source,text,options=nowrap]
+----
+ID       AUTOSCALING  DESIRED REPLICAS  CURRENT REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  TUNING CONFIGS  MESSAGE  
+workers  No           2                 2                 m5.xlarge                          us-east-2a         subnet-05499265505d0c9bd  4.12.36  Yes                                  
+----
++
+The *ID* of the MachinePool that you want to add autoscaling to is `workers`.
+endif::[]
 
 . To enable autoscaling on a machine pool, enter the following command:
 +
+ifeval::[{"rosa_deploy_hcp}" == "False"]
+[source,sh,role=execute]
+----
+rosa edit machinepool --cluster rosa-$GUID worker --enable-autoscaling --min-replicas=2 --max-replicas=4
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Updated machine pool 'worker' on cluster 'rosa-6n4s8'
+----
+endif::[]
+ifeval::[{"rosa_deploy_hcp}" == "False"]
 [source,sh,role=execute]
 ----
 rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling --min-replicas=2 --max-replicas=4
@@ -43,36 +68,39 @@ rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling --min-re
 ----
 I: Updated machine pool 'workers' on cluster 'rosa-6n4s8'
 ----
+endif::[]
 
-// . Next, let's check to see that our managed machine autoscalers have been created.
-// To do so, run the following command:
-// +
-// [source,sh,role=execute]
-// ----
-// oc -n openshift-machine-api get machineautoscaler
-// ----
-// +
-// .Sample Output
-// [source,text,options=nowrap]
-// ----
-// NAME                                 REF KIND     REF NAME                             MIN   MAX   AGE
-// rosa-6n4s8-7hbhw-worker-us-east-2a   MachineSet   rosa-6n4s8-7hbhw-worker-us-east-2a   2     4     4m30s
-// ----
+ifeval::[{"rosa_deploy_hcp}" == "False"]
+. Next, let's check to see that our managed machine autoscalers have been created.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc -n openshift-machine-api get machineautoscaler
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                                 REF KIND     REF NAME                             MIN   MAX   AGE
+rosa-82prr-dw6cz-worker-us-east-2a   MachineSet   rosa-82prr-dw6cz-worker-us-east-2a   2     4     58s
+----
 
-// . And finally, let's check to see that our cluster autoscaler has been created.
-// To do so, run the following command:
-// +
-// [source,sh,role=execute]
-// ----
-// oc get clusterautoscaler
-// ----
-// +
-// .Sample Output
-// [source,text,options=nowrap]
-// ----
-// NAME      AGE
-// default   4m55s
-// ----
+. And finally, let's check to see that our cluster autoscaler has been created.
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc get clusterautoscaler
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME      AGE
+default   4m55s
+----
+endif::[]
 
 == Test the Cluster Autoscaler
 
@@ -174,16 +202,27 @@ Check that the `MachinePool` is provioning new nodes.
 rosa list machinepools --cluster rosa-$GUID
 ----
 +
+ifeval::[{"rosa_deploy_hcp}" == "False"]
+.Sample Output
+[source,texinfo,option=nowrap]
+----
+ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE  
+worker  Yes          2-4       m5.xlarge                          us-east-2a                       No              300 GiB
+----
++
+You should see the text `WaitingForAvailableMachines: NodeProvisioning` to indicate that new nodes are being brought online.
+endif::[]
+ifeval::[{"rosa_deploy_hcp}" == "True"]
 .Sample Output
 [source,texinfo,option=nowrap]
 ----
 ID       AUTOSCALING  DESIRED REPLICAS  CURRENT REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  TUNING CONFIGS  MESSAGE                                        
-workers  Yes          2-4               2                 m5.xlarge                          us-east-2a         subnet-0b83b72575eb742dc  4.12.35  Yes                         WaitingForAvailableMachines: NodeProvisioning  
+workers  Yes          2-4               2                 m5.xlarge                          us-east-2a         subnet-05499265505d0c9bd  4.12.36  Yes                         WaitingForAvailableMachines: NodeProvisioning  
 ----
-+
-You should see the text `WaitingForAvailableMachines: NodeProvisioning` to indicate that new nodes are being brought online.
+endif::[]
 
-. Check the number of nodes in your cluster (repeat this command until you see 4 nodes - the maximum that you configured for autoscaling the Machinepool):
+ifeval::[{"rosa_deploy_hcp}" == "False"]
+. Check the number of nodes in your cluster (repeat this command until you see 9 nodes - 3 control plane nodes, 2 infra nodes and the maximum 4 that you configured for autoscaling the Machinepool):
 +
 [source,sh]
 ----
@@ -200,47 +239,61 @@ ip-10-0-0-249.us-east-2.compute.internal   Ready    worker   69s     v1.25.12+ba
 ip-10-0-0-53.us-east-2.compute.internal    Ready    worker   3h49m   v1.25.12+ba5cc25
 ----
 
-// . Let's check to see if our MachineSet automatically scaled (it may take a few minutes).
-// To do so, run the following command:
-// +
-// [source,sh,role=execute]
-// ----
-// oc -n openshift-machine-api get machinesets
-// ----
-// +
-// .Sample Output
-// [source,text,options=nowrap]
-// ----
-// NAME                                 DESIRED   CURRENT   READY   AVAILABLE   AGE
-// rosa-6n4s8-7hbhw-infra-us-east-2a    2         2         2       2           23h
-// rosa-6n4s8-7hbhw-worker-us-east-2a   4         4         2       2           23h
-// ----
-// +
-// This shows that the cluster autoscaler is working on scaling multiple MachineSets up to 4.
+. Let's check to see if our MachineSet automatically scaled (it may take a few minutes).
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc -n openshift-machine-api get machinesets
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                                 DESIRED   CURRENT   READY   AVAILABLE   AGE
+rosa-82prr-dw6cz-infra-us-east-2a    2         2         2       2           4h29m
+rosa-82prr-dw6cz-worker-us-east-2a   4         4         2       2           4h49m
+----
++
+This shows that the cluster autoscaler is working on scaling multiple MachineSets up to 4.
 
-// . Now let's watch the cluster autoscaler create and delete machines as necessary (it may take several minutes for machines to appear in the Running state).
-// To do so, run the following command:
-// +
-// [source,sh,role=execute]
-// ----
-// watch oc -n openshift-machine-api get machines \
-//   -l machine.openshift.io/cluster-api-machine-role=worker
-// ----
-// +
-// .Sample Output
-// [source,text,options=nowrap]
-// ----
-// NAME                                       PHASE         TYPE        REGION	 ZONE         AGE
-// rosa-6n4s8-7hbhw-worker-us-east-2a-vpfqr   Provisioned   m5.xlarge   us-east-2   us-east-2a   99s
-// rosa-6n4s8-7hbhw-worker-us-east-2a-wwmj7   Provisioned   m5.xlarge   us-east-2   us-east-2a   99s
-// rosa-6n4s8-7hbhw-worker-us-east-2a-xc8g2   Running	 m5.xlarge   us-east-2   us-east-2a   23h
-// rosa-6n4s8-7hbhw-worker-us-east-2a-zxm8j   Running	 m5.xlarge   us-east-2   us-east-2a   23h
-// ----
-// +
-// [TIP]
-// ====
-// Watch will refresh the output of a command every second. Hit CTRL and c on your keyboard to exit the watch command when you're ready to move on to the next part of the workshop.
-// ====
+. Now let's watch the cluster autoscaler create and delete machines as necessary (it may take several minutes for machines to appear in the Running state).
+To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc -n openshift-machine-api get machines \
+  -l machine.openshift.io/cluster-api-machine-role=worker
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                                       PHASE         TYPE        REGION      ZONE         AGE
+rosa-82prr-dw6cz-worker-us-east-2a-g8f5m   Running       m5.xlarge   us-east-2   us-east-2a   4h46m
+rosa-82prr-dw6cz-worker-us-east-2a-q6l9r   Running       m5.xlarge   us-east-2   us-east-2a   5m12s
+rosa-82prr-dw6cz-worker-us-east-2a-qh5q4   Provisioned   m5.xlarge   us-east-2   us-east-2a   5m12s
+rosa-82prr-dw6cz-worker-us-east-2a-stwdg   Running       m5.xlarge   us-east-2   us-east-2a   4h46m
+----
+endif::[]
+ifeval::[{"rosa_deploy_hcp}" == "True"]
+. Check the number of nodes in your cluster (repeat this command until you see 4 nodes - the maximum that you configured for autoscaling the Machinepool):
++
+[source,sh]
+----
+oc get nodes
+----
++
+.Sample Output
+[source,texinfo]
+----
+NAME                                       STATUS   ROLES    AGE     VERSION
+ip-10-0-0-183.us-east-2.compute.internal   Ready    worker   59s     v1.25.12+ba5cc25
+ip-10-0-0-245.us-east-2.compute.internal   Ready    worker   3h49m   v1.25.12+ba5cc25
+ip-10-0-0-249.us-east-2.compute.internal   Ready    worker   69s     v1.25.12+ba5cc25
+ip-10-0-0-53.us-east-2.compute.internal    Ready    worker   3h49m   v1.25.12+ba5cc25
+----
+endif::[]
 
 . Once the nodes are available re-run the command to display the pods for the job. You should see that more pods are now running. If you still see some pods in Pending state that is normal because even 4 worker nodes may not be enough to handle the node - but you limited the autoscaler to 4 worker nodes.
 +
@@ -265,7 +318,8 @@ maxscale-5p2n8   0/1     ContainerCreating   0          5m18s
 [...Output omitted...]
 ----
 
-Congratulations!
+*Congratulations!*
+
 You've successfully demonstrated cluster autoscaling.
 
 == Summary
