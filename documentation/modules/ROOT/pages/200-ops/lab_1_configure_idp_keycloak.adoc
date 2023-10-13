@@ -384,6 +384,7 @@ rosa create idp \
 --username-claims preferred_username
 ----
 +
+ifeval::[{rosa_deploy_hcp} == False]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -395,15 +396,22 @@ I: Identity Provider 'RosaKeycloak' has been created.
 I: Callback URI: https://oauth-openshift.apps.rosa-9zlx8.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
 I: To log in to the console, open https://console-openshift-console.apps.rosa-9zlx8.999y.p1.openshiftapps.com and click on 'RosaKeycloak'.
 ----
+endif::[]
+ifeval::[{rosa_deploy_hcp} == True]
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Configuring IDP for cluster 'rosa-zwrzl'
+I: Identity Provider 'RosaKeycloak' has been created.
+   It may take several minutes for this access to become active.
+   To add cluster administrators, see 'rosa grant user --help'.
+
+I: Callback URI: https://oauth.rosa-zwrzl.8ffn.p3.openshiftapps.com:443/oauth2callback/RosaKeycloak
+I: To log in to the console, open https://console-openshift-console.apps.rosa.rosa-zwrzl.8ffn.p3.openshiftapps.com and click on 'RosaKeycloak'.
+----
+endif::[]
 
 ifeval::["{rosa_deploy_hcp}" == "False"]
-
-+
-[WARNING]
-====
-The following three commands will *not* work on a cluster with Hosted Control Planes. Authentication is managed differently on HCP so the `OAuth` object is empty. Which also means that the `rosa` CLI is the only way to update authentication mechanisms. Just go to the section where you log in with the new provider.
-====
-
 . Validate that the cluster's `OAuth` resource has been updated (you may need to retry this command a few times until ROSA has updated the configuration):
 +
 [source,sh,role=copy]
@@ -514,11 +522,11 @@ oc get users
 ----
 NAME                      UID                                    FULL NAME        IDENTITIES
 backplane-cluster-admin   43481904-a0ae-4849-8c0b-0dcccd3769d5
-cluster-admin             b5fbb4e8-cdf1-4e1e-8989-e33d6e2ec8ff                    htpasswd:cluster-admin
+cluster-admin             b5fbb4e8-cdf1-4e1e-8989-e33d6e2ec8ff                    cluster-admin:cluster-admin
 rosa-admin                bc530c3d-26f1-4d6f-a1a8-cf74311d9156   ROSA Admin       RosaKeycloak:34b868e4-6f63-4818-86e2-d642f2ea967a
 ----
 +
-In the example above you can see the two admin users that we have created: the `cluster-admin` which is managed by htpasswd and the `34b868e4-6f63-4818-86e2-d642f2ea967a` user that is managed by Red Hat SSO. You will also see the `backplane-cluster-admin` that Red Hat SREs are using.
+In the example above you can see the two admin users that are available: the `cluster-admin` which has been pre-created for you and the user `rosa-admin` that is managed by Red Hat SSO. You will also see the `backplane-cluster-admin` that Red Hat SREs are using.
 
 . Since this is ROSA you can't just use `oc adm policy` to grant `cluster-admin` permissions to your `rosa-admin` user. You have to use the `rosa` CLI instead. If you don't then you may run into issues later on where some commands are prohibited by the ROSA web hook. So use the rosa CLI:
 +
@@ -530,28 +538,42 @@ rosa grant user cluster-admin \
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-tfbjn'
+I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 ----
 
 . Refresh the OpenShift web console - you should now be able to switch to the Administrator view.
+
 . Log into the API using the new user:
 +
-[source,sh,role=copy]
+[source,sh,role=copy,subs="attributes"]
 ----
-oc login -u rosa-admin -p RosaIsGre@t
+oc login -u rosa-admin -p RosaIsGre@t {ocp_api_url}
 ----
 +
+ifeval::[{rosa_deploy_hcp} == False]
 .Sample Output
 [source,text,options=nowrap]
 ----
 Login successful.
 
-You have access to 102 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 101 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----
+endif::[]
+ifeval::[{rosa_deploy_hcp} == True]
+.Sample Output
+[source,text,options=nowrap]
+----
+Login successful.
+
+You have access to 76 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "keycloak".
+----
+endif::[]
 
 . The final step is to delete the temporary ROSA admin user:
 +
@@ -561,9 +583,9 @@ rosa delete admin -c rosa-$GUID --yes
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Admin user 'cluster-admin' has been deleted from cluster 'rosa-s8j4w'
+I: Admin user 'cluster-admin' has been deleted from cluster 'rosa-{guid}'
 ----
 
 ifeval::["{rosa_deploy_hcp}" == "False"]

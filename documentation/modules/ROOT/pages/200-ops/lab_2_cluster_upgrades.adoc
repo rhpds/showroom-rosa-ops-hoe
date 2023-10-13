@@ -55,7 +55,9 @@ Recommended updates:
 +
 [NOTE]
 ====
-Depending on when you run this command the available version list may be longer than just the next release. Or it may have no available upgrades available. In that case you are already on the latest release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
+Depending on when you run this command the available version list may be longer than just the next release.
+
+Or there may not be any available upgrades at all. In that case you are already on the latest minor release for your major OpenShift release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
 ====
 
 . Set a variable for the cluster version you want to upgrade to. For the example above this would be:
@@ -83,8 +85,9 @@ echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 Date: 2023-04-18, Time: 19:51
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.10`) - answer `y` when prompted if you really want to upgrade.
+. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.36`) - answer `y` when prompted if you really want to upgrade.
 +
+ifeval::[{rosa_deploy_hcp} == True]
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \
@@ -106,23 +109,48 @@ I: Cluster 'rosa-6lzvq' operator roles have attached managed policies. An upgrad
 I: Account and operator roles for cluster 'rosa-6lzvq' are compatible with upgrade
 I: Upgrade successfully scheduled for cluster 'rosa-6lzvq'
 ----
+endif::[]
+ifeval::[{rosa_deploy_hcp} == False]
+[source,sh,role=execute]
+----
+rosa upgrade cluster \
+  -c rosa-$GUID \
+  --version $CLUSTER_VERSION \
+  --mode auto \
+  --schedule-date $UPGRADE_DATE \
+  --schedule-time $UPGRADE_TIME \
+  --yes
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: Ensuring account and operator role policies for cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are compatible with upgrade.
+I: Account roles/policies for cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are already up-to-date.
+I: Operator roles/policies associated with the cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are already up-to-date.
+I: Account and operator roles for cluster 'rosa-82prr' are compatible with upgrade
+I: Upgrade successfully scheduled for cluster 'rosa-82prr'
+----
+endif::[]
 
-Congratulations! You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.
+*Congratulations!*
+
+You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.
 
 == Additional Resources
 
 === Red Hat OpenShift Upgrade Graph Tool
 
-Occasionally, you may be not be able to go directly from your current version to a desired version. In these cases, you must first upgrade your cluster from your current version, to an intermediary version, and then to your desired version. To help you navigate these decisions, you can take advantage of the https://access.redhat.com/labs/ocpupgradegraph/update_path_rosa[Red Hat OpenShift Upgrade Graph Tool].
+Occasionally, you may be not be able to go directly from your current version to a desired version. In these cases, you must first upgrade your cluster from your current version, to an intermediary version, and then to your desired version. To help you navigate these decisions, you can take advantage of the https://access.redhat.com/labs/ocpupgradegraph/update_path_rosa[Red Hat OpenShift Upgrade Graph Tool,window=_blank].
 
-image:rosa_upgrade_graph.png[ROSA Upgrade Graph Tool Screenshot]
+image::rosa_upgrade_graph.png[ROSA Upgrade Graph Tool Screenshot]
 
 In this scenario to upgrade your cluster from version 4.11.0 to 4.12.15, you must first upgrade to 4.11.39, then you can upgrade to 4.12.15. The ROSA Upgrade Graph Tool helps you easily see which version you should upgrade to.
 
 === Links to Documentation
 
-* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html[Upgrading ROSA clusters with STS]
-* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html#rosa-upgrade-ocm_rosa-upgrading-sts[Scheduling individual upgrades through the OpenShift Cluster Manager console]
+* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html[Upgrading ROSA clusters with STS,window=_blank]
+* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html#rosa-upgrade-ocm_rosa-upgrading-sts[Scheduling individual upgrades through the OpenShift Cluster Manager console,window=_blank]
 
 == Summary
 
@@ -139,7 +167,7 @@ Here you learned:
 This section is for your information only. You do *not* have access to the OpenShift Cluster Manager. Feel free to read through these instructions to understand how to do it via the console - or skip to the next swection.
 ====
 
-. Log back into the OpenShift Cluster Manager by https://console.redhat.com/openshift[clicking here].
+. Log back into the OpenShift Cluster Manager by https://console.redhat.com/openshift[clicking here,window=_blank].
 . In the _Clusters_ section, locate your cluster and click on it.
 +
 image::ocm-cluster-list.png[OCM - Cluster List]
@@ -166,7 +194,3 @@ image::ocm-update-schedule-select.png[OCM - Update Schedule Select]
 image::ocm-update-confirm.png[OCM - Update Confirm]
 +
 image::ocm-update-close.png[OCM - Update Close]
-
-*Congratulations!*
-
-You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.

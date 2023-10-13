@@ -1,6 +1,5 @@
 *Introduction*
 
-* xref:100-environment/lab_0_debug_vars.adoc[Debug available AgnosticD Vars]
 * xref:100-environment/lab_1_deploy_rosa.adoc[Deploy a ROSA Cluster - Review]
 * xref:100-environment/lab_2_explore_rosa.adoc[Explore the ROSA environment]
 

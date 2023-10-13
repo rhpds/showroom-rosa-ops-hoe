@@ -16,10 +16,10 @@ rosa list clusters
 +
 ifeval::["{rosa_deploy_hcp}" == "True"]
 .Sample Output
-[source,texinfo,options=nowrap]
+[source,texinfo,options=nowrap,subs="attributes"]
 ----
-ID                                NAME         STATE  TOPOLOGY
-26mpkbt35pras0n6867p732qeb1l7tmm  rosa-wkrh33  ready  Hosted CP
+ID                                NAME        STATE  TOPOLOGY
+26rb36mq3avdbitdo3qv3t7sc7s4ui16  rosa-{guid}  ready  Hosted CP
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "False"]
@@ -27,13 +27,13 @@ ifeval::["{rosa_deploy_hcp}" == "False"]
 [source,texinfo,options=nowrap]
 ----
 ID                                NAME        STATE  TOPOLOGY
-26q1nc3k2g65jvfdti0suass82df2pk6  rosa-8922k  ready  Classic (STS)
+26rate9v2s9k7mjgtag8gcoh3kkdl6qj  rosa-{guid}  ready  Classic (STS)
 ----
 endif::[]
 +
 [TIP]
 ====
-The ID and Name of your cluster will be different than in the sample output above.
+The ID of your cluster will be different than in the sample output above.
 
 Also notice the Topology and state. State should be *ready* and Topology could be either *Classic (STS)* or *Hosted CP* which stands for Hosted Control Plane - a new, resource saving way of deploying a ROSA cluster.
 ====
@@ -45,20 +45,71 @@ Also notice the Topology and state. State should be *ready* and Topology could b
 rosa describe cluster --cluster rosa-$GUID
 ----
 +
+ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
-Name:                       rosa-wkrh33
-ID:                         26mpkbt35pras0n6867p732qeb1l7tmm
-External ID:                45f44186-94a7-4444-a6ce-2f82c1afe09a
-Control Plane:              ROSA Service Hosted
-OpenShift Version:          4.12.35
+Name:                       rosa-{guid}
+ID:                         26rate9v2s9k7mjgtag8gcoh3kkdl6qj
+External ID:                ef03828c-43bb-4e49-b8fc-20f0be436154
+Control Plane:              Customer Hosted
+OpenShift Version:          4.12.36
 Channel Group:              stable
-DNS:                        rosa-wkrh33.8jh1.p3.openshiftapps.com
-AWS Account:                551773360602
+DNS:                        rosa-{guid}.z6qe.p1.openshiftapps.com
+AWS Account:                698064993456
+API URL:                    {ocp_api_url}
+Console URL:                {ocp_console_url}
+Region:                     us-east-2
+Multi-AZ:                   false
+Nodes:
+ - Control plane:           3
+ - Infra:                   2
+ - Compute:                 2
+   - Root disk size:        300 GiB
+Network:
+ - Type:                    OVNKubernetes
+ - Service CIDR:            172.30.0.0/16
+ - Machine CIDR:            10.0.0.0/16
+ - Pod CIDR:                10.128.0.0/14
+ - Host Prefix:             /23
+Workload Monitoring:        Enabled
+Infra ID:                   rosa-{guid}-dw6cz
+Ec2 Metadata Http Tokens:   optional
+STS Role ARN:               arn:aws:iam::698064993456:role/ManagedOpenShift-Installer-Role
+Support Role ARN:           arn:aws:iam::698064993456:role/ManagedOpenShift-Support-Role
+Instance IAM Roles:
+ - Control plane:           arn:aws:iam::698064993456:role/ManagedOpenShift-ControlPlane-Role
+ - Worker:                  arn:aws:iam::698064993456:role/ManagedOpenShift-Worker-Role
+Operator IAM Roles:
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-cloud-network-config-controller-cloud-
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-machine-api-aws-cloud-credentials
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-cloud-credential-operator-cloud-creden
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-image-registry-installer-cloud-credent
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::698064993456:role/rosa-{guid}-r8e0-openshift-cluster-csi-drivers-ebs-cloud-credenti
+Managed Policies:           No
+State:                      ready 
+Private:                    No
+Created:                    Oct 13 2023 08:15:57 UTC
+Details Page:               https://console.redhat.com/openshift/details/s/2WhVmXVt37Zln8gcdLq3eadaYeS
+OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26rate9v2s9k7mjgtag8gcoh3kkdl6qj (Classic)
+----
+endif::[]
+ifeval::["{rosa_deploy_hcp}" == "True"]
+.Sample Output
+[source,texinfo,subs="attributes"]
+----
+Name:                       rosa-{guid}
+ID:                         26rb36mq3avdbitdo3qv3t7sc7s4ui16
+External ID:                1f4e7022-6556-4529-af7d-b3b470091990
+Control Plane:              ROSA Service Hosted
+OpenShift Version:          4.12.36
+Channel Group:              stable
+DNS:                        rosa-{guid}.8ffn.p3.openshiftapps.com
+AWS Account:                237325068408
 API URL:                    {rosa_api_url}
 Console URL:                {rosa_console_url}
-Region:                     eu-central-1
+Region:                     us-east-2
 Availability:
  - Control Plane:           MultiAZ
  - Data Plane:              SingleAZ
@@ -73,27 +124,28 @@ Network:
  - Host Prefix:             /23
 Workload Monitoring:        Enabled
 Ec2 Metadata Http Tokens:   optional
-STS Role ARN:               arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Installer-Role
-Support Role ARN:           arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Support-Role
+STS Role ARN:               arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Installer-Role
+Support Role ARN:           arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Support-Role
 Instance IAM Roles:
- - Worker:                  arn:aws:iam::551773360602:role/ManagedOpenShift-HCP-ROSA-Worker-Role
+ - Worker:                  arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Worker-Role
 Operator IAM Roles:
- - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-capa-controller-manager
- - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-control-plane-operator
- - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-kms-provider
- - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-image-registry-installer-cloud-credentials
- - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-ingress-operator-cloud-credentials
- - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-cluster-csi-drivers-ebs-cloud-credentials
- - arn:aws:iam::551773360602:role/rosa-wkrh33-openshift-cloud-network-config-controller-cloud-cred
- - arn:aws:iam::551773360602:role/rosa-wkrh33-kube-system-kube-controller-manager
+ - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-kube-controller-manager
+ - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-capa-controller-manager
+ - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-control-plane-operator
+ - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-kms-provider
+ - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-image-registry-installer-cloud-credentials
+ - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-cluster-csi-drivers-ebs-cloud-credentials
+ - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-cloud-network-config-controller-cloud-crede
 Managed Policies:           Yes
 State:                      ready 
 Private:                    No
-Created:                    Oct  6 2023 10:57:55 UTC
-Details Page:               https://console.redhat.com/openshift/details/s/2WO3c1TcyGrdKPznnS51HYdL6dn
-OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26mpk4vkj1n1phqpb6ai7hf5c5oavold (Managed)
+Created:                    Oct 13 2023 08:28:11 UTC
+Details Page:               https://console.redhat.com/openshift/details/s/2WhXGgLtboCE2fadfRDSoGtt44H
+OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26rb33og2cncnmb2t98q90jf9fr359nb (Managed)
 Audit Log Forwarding:       disabled
 ----
+endif::[]
 +
 Note that not all values in the sample output will match exactly your environment.
 
@@ -139,6 +191,7 @@ cmdo
 oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
 ----
 +
+ifeval::[{rosa_deploy_hcp} == True]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
@@ -149,6 +202,19 @@ You have access to 75 projects, the list has been suppressed. You can list all p
 Using project "default".
 Welcome! See 'oc help' to get started.
 ----
+endif::[]
+ifeval::[{rosa_deploy_hcp} == False]
+.Sample Output
+[source,texinfo,options=nowrap]
+----
+Login successful.
+
+You have access to 100 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "default".
+Welcome! See 'oc help' to get started.
+----
+endif::[]
 
 . To check that you are logged in as the admin user you can run `oc whoami`:
 +
