@@ -549,7 +549,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 +
 [source,sh,role=copy,subs="attributes"]
 ----
-oc login -u rosa-admin -p RosaIsGre@t {ocp_api_url}
+oc login -u rosa-admin -p RosaIsGre@t {rosa_api_url}
 ----
 +
 ifeval::[{rosa_deploy_hcp} == False]
