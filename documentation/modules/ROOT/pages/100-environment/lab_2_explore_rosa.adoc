@@ -57,8 +57,8 @@ OpenShift Version:          4.12.36
 Channel Group:              stable
 DNS:                        rosa-{guid}.z6qe.p1.openshiftapps.com
 AWS Account:                698064993456
-API URL:                    {ocp_api_url}
-Console URL:                {ocp_console_url}
+API URL:                    {rosa_api_url}
+Console URL:                {rosa_console_url}
 Region:                     us-east-2
 Multi-AZ:                   false
 Nodes:
