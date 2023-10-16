@@ -1,7 +1,4 @@
-name: rosa-ops-hoe
-title: ROSA Ops Hands-on Experience
+name: modules
 version: master
 nav:
 - modules/ROOT/nav.adoc
-
-# start_page: ROOT:index.adoc
