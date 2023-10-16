@@ -157,7 +157,7 @@ rhsso-operator-74d7955b8c-77jnb        1/1     Running   0          7m25s
 +
 [source,sh,role=copy]
 ----
-oc get keycloak keycloak -o json | jq .status.ready
+oc get keycloak keycloak -n $SSO_NAMESPACE -o json | jq .status.ready
 ----
 +
 .Sample Output
@@ -196,7 +196,7 @@ ifeval::["{rosa_deploy_hcp}" == "True"]
 +
 [source,sh,role=copy]
 ----
-export CALLBACK_URL_BASE=https://oauth.$CLUSTER_DOMAIN/oauth2callback
+export CALLBACK_URL_BASE=https://oauth.$CLUSTER_DOMAIN:443/oauth2callback
 ----
 endif::[]
 
