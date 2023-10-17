@@ -24,7 +24,7 @@ ID                                NAME        STATE  TOPOLOGY
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "False"]
 .Sample Output
-[source,texinfo,options=nowrap]
+[source,texinfo,options=nowrap,subs=attributes]
 ----
 ID                                NAME        STATE  TOPOLOGY
 26rate9v2s9k7mjgtag8gcoh3kkdl6qj  rosa-{guid}  ready  Classic (STS)
