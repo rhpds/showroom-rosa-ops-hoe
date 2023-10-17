@@ -40,7 +40,7 @@ Also notice the Topology and state. State should be *ready* and Topology could b
 
 . Now let's examine this cluster a bit more by describing the cluster (the `$GUID` environment variable is already set for you so you can immediately describe your individual cluster):
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 rosa describe cluster --cluster rosa-$GUID
 ----
@@ -151,7 +151,7 @@ Note that not all values in the sample output will match exactly your environmen
 
 . Get the API URL for your cluster:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 rosa describe cluster --cluster rosa-$GUID --output json | jq -r .api.url
 ----
@@ -164,7 +164,7 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .api.url
 
 . Get the OpenShift Console URL for your cluster:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 ----
@@ -186,7 +186,7 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 . Now that you have the information about the Admin credentials and the API URL for your cluster you can log into your cluster:
 cmdo
 +
-[source,sh,subs="attributes"]
+[source,sh,role=execute,subs="attributes"]
 ----
 oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
 ----
