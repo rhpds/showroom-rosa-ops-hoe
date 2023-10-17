@@ -21,6 +21,7 @@ oc -n microsweeper-ex set resources deployment/microsweeper-appservice \
 ----
 +
 Requests state the minimum CPU and memory requirements for a container. This will ensure that the pod is placed on a node that can meet those requirements. Limits set the maximum amount of CPU and Memory that can be consumed by a container and ensure that a whole container does not consume all of the resources on a node. Setting limits and requests for deployments is best practice for resource management and ensuring the stability and reliability of your applications.
+ifeval::["{rosa_deploy_hcp}" == "False"]
 +
 [NOTE]
 ====
@@ -39,6 +40,7 @@ NAME                                       CPU(cores)   MEMORY(bytes)
 microsweeper-appservice-65799476b6-vh9q7   0m           191Mi
 ----
 +
+endif::[]
 . Now that we've updated the resource, we can see that a new pod was automatically rolled out with these new limits and requests. To do so, run the following command:
 +
 [source,sh,role=execute]
@@ -244,6 +246,11 @@ oc -n microsweeper-ex get horizontalpodautoscaler/microsweeper-appservice-cpu
 NAME              REFERENCE                                        TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 microsweeper-appservice-cpu   Deployment/microsweeper-appservice   0%/50%    2         4         3          43s
 ----
++
+[NOTE]
+====
+You may see `<unknown>` for the target - this is normal until the HPA has been in the system for a while.
+====
 
 . Next, let's generate some load against the `microsweeper-appservice` application. To do so, run the following command:
 +
@@ -287,7 +294,7 @@ microsweeper-appservice-cpu   Deployment/microsweeper-appservice   0%/50%     2 
 microsweeper-appservice-cpu   Deployment/microsweeper-appservice   0%/50%     2         4         2          20m
 ----
 
-== Summary and Next Steps
+== Summary
 
 Here you learned:
 

@@ -120,10 +120,11 @@ oc -n istio-system get smcp
 [source,text,options=nowrap]
 ----
 NAME    READY   STATUS            PROFILES      VERSION   AGE
-basic   10/10   ComponentsReady   ["default"]   2.2.6     3m18s
+basic   10/10   ComponentsReady   ["default"]   2.2.10    3m18s
 ----
 +
 The installation has finished successfully when the STATUS column says `ComponentsReady`.
 
-Congratulations!
+*Congratulations!*
+
 You've successfully deployed the OpenShift Service Mesh control plane to your cluster.

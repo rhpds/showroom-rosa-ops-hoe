@@ -87,14 +87,12 @@ https://kiali-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/console
 
 . Next, navigate to that URL in your web browser and click the `Login With OpenShift` button.
 +
-[TIP]
+[subs="attributes"]
 ====
-If you forgot the password for your `cluster-admin` user use the following command to remind yourself:
+Remember your credentials:
 
-[source,sh,role=execute]
-----
-history | grep login
-----
+* *Admin user ID:* rosa-admin
+* *Admin user Password:* {rosa_user_password}
 ====
 +
 image::kiali-login-with-cluster-credentials.png[Kiali Login]

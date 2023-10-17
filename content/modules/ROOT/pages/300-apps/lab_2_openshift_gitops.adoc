@@ -150,7 +150,6 @@ Remember your credentials:
 * *Admin user ID:* rosa-admin
 * *Admin user Password:* {rosa_user_password}
 ====
-
 +
 [source,sh,role=execute]
 ----
