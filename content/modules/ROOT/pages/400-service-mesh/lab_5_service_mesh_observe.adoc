@@ -132,5 +132,8 @@ image::example-details-workload.png[Kiali Console]
 
 . In your terminal window stop the traffic generation by pressing `Ctrl-C`.
 
-Congratulations!
+*Congratulations!*
+
 You should now see traffic flowing between the various services in your bookinfo application.
+
+This concludes the Service Mesh section of this experience.
