@@ -21,26 +21,24 @@ oc -n microsweeper-ex set resources deployment/microsweeper-appservice \
 ----
 +
 Requests state the minimum CPU and memory requirements for a container. This will ensure that the pod is placed on a node that can meet those requirements. Limits set the maximum amount of CPU and Memory that can be consumed by a container and ensure that a whole container does not consume all of the resources on a node. Setting limits and requests for deployments is best practice for resource management and ensuring the stability and reliability of your applications.
-ifeval::["{rosa_deploy_hcp}" == "False"]
 +
 [NOTE]
 ====
-It is important to know the resource needs of the application before setting limits and requests to avoid resource starvation or over allocating resources. If you are unsure of the resource consumption of your application, you can use 'oc adm top pods' to view the current memory and CPU being currently consumed by each pod. Running the following command multiple times while the application is running can help set a general picture:
+It is important to know the resource needs of the application before setting limits and requests to avoid resource starvation or over allocating resources. If you are unsure of the resource consumption of your application, you can use 'oc adm top pods' to view the current memory and CPU being currently consumed by each pod. Running the following command multiple times while the application is running can help set a general picture. If you get an error that no metrics are available yet wait a few seconds and try again.
 ====
 +
 [source,sh,role=execute]
 ----
-oc adm top pods -n microsweeper-ex
+oc adm top pod -n microsweeper-ex -l app.kubernetes.io/name=microsweeper-appservice
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-NAME                                       CPU(cores)   MEMORY(bytes)
-microsweeper-appservice-65799476b6-vh9q7   0m           191Mi
+NAME                                       CPU(cores)   MEMORY(bytes)   
+microsweeper-appservice-5fb77584fb-sfx2m   55m          67Mi            
 ----
 +
-endif::[]
 . Now that we've updated the resource, we can see that a new pod was automatically rolled out with these new limits and requests. To do so, run the following command:
 +
 [source,sh,role=execute]
