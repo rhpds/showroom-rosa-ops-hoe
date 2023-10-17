@@ -20,7 +20,7 @@ Route destinations can be versions of the same service or entirely different ser
 In this example 80% to v1, 20% to v2.
 To create a virtual service with this configuration, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -55,7 +55,7 @@ virtualservice.networking.istio.io/reviews created
 Accidentally close out of the tab?
 No problem, run the following command to get the product page URL:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 echo "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage"
 ----
@@ -74,7 +74,7 @@ It helps you understand the structure and health of your service mesh by monitor
 . First, grab the Kiali web console URL.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 echo "https://$(oc get routes -n istio-system kiali -o jsonpath='{.spec.host}')/console"
 ----
@@ -91,7 +91,7 @@ https://kiali-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/console
 ====
 If you forgot the password for your `cluster-admin` user use the following command to remind yourself:
 
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 history | grep login
 ----
@@ -106,7 +106,7 @@ image::verify-overiview-bookinfoapp.png[Kiali Console]
 . Now, let's generate some traffic against the product page service.
 To do so, run the following command in your terminal:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 while true; do curl -sSL "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage" | head -n 5; sleep 1; done
 ----

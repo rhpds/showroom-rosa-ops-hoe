@@ -13,7 +13,7 @@ In this section of the workshop, we'll configure ROSA to forward logs to Amazon 
 
 . Validate that a policy `RosaCloudWatch-$GUID` already exists:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 POLICY_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='RosaCloudWatch-$GUID'].{ARN:Arn}" --output text
 )
@@ -31,7 +31,7 @@ arn:aws:iam::551773360602:policy/RosaCloudWatch-wkrh6
 +
 Examine the role that has been created:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 aws iam get-role --role-name RosaCloudWatch-$GUID --output json
 ----
@@ -80,7 +80,7 @@ Note that the role allows the service account `logcollector` in the `openshift-l
 
 . Get the *ARN* of the Role - we will use that later to configure the log collector:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 ROLE_ARN=$(aws iam get-role --role-name RosaCloudWatch-$GUID --output json | jq -r .Role.Arn)
 
@@ -102,7 +102,7 @@ The CLO (Cluster Logging Operator) provides a set of APIs to control collection 
 . Now, we need to deploy the OpenShift Cluster Logging Operator.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -131,7 +131,7 @@ subscription.operators.coreos.com/cluster-logging created
 . Now, we will wait for the OpenShift Cluster Logging Operator to install.
 To do so, we can run the following command to watch the status of the installation:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n openshift-logging rollout status deployment cluster-logging-operator
 ----
@@ -150,7 +150,7 @@ If you get an error `Error from server (NotFound): deployments.apps "cluster-log
 . Next, we need to create a secret containing the ARN of the IAM role that was previously created.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -173,7 +173,7 @@ secret/cloudwatch-credentials created
 . Next, let's configure the OpenShift Cluster Logging Operator by creating a Cluster Log Forwarding custom resource that will forward logs to Amazon CloudWatch.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -211,7 +211,7 @@ clusterlogforwarder.logging.openshift.io/instance created
 
 . Next, let's create a Cluster Logging custom resource which will enable the OpenShift Cluster Logging Operator to start collecting logs.
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -238,7 +238,7 @@ clusterlogging.logging.openshift.io/instance created
 
 . After a few minutes, you should begin to see log groups inside of Amazon CloudWatch.
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 aws logs describe-log-groups \
   --log-group-name-prefix rosa-$GUID
@@ -267,7 +267,7 @@ aws logs describe-log-groups \
 }
 ----
 
-Congratulations!
+*Congratulations!*
 
 You've successfully forwarded your cluster's logs to the Amazon CloudWatch service.
 

@@ -277,7 +277,7 @@ rosa-82prr-dw6cz-worker-us-east-2a-stwdg   Running       m5.xlarge   us-east-2  
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "True"]
-. Check the number of nodes in your cluster (repeat this command until you see 4 nodes - the maximum that you configured for autoscaling the Machinepool):
+. Check the number of nodes in your cluster. Repeat this command until you see 4 nodes - the maximum that you configured for autoscaling the Machinepool. It will take a few minutes (like 5) for the new nodes to be available.
 +
 [source,sh,role=execute]
 ----

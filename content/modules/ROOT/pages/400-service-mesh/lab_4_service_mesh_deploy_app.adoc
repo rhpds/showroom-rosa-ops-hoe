@@ -12,7 +12,7 @@ Now, let's proceed with deploying a workload to test our service mesh.
 . First, let's create a project (namespace) for us to deploy our workload into.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc new-project bookinfo
 ----
@@ -33,7 +33,7 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
 
 . Next, let's label that project (namespace) to enable the service mesh injection for all applications in the project.
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc label namespace bookinfo istio-injection=enabled
 ----
@@ -47,7 +47,7 @@ namespace/bookinfo labeled
 . Even though we've enabled service mesh injection in the project, we also need to add our project (namespace) to the `ServiceMeshMemberRoll`, which limits the scope of the service mesh control plane to only projects in the member roll.
 To add the project to the `ServiceMeshMemberRoll`, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
 ---
@@ -71,7 +71,7 @@ servicemeshmemberroll.maistra.io/default created
 . Next, let's verify the `ServiceMeshMemberRoll` was created successfully.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n istio-system get smmr -o wide
 ----
@@ -90,7 +90,7 @@ The service mesh member roll was successfully configured when the STATUS column 
 . Now that we've configured the service mesh for our project, let's deploy our bookinfo workload into our project.
 To do so, run the following command to create the necessary resources:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n bookinfo apply -f \
   https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/bookinfo.yaml
@@ -123,7 +123,7 @@ Check it out on GitHub https://github.com/rh-mobb/rosa-workshop-content/blob/mai
 . Now, let's create the service mesh ingress gateway.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n bookinfo apply -f \
   https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/bookinfo-gateway.yaml
@@ -140,7 +140,7 @@ virtualservice.networking.istio.io/bookinfo created
 Destination rules define policies that apply to traffic intended for a service after routing has occurred.
 To create the rules, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n bookinfo apply -f \
   https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/destination-rule-all.yaml
@@ -159,7 +159,7 @@ destinationrule.networking.istio.io/details created
 
 . First, let's verify that all pods are running and ready by running the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 oc -n bookinfo get pods
 ----
@@ -179,7 +179,7 @@ reviews-v3-7d84688cc9-kktpt       2/2     Running   0          97s
 . Next, let's get the URL for the product page.
 To do so, run the following command:
 +
-[source,sh,role=copy]
+[source,sh,role=execute]
 ----
 echo "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage"
 ----

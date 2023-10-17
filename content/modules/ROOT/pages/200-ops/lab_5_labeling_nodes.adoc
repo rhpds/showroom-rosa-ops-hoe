@@ -19,7 +19,7 @@ endif::[]
 . Just like the last section, let's use the default machine pool to add our label.
 To do so, run the following command:
 +
-ifeval::[{"rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "False"]
 [source,sh,role=execute]
 ----
 rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker
@@ -31,7 +31,7 @@ rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker
 I: Updated machine pool 'worker' on cluster 'rosa-82prr'
 ----
 endif::[]
-ifeval::[{"rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 [source,sh,role=execute]
 ----
 rosa edit machinepool -c rosa-$GUID --labels tier=frontend --min-replicas=2 --max-replicas=4 workers 
