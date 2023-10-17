@@ -327,7 +327,7 @@ keycloakuser.keycloak.org/rosa-admin created
 +
 [source,sh,role=execute,subs=attributes]
 ----
-cat <<EOF | oc apply -f -
+echo "
 ---
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
@@ -350,7 +350,7 @@ spec:
     - temporary: false
       type: password
       value: '{rosa_user_password}'
-EOF
+" | oc apply -f -
 ----
 +
 .Sample Output
