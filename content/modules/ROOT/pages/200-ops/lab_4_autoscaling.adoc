@@ -57,7 +57,7 @@ rosa edit machinepool --cluster rosa-$GUID worker --enable-autoscaling --min-rep
 I: Updated machine pool 'worker' on cluster 'rosa-6n4s8'
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "True"]
 [source,sh,role=execute]
 ----
 rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling --min-replicas=2 --max-replicas=4
