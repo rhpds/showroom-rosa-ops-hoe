@@ -204,7 +204,7 @@ route.route.openshift.io/nodeselector-app created
 +
 [source,sh,role=execute]
 ----
-oc get routes/nodeselector-app -o json | jq -r '.spec.host'
+echo "https://$(oc get routes/nodeselector-app -o json | jq -r '.spec.host')"
 ----
 +
 .Sample Output
@@ -218,7 +218,8 @@ Then visit the URL presented in a new tab in your web browser.
 Note that the application is exposed over the default ingress using a predetermined URL and trusted TLS certificate.
 This is done using the OpenShift `Route` resource which is an extension to the Kubernetes `Ingress` resource.
 
-Congratulations!
+*Congratulations!*
+
 You've successfully demonstrated the ability to label nodes and target those nodes using `nodeSelector`.
 
 == Summary
