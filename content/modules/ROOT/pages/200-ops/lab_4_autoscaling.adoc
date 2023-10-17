@@ -197,7 +197,7 @@ This should trigger the cluster autoscaler to create more machines using the Mac
 . It will take a few minutes (like 5) for the new nodes to be available.
 Check that the `MachinePool` is provioning new nodes.
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 rosa list machinepools --cluster rosa-$GUID
 ----
@@ -224,7 +224,7 @@ endif::[]
 ifeval::["{rosa_deploy_hcp}" == "False"]
 . Check the number of nodes in your cluster (repeat this command until you see 9 nodes - 3 control plane nodes, 2 infra nodes and the maximum 4 that you configured for autoscaling the Machinepool):
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 oc get nodes
 ----
@@ -279,7 +279,7 @@ endif::[]
 ifeval::["{rosa_deploy_hcp}" == "True"]
 . Check the number of nodes in your cluster (repeat this command until you see 4 nodes - the maximum that you configured for autoscaling the Machinepool):
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 oc get nodes
 ----
