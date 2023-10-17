@@ -236,6 +236,7 @@ I: Successfully deleted machine pool 'workshop' from cluster 'rosa-6n4s8'
 ----
 rosa list machinepools -c rosa-$GUID
 ----
++
 .Sample Output
 [source,text,options=nowrap]
 ----
