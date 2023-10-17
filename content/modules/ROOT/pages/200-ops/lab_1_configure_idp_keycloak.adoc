@@ -543,7 +543,7 @@ rosa grant user cluster-admin \
 I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 ----
 
-. Refresh the OpenShift web console - you should now be able to switch to the Administrator view.
+. Refresh the OpenShift web console - you should now be able to switch to the Administrator view. If you don't see the Administrator view log out and back into the web console.
 
 . Log into the API using the new user:
 +
