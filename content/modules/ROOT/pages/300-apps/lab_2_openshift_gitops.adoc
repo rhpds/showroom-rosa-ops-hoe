@@ -186,7 +186,7 @@ deployment "bgd" successfully rolled out
 +
 [source,sh,role=execute]
 ----
-oc get route bgd -n bgd -o jsonpath='{.spec.host}{"\n"}'
+echo "http://$(oc -n bgd get route bgd -o jsonpath='{.spec.host}')"
 ----
 +
 .Sample Output
@@ -226,4 +226,6 @@ image::sync_bgd.png[]
 +
 image::bgd_green.png[]
 
-Congratulations! You have successfully deployed OpenShift Gitops 
+*Congratulations!*
+
+You have successfully deployed Red Hat OpenShift Gitops and used it to deploy an application to your ROSA cluster.

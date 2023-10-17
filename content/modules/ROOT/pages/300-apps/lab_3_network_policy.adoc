@@ -226,6 +226,7 @@ For information on setting default network policies for new projects you can rea
 == Summary
 
 Here's what you learned:
+
 * Network Policies are a powerful way to apply zero-trust networking patterns.
 * Access to pods can be restricted to other Pods, Namespaces, or other labels.
 * Access can be completely denied, allowed, or set to particular ports or services.
