@@ -231,6 +231,7 @@ I: Successfully deleted machine pool 'workshop' from cluster 'rosa-6n4s8'
 ----
 +
 . You can validate that the MachinePool has been deleted by using the `rosa` cli:
++
 [source,sh,role=execute]
 ----
 rosa list machinepools -c rosa-$GUID
