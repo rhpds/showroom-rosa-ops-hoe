@@ -23,7 +23,7 @@ OpenShift and OpenShift GitOps:
 
 . From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for "openshift gitops" and click *Install*.
 +
-For the update channel select *gitops-1.8*. Leave all other defaults and click *Install*.
+For the update channel select *gitops-1.10*. Leave all other defaults and click *Install*.
 +
 image::gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
 
@@ -56,7 +56,7 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
 ----
 cat <<EOF | oc apply -f -
 ---
-apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
@@ -141,17 +141,26 @@ EOF
 application.argoproj.io/bgd-app created
 ----
 
-. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials).
+. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials.
++
+[subs="attributes"]
+====
+Remember your credentials:
+
+* *Admin user ID:* rosa-admin
+* *Admin user Password:* {rosa_user_password}
+====
+
 +
 [source,sh,role=execute]
 ----
-oc get route argocd-server -n bgd -o jsonpath='{.spec.host}{"\n"}'
+echo "https://$(oc -n bgd get route argocd-server -o jsonpath='{.spec.host}')"
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+https://argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
 +
 image::argo_app1.png[]

@@ -109,7 +109,7 @@ serviceaccount/microsweeper created
 
 . Examine the role that has been created for you:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 aws iam get-role --role-name irsa-$GUID --output json
 ----
@@ -152,7 +152,7 @@ Note how the service account `microsweeper` in the namespace `microsweeper-ex` h
 
 . Get the Role ARN:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 ROLE_ARN=$(aws iam get-role --role-name irsa-$GUID --output json | jq -r .Role.Arn)
 
@@ -206,7 +206,7 @@ quarkus --version
 .Sample Output
 [source,text,options=nowrap]
 ----
-3.4.2
+3.4.3
 ----
 
 . Now, let's clone the application from GitHub.
