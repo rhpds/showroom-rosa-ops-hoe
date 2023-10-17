@@ -289,7 +289,7 @@ keycloakclient.keycloak.org/rosa created
 
 . Create a user which will become the ROSA admin:
 +
-[source,sh,role=execute]
+[source,sh,role=execute,subs=attributes]
 ----
 cat <<EOF | oc apply -f -
 ---
@@ -313,7 +313,7 @@ spec:
     credentials:
     - temporary: false
       type: password
-      value: 'RosaIsGre@t'
+      value: '{rosa_user_password}'
 EOF
 ----
 +
@@ -325,7 +325,7 @@ keycloakuser.keycloak.org/rosa-admin created
 
 . Create a user which will become the just a regular developer user:
 +
-[source,sh,role=execute]
+[source,sh,role=execute,subs=attributes]
 ----
 cat <<EOF | oc apply -f -
 ---
@@ -349,7 +349,7 @@ spec:
     credentials:
     - temporary: false
       type: password
-      value: 'RosaIsGre@t'
+      value: '{rosa_user_password}'
 EOF
 ----
 +
@@ -506,7 +506,7 @@ endif::[]
 If you do not see the *RosaKeycloak* option wait a few seconds and refresh the screen.
 ====
 
-. Click on *RosaKeycloak* and use the userid `rosa-admin` with password `RosaIsGre@t`.
+. Click on *RosaKeycloak* and use the userid `rosa-admin` with password `{rosa_user_password}`.
 
 . Let's give Cluster Admin permissions to your RosaKeycloak admin.
 +
@@ -549,7 +549,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 +
 [source,sh,role=execute,subs="attributes"]
 ----
-oc login -u rosa-admin -p RosaIsGre@t {rosa_api_url}
+oc login -u rosa-admin -p {rosa_user_password} {rosa_api_url}
 ----
 +
 ifeval::["{rosa_deploy_hcp}" == "False"]
