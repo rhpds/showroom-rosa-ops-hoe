@@ -1,7 +1,7 @@
 ---
 site:
   title: ROSA Ops Hands-on Experience
-  start_page: modules::index.adoc
+  start_page: rosa-ops-hoe::index.adoc
 
 content:
   sources:
