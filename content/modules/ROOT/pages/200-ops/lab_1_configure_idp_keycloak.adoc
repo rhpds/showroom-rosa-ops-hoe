@@ -552,7 +552,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 . Refresh the OpenShift web console - you should now be able to switch to the Administrator view. If you don't see the Administrator view log out and back into the web console.
 +
 It should look something like this:
-image::cluster_admin_view.png[Cluster Admin View, width=100%]
+image::cluster_admin_view.png[Cluster Admin View]
 
 . Log into the API using the new user:
 +
