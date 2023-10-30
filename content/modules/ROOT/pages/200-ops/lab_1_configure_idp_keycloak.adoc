@@ -553,7 +553,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 +
 It should look something like this:
 +
-image::../../assets/images/cluster_admin_view.png[Cluster Admin View]
+image::cluster_admin_view.png[Cluster Admin View]
 
 . Log into the API using the new user:
 +
