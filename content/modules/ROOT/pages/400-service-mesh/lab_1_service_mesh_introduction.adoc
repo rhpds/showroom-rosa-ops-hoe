@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 As your applications evolve into collections of decentralized microservices, monitoring and managing the network communications and security among those multiple services becomes more challenging.

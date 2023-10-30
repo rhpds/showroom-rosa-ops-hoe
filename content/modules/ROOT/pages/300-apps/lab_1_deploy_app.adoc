@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 It's time for us to put our cluster to work and deploy a workload! We're going to build an example Java application, https://github.com/redhat-mw-demos/microsweeper-quarkus/tree/ROSA[microsweeper], using https://quarkus.io/[Quarkus] (a Kubernetes-native Java stack) and https://aws.amazon.com/dynamodb[Amazon DynamoDB]. We'll then deploy the application to our ROSA cluster and connect to the database over AWS's secure network.

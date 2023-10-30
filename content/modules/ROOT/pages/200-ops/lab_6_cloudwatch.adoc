@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 Red Hat OpenShift Service on AWS (ROSA) clusters store log data inside the cluster by default. Understanding metrics and logs is critical in successfully running your cluster. Included with ROSA is the OpenShift Cluster Logging Operator, which is intended to simplify log management and analysis within a ROSA cluster, offering centralized log collection, powerful search capabilities, visualization tools, and integration with other monitoring systems like https://aws.amazon.com/cloudwatch/[Amazon CloudWatch].

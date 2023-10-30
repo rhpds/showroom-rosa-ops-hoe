@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 ROSA is designed with high availability and resiliency in mind. Within ROSA there are multiple tools at your disposal to leverage this highly available and resilient architecture to ensure maximum uptime and availability for your applications. Disruptions can occur for a variety of different reasons, but with proper configuration of the application, you can eliminate application disruption.

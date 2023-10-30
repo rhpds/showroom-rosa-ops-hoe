@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 Based on the open source Istio project, Red Hat OpenShift Service Mesh adds a transparent layer on existing distributed applications without requiring any changes to the service code.

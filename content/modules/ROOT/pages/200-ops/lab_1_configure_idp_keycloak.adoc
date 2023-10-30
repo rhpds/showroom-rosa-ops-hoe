@@ -1,6 +1,3 @@
-:lab_name: Configure ROSA to use Red Hat SSO (Keycloak) for authentication
-include::../_attributes.adoc[]
-
 == Introduction
 
 As part of your pre-defined environment a temporary cluster-admin user has been created using the `rosa create admin` command.

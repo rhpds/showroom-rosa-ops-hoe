@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 Now that your Red Hat Service Mesh has been deployed on your ROSA cluster you can actually use it to connect the microservices of an example application. You will use the standard Service Mesh example application called `Bookinfo`.

@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 In this section you will configure and observe traffic between the micro services that make up the example application.

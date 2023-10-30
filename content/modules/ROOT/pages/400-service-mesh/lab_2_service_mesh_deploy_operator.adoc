@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 In this section you will install the operators that are necessary to deploy Red Hat Service Mesh to your cluster.

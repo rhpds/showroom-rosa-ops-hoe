@@ -1,5 +1,3 @@
-include::../_attributes.adoc[]
-
 == Introduction
 
 When deploying your ROSA cluster, you can configure many aspects of your worker nodes, but what happens when you need to change your worker nodes after they've already been created? These activities include scaling the number of nodes, changing the instance type, adding labels or taints, just to name a few.
