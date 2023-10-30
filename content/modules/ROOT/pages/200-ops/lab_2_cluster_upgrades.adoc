@@ -87,7 +87,7 @@ Date: 2023-04-18, Time: 19:51
 
 . Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.36`).
 +
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \
@@ -110,7 +110,7 @@ I: Account and operator roles for cluster 'rosa-6lzvq' are compatible with upgra
 I: Upgrade successfully scheduled for cluster 'rosa-6lzvq'
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \

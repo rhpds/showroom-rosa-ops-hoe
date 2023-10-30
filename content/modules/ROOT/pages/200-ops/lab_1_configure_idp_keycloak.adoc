@@ -182,7 +182,7 @@ export CLUSTER_DOMAIN=$(rosa describe cluster -c rosa-$GUID | grep "DNS" | grep 
 ----
 
 . Set your OAuth Callback URL base variable.
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .. Your cluster is a classic ROSA cluster. Therefore the command to determine the OAuth Callback URL is the following:
 +
 [source,sh,role=execute]
@@ -191,7 +191,7 @@ export CALLBACK_URL_BASE=https://oauth-openshift.apps.$CLUSTER_DOMAIN/oauth2call
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .. Your cluster is a ROSA cluster using a hosted control plane. Therefore the command to determine the OAuth Callback URL is the following:
 +
 [source,sh,role=execute]
@@ -384,7 +384,7 @@ rosa create idp \
 --username-claims preferred_username
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -397,7 +397,7 @@ I: Callback URI: https://oauth-openshift.apps.rosa-9zlx8.999y.p1.openshiftapps.c
 I: To log in to the console, open https://console-openshift-console.apps.rosa-9zlx8.999y.p1.openshiftapps.com and click on 'RosaKeycloak'.
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -411,7 +411,7 @@ I: To log in to the console, open https://console-openshift-console.apps.rosa.ro
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Validate that the cluster's `OAuth` resource has been updated (you may need to retry this command a few times until ROSA has updated the configuration):
 +
 [source,sh,role=execute]
@@ -552,7 +552,7 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 oc login -u rosa-admin -p {rosa_user_password} {rosa_api_url}
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -563,7 +563,7 @@ You have access to 101 projects, the list has been suppressed. You can list all 
 Using project "keycloak".
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -588,7 +588,7 @@ rosa delete admin -c rosa-$GUID --yes
 I: Admin user 'cluster-admin' has been deleted from cluster 'rosa-{guid}'
 ----
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Validate that only the RosaKeycloak authentication provider is left in the OpenShift OAuth configuration:
 +
 [source,sh,role=execute]

@@ -27,7 +27,7 @@ image::scale_machinepool.png[scale_machinepool]
 rosa list machinepools -c rosa-$GUID
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -35,7 +35,7 @@ ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY Z
 worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -44,7 +44,7 @@ workers  No           2                 2                 m5.xlarge             
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now, let's take a look at the MachineSets inside of the ROSA cluster that have been created according to the instructions provided by the above MachinePools. To do so, run the following command:
 +
 [source,sh,role=execute]
@@ -107,7 +107,7 @@ endif::[]
 
 . Now, let's scale up our MachinePool from two to three machines.
 To do so, run the following command:
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 +
 [source,sh,role=execute]
 ----
@@ -120,7 +120,7 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workshop
 I: Updated machine pool 'workshop' on cluster 'rosa-6n4s8'
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 +
 [source,sh,role=execute]
 ----
@@ -134,7 +134,7 @@ I: Updated machine pool 'workers' on hosted cluster 'rosa-zwrzl'
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now that we've scaled the MachinePool to three machines, we can see that the machines are already being created.
 First, let's quickly check the output of the `oc get machinesets` command we ran earlier:
 +
@@ -184,20 +184,20 @@ endif::[]
 +
 To do so, run the following command:
 +
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workshop
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workers
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 . Now that we've scaled the MachinePool (and therefore the MachineSet) back down to one machine, we can see the change reflected in the cluster almost immediately.
 Let's quickly check the output of the same command we ran before:
 +
@@ -253,7 +253,7 @@ You've successfully scaled your cluster up and back down to two worker nodes.
 
 Here you learned:
 
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 * Creating new Machine Pool for your ROSA cluster to add additional nodes to the cluster
 endif::[]
 * Scaling a Machine Pool up to add more nodes to the cluster

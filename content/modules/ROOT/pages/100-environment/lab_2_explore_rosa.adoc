@@ -4,8 +4,6 @@ As you have seen in the video your ROSA cluster has already been deployed for yo
 
 All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
-Rosa deploy: {rosa_deploy_hcp}
-
 . List all deployed ROSA clusters in the AWS account:
 +
 [source,sh,role=execute]
@@ -13,7 +11,7 @@ Rosa deploy: {rosa_deploy_hcp}
 rosa list clusters
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,options=nowrap,subs="attributes"]
 ----
@@ -21,7 +19,7 @@ ID                                NAME        STATE  TOPOLOGY
 26rb36mq3avdbitdo3qv3t7sc7s4ui16  rosa-{guid}  ready  Hosted CP
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,texinfo,options=nowrap,subs=attributes]
 ----
@@ -44,7 +42,7 @@ Also notice the Topology and state. State should be *ready* and Topology could b
 rosa describe cluster --cluster rosa-$GUID
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
@@ -94,7 +92,7 @@ Details Page:               https://console.redhat.com/openshift/details/s/2WhVm
 OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26rate9v2s9k7mjgtag8gcoh3kkdl6qj (Classic)
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
@@ -190,7 +188,7 @@ cmdo
 oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "True"]
+ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
@@ -202,7 +200,7 @@ Using project "default".
 Welcome! See 'oc help' to get started.
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "False"]
+ifeval::["{rosa_deploy_hcp}" == "false"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
