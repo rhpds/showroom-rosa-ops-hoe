@@ -11,6 +11,7 @@ content:
 
 asciidoc:
   attributes:
+    lab_name: ROSA Ops Hands-on Experience
     release-version: master
     page-pagination: true
   extensions:
