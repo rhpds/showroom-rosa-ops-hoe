@@ -21,11 +21,16 @@ oc version
 .Sample Output
 [source,text,options=nowrap]
 ----
-Client Version: 4.12.35
+Client Version: 4.13.17
 Kustomize Version: v4.5.7
-Server Version: 4.12.35
-Kubernetes Version: v1.25.12+ba5cc25
+Server Version: 4.13.17
+Kubernetes Version: v1.26.9+c7606e7
 ----
++
+[NOTE]
+====
+Actual versions displayed in your environment will be different than the example above.
+====
 
 . Find out the available versions:
 +
@@ -37,25 +42,28 @@ oc adm upgrade
 .Sample Output
 [source,text,options=nowrap]
 ----
-Cluster version is 4.12.35
+Cluster version is 4.13.17
 
 Upgradeable=False
 
   Reason: AdminAckRequired
-  Message: Kubernetes 1.26 and therefore OpenShift 4.13 remove several APIs which require admin consideration. Please see the knowledge article https://access.redhat.com/articles/6958394 for details and instructions.
+  Message: Kubernetes 1.27 and therefore OpenShift 4.14 remove several APIs which require admin consideration. Please see the knowledge article https://access.redhat.com/articles/6958395 for details and instructions.
 
 Upstream is unset, so the cluster will use an appropriate default.
-Channel: stable-4.12 (available channels: candidate-4.12, candidate-4.13, eus-4.12, fast-4.12, fast-4.13, stable-4.12)
+Channel: stable-4.13 (available channels: candidate-4.13, candidate-4.14, fast-4.13, stable-4.13)
+No updates available. You may still upgrade to a specific release image with --to-image or wait for new updates to be available.
 
 Recommended updates:
 
   VERSION     IMAGE
-  4.12.36     quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
+  4.13.18     quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
 ----
 +
 [NOTE]
 ====
-Depending on when you run this command the available version list may be longer than just the next release.
+Note the message that is printed. OpenShift will tell you that in order to upgrade to the next *major* version (e.g. 4.14 in the example above) an administrator needs to acknowledge that all incompatible API objects have been removed from the cluster. Minor upgrades (e.g. to 4.13.18) will work regardless of the message.
+
+Also depending on when you run this command the available version list may be longer than just the next release.
 
 Or there may not be any available upgrades at all. In that case you are already on the latest minor release for your major OpenShift release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
 ====
@@ -64,7 +72,7 @@ Or there may not be any available upgrades at all. In that case you are already 
 +
 [source,sh]
 ----
-export CLUSTER_VERSION=4.12.36
+export CLUSTER_VERSION=4.13.18
 ----
 
 . You probably don't want to actually upgrade the cluster right now since that may disrupt your lab environment. Luckily it is possible to schedule an update at a less inconvenient time.
@@ -82,10 +90,10 @@ echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 .Sample Output
 [source,text,options=nowrap]
 ----
-Date: 2023-04-18, Time: 19:51
+Date: 2023-10-31, Time: 11:09
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.12.36`).
+. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.13.18`).
 +
 ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
@@ -135,7 +143,7 @@ endif::[]
 
 *Congratulations!*
 
-You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the workshop environment will be deleted before then, you now have the experience to schedule upgrades in the future.
+You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the hands-on environment will be deleted before then, you now have the experience to schedule upgrades in the future.
 
 == Additional Resources
 

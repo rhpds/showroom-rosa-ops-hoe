@@ -106,7 +106,7 @@ prometheus-7db5b74ddf-5dgw6            2/2     Running   0          2m41s
 wasm-cacher-basic-58894856d5-jhwvm     1/1     Running   0          2m8s
 ----
 +
-Once all the pods are running (like in the example above), hit Ctrl-C and proceed to the next step.
+Once all the pods are running (like in the example above), hit `Ctrl-C` and proceed to the next step.
 
 . Next, let's verify that the service mesh control plane is successfully installed.
 To do so, run the following command:
@@ -120,7 +120,7 @@ oc -n istio-system get smcp
 [source,text,options=nowrap]
 ----
 NAME    READY   STATUS            PROFILES      VERSION   AGE
-basic   10/10   ComponentsReady   ["default"]   2.2.10    3m18s
+basic   10/10   ComponentsReady   ["default"]   2.2.11    3m18s
 ----
 +
 The installation has finished successfully when the STATUS column says `ComponentsReady`.

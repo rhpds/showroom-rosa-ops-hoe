@@ -1,4 +1,4 @@
-name: modules
+name: rosa-ops-hoe
 version: master
 nav:
 - modules/ROOT/nav.adoc

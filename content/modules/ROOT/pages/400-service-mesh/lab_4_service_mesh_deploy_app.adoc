@@ -193,3 +193,7 @@ http://istio-ingressgateway-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.c
 . Copy and paste the URL provided in the previous step into your web browser and verify the Bookinfo product page is successfully deployed.
 +
 You should see a book review of "The Comedy of Errors".
+
+*Congratulations!*
+
+You've successfully deployed the *Bookinfo* example application to your OpenShift cluster and used the Service Mesh capabilities to configure the application.

@@ -20,24 +20,37 @@ For this module we will be applying networkpolices to the previously created 'mi
 +
 [source,sh,role=execute]
 ----
- cat << EOF | oc apply -f -
- apiVersion: v1
- kind: Pod
- metadata:
-   name: networkpolicy-pod
-   namespace: networkpolicy-test
-   labels:
-     app: networkpolicy
- spec:
-   securityContext:
-     allowPrivilegeEscalation: false
-   containers:
-     - name: networkpolicy-pod
-       image: registry.access.redhat.com/ubi9/ubi-minimal
-       command: ["sleep", "infinity"]
+cat << EOF | oc apply -f -
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: networkpolicy-pod
+  namespace: networkpolicy-test
+  labels:
+    app: networkpolicy
+spec:
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+    drop:
+    - ALL
+  containers:
+  - name: networkpolicy-pod
+    image: registry.access.redhat.com/ubi9/ubi-minimal
+    command: ["sleep", "infinity"]
 EOF
 ----
 +
+.Sample Output
+[source,texinfo]
+----
+pod/networkpolicy-pod created
+----
+
 . Now we will change to the microsweeper-ex project to start applying the network policies
 +
 [source,sh,role=execute]
@@ -138,6 +151,7 @@ If you have your browser still open to the microsweeper app, you can refresh and
 [source,sh,role=execute]
 ----
 cat <<EOF | oc apply -f -
+---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -148,13 +162,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: microsweeper-appservice
   ingress:
-    - from:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: networkpolicy-test
-        podSelector:
-          matchLabels:
-            app: networkpolicy
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: networkpolicy-test
+      podSelector:
+        matchLabels:
+          app: networkpolicy
 EOF
 ----
 +
@@ -191,6 +205,7 @@ oc -n networkpolicy-test exec -ti pod/networkpolicy-pod -- curl $MS_IP:8080 | he
 [source,sh,role=execute]
 ----
 cat << EOF | oc apply -f -
+---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -201,6 +216,12 @@ metadata:
 spec:
   securityContext:
     allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+    drop:
+    - ALL
   containers:
     - name: new-test
       image: registry.access.redhat.com/ubi9/ubi-minimal

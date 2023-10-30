@@ -39,8 +39,8 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
-ID       AUTOSCALING  DESIRED REPLICAS  CURRENT REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  TUNING CONFIGS  MESSAGE
-workers  No           2                 2                 m5.xlarge                          us-east-2a         subnet-05499265505d0c9bd  4.12.36  Yes
+ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR
+workers  No           2/2       m5.xlarge                          us-east-2a         subnet-057787b91b877ab8a  4.13.17  Yes
 ----
 endif::[]
 
