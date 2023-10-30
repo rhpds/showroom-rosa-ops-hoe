@@ -233,7 +233,7 @@ This is done using the OpenShift `Route` resource which is an extension to the K
 
 *Congratulations!*
 
-You've successfully demonstrated the ability to label nodes and target those nodes using `nodeSelector`.
+You've successfully demonstrated the ability to label nodes and target those nodes using a `nodeSelector`.
 
 == Summary
 
