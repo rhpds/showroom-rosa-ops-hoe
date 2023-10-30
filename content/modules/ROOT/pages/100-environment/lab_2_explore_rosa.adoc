@@ -226,7 +226,7 @@ oc whoami
 {rosa_admin_user}
 ----
 
-. You can now use the cluster as an admin user, which will suffice for this workshop. Though, for any other use, it is highly recommended to set up an IdP.
+. You can now use the cluster as an admin user, which would suffice for this hands-on experience. Though, for any other use, it is highly recommended to set up an IdP. Which is why you will set up external authentication in the next module.
 
 === Login to the OpenShift Web Console
 

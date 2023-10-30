@@ -4,11 +4,17 @@ include::../_attributes.adoc[]
 == Introduction
 
 As part of your pre-defined environment a temporary cluster-admin user has been created using the `rosa create admin` command.
+
 This uses htpasswd as a local identity provider to allow you to access the cluster.
+
 Most ROSA users will want to connect ROSA to a single-sign-on provider, such as Red Hat SSO.
+
 In this section of the workshop, we'll deploy Red Hat SSO on your cluster and configure ROSA to use it for identity management.
 
-Now in the real world you would obviously use an already existing keycloak environment - but the basic steps are the same regardless if your keycloak already exists or not.
+[NOTE]
+====
+In the real world you would obviously use an already existing keycloak environment - but the basic steps are the same regardless if your keycloak already exists or not.
+====
 
 :numbered:
 == Deploy Red Hat SSO
@@ -544,6 +550,9 @@ I: Granted role 'cluster-admins' to user 'rosa-admin' on cluster 'rosa-{guid}'
 ----
 
 . Refresh the OpenShift web console - you should now be able to switch to the Administrator view. If you don't see the Administrator view log out and back into the web console.
++
+It should look something like this:
+image::cluster_admin_view.png[Cluster Admin View, width=100%]
 
 . Log into the API using the new user:
 +

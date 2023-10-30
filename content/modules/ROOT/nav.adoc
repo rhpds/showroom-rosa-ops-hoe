@@ -1,6 +1,6 @@
 *Introduction*
 
-* xref:100-environment/lab_1_deploy_rosa.adoc[Deploy a ROSA Cluster - Review]
+* xref:100-environment/lab_1_deploy_rosa.adoc[Deploy a ROSA Cluster - Video Review]
 * xref:100-environment/lab_2_explore_rosa.adoc[Explore the ROSA environment]
 
 *Basic Operational Tasks*
