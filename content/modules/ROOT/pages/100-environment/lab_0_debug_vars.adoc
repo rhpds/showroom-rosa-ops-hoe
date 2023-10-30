@@ -22,5 +22,4 @@ ssh_password: {ssh_password}
 rosa_user_password: {rosa_user_password}
 
 targethost: {targethost}
-showroom_primary_view_url: {showroom_primary_view_url}
 ----

@@ -4,6 +4,8 @@ As you have seen in the video your ROSA cluster has already been deployed for yo
 
 All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
+Rosa deploy: {rosa_deploy_hcp}
+
 . List all deployed ROSA clusters in the AWS account:
 +
 [source,sh,role=execute]
