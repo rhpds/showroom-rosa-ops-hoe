@@ -1,6 +1,3 @@
-:lab_name: Explore your ROSA environment
-include::../_attributes.adoc[]
-
 == Explore your ROSA environment
 
 As you have seen in the video your ROSA cluster has already been deployed for you. This is both to speed things up for this lab and because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions.

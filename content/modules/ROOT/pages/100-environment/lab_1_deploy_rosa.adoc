@@ -1,11 +1,13 @@
-:lab_name: Deploy a ROSA Cluster - Review
-include::../_attributes.adoc[]
-
 == Deploy a ROSA Cluster - Review
 
-In this environment you do not have enough AWS permissions to deploy your own ROSA cluster.
+In this environment you do not have enough AWS permissions to deploy your own ROSA cluster. Your ROSA cluster has already been created for you.
 
-Therefore we have included a video that shows how ROSA can be installed.
+Please watch this video that shows how your ROSA has been installed.
+
+[NOTE]
+====
+You will *NOT* install your own cluster - this video is to explain what has been done for you.
+====
 
 ====
 .How to deploy a Red Hat OpenShift Service on AWS
