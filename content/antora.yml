@@ -1,4 +1,10 @@
-name: rosa-ops-hoe
+name: modules
+title: ROSA Hands-on Experience
 version: master
 nav:
 - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    lab_name: ROSA Hands-on Experience
+    release_version: master
+    page-pagination: true  
