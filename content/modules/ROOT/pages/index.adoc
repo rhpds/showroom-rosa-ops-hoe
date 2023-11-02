@@ -16,3 +16,8 @@ In this experience, you will learn how you can take advantage of Red Hat OpenShi
 . Learn how to use OpenShift Service Mesh for application observability and tracing
 
 After completing this workshop, you will understand the concepts of modern application platforms, and will have begun to lay the foundations with Red Hat OpenShift.
+
+[NOTE]
+====
+Although this experience is focused on the command line, most if not all of these actions can be done from the OpenShift Console as well.
+====
