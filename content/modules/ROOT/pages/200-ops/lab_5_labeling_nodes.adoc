@@ -1,6 +1,6 @@
 == Introduction
 
-Labels are a useful way to select which nodes that an application will run on. These nodes are created by machines which are defined by the MachineSets we worked with in previous sections of this workshop. An example of this would be running a memory intensive application only on a specific node type.
+Labels are a useful way to select which nodes an application will run on. These nodes are created by machines which are defined by the MachineSets we worked with in previous sections of this workshop. An example use case for labels would be running a memory intensive application only on a specific node type.
 
 While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the Machine pool itself.
 
@@ -239,7 +239,7 @@ You've successfully demonstrated the ability to label nodes and target those nod
 
 == Summary
 
-Here's you learned:
+Here you learned:
 
 * Add labels to Machine Pools
 * Deploy an application on nodes with certain labels
