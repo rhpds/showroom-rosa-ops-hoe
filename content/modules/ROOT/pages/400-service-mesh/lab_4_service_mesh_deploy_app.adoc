@@ -113,8 +113,6 @@ serviceaccount/bookinfo-productpage created
 deployment.apps/productpage-v1 created
 ----
 +
-You may ignore any warnings.
-+
 Interested in seeing the configuration you're deploying?
 Check it out on GitHub https://github.com/rh-mobb/rosa-workshop-content/blob/main/rosa-content/assets/scripts/bookinfo.yaml[here].
 
@@ -190,7 +188,7 @@ http://istio-ingressgateway-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.c
 
 . Copy and paste the URL provided in the previous step into your web browser and verify the Bookinfo product page is successfully deployed.
 +
-You should see a book review of "The Comedy of Errors".
+You should see a book review of *"The Comedy of Errors"*. If you see an "Error fetching product reviews!" message wait a little bit and then refresh the browser window. It takes a moment for the reviews service to be fully available.
 
 *Congratulations!*
 

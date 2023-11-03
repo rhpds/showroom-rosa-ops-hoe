@@ -181,7 +181,7 @@ serviceaccount/microsweeper annotated
 
 Now that we've got a DynamoDB instance up and running and our IRSA configuration completed, let's build and deploy our application.
 
-. In order to build the application you will need the Java JDK 17 and the Quarkus CLI installed. The Java Open JDK is already installed on your bastion VM so let's install the Quarkus CLI:
+. In order to build the application you will need the Java JDK 11 and the Quarkus CLI installed. The Java Open JDK is already installed on your terminal so let's install the Quarkus CLI:
 +
 [source,sh,role=execute]
 ----
@@ -404,7 +404,7 @@ http://microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshift
 
 Let's take a quick look at what IP the application resolves to.
 
-Back in your bastion VM, run the following command:
+Back in your terminal, run the following command:
 
 [source,sh,role=execute]
 ----
@@ -414,14 +414,12 @@ nslookup $(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpath='
 .Sample Output
 [source,text,options=nowrap]
 ----
-Server:		192.168.0.2
-Address:	192.168.0.2#53
+Server:         192.168.0.2
+Address:        192.168.0.2#53
 
 Non-authoritative answer:
-Name:	microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
-Address: 54.185.165.99
-Name:	microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
-Address: 54.191.151.187
+Name:   microsweeper-appservice-microsweeper-ex.apps.rosa.rosa-7v44k.u7g2.p3.openshiftapps.com
+Address: 3.21.3.12
 ----
 
 Notice the IP address;

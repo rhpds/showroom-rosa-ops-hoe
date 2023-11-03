@@ -27,7 +27,7 @@ image::gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorH
 
 . Wait until the operator shows as successfully installed (*Installed operator - ready for use*).
 
-. In your bastion VM create a new project:
+. In your terminal create a new project:
 +
 [source,sh,role=execute]
 ----
@@ -48,7 +48,9 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
     kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
 ----
 
-. Deploy ArgoCD into your project
+. The OpenShift Gitops operator includes the capability to deploy individual instances of ArgoCD for developers.
++
+Deploy your personal ArgoCD into your development project:
 +
 [source,sh,role=execute]
 ----
@@ -91,7 +93,7 @@ EOF
 argocd.argoproj.io/argocd created
 ----
 
-. Wait for ArgoCD to be ready
+. Wait for your ArgoCD server to be ready:
 +
 [source,sh,role=execute]
 ----
@@ -104,7 +106,9 @@ oc rollout status deploy/argocd-server -n bgd
 deployment "argocd-server" successfully rolled out
 ----
 
-. Apply the GitOps application for your application:
+. Now that you ArgoCD server is ready you can use it to deploy an application from a git repository. In this case the Kubernetes / OpenShift definition of the application is in the git repository https://github.com/rh-mobb/gitops-bgd-app. We won't have time to go into all the options but creating the `Application` tells ArgoCD to deploy the application from the Git repository into the namespace `bgd`.
++
+Create the Application:
 +
 [source,sh,role=execute]
 ----
@@ -139,15 +143,7 @@ EOF
 application.argoproj.io/bgd-app created
 ----
 
-. Find the URL for your Argo CD dashboard, copy it to your web browser and log in using your OpenShift credentials.
-+
-[subs="attributes"]
-====
-Remember your credentials:
-
-* *Admin user ID:* rosa-admin
-* *Admin user Password:* {rosa_user_password}
-====
+. Retrieve the URL for your Argo CD dashboard and navigate to it in your web browser:
 +
 [source,sh,role=execute]
 ----
@@ -159,14 +155,24 @@ echo "https://$(oc -n bgd get route argocd-server -o jsonpath='{.spec.host}')"
 ----
 https://argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
+
+. ArgoCD is configured for single sign on with OpenShift. Therefore your admin credentials also work in ArgoCD. Click on the *Log in via OpenShift* button and use the admin credentials to log in (you may need to click on *Allow selected permissions* after the login step):
++
+[subs="attributes"]
+====
+* *Admin user ID:* rosa-admin
+* *Admin user Password:* {rosa_user_password}
+====
+
+. Once you have logged into ArgoCD yoiu should see the ArgoCD application dashboard.
 +
 image::argo_app1.png[]
 
-. Click on the Application to show its topology
+. Click on the Application `bgd-app` to show its topology.
 +
 image::argo_sync.png[]
 
-. Verify that OpenShift sees the Deployment as rolled out
+. Verify that OpenShift sees the Deployment as rolled out:
 +
 [source,sh,role=execute]
 ----
@@ -179,7 +185,7 @@ oc rollout status deploy/bgd
 deployment "bgd" successfully rolled out
 ----
 
-. Get the route and browse to it in your browser
+. Get the route and browse to it in your browser:
 +
 [source,sh,role=execute]
 ----
@@ -192,7 +198,7 @@ echo "http://$(oc -n bgd get route bgd -o jsonpath='{.spec.host}')"
 bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
 
-. You should see a green box in the website like so
+. You should see a green box in the website like so:
 +
 image::bgd_green.png[]
 
@@ -211,18 +217,18 @@ oc -n bgd patch deploy/bgd --type='json' \
 deployment.apps/bgd patched
 ----
 
-. Refresh Your browser and you should see a blue box in the website like so
+. Refresh Your browser and you should see a blue box in the website like so:
 +
 image::app_blue.png[]
 
-. Meanwhile check ArgoCD it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift
+. Meanwhile check ArgoCD it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift:
 +
 image::sync_bgd.png[]
 
-. Check again, you should see a green box in the website like so
+. Check again, you should see a green box in the website like so:
 +
 image::bgd_green.png[]
 
 *Congratulations!*
 
-You have successfully deployed Red Hat OpenShift Gitops and used it to deploy an application to your ROSA cluster.
+You have successfully deployed Red Hat OpenShift Gitops and used it to deploy and heal an application to your ROSA cluster.

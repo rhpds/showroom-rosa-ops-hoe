@@ -22,7 +22,7 @@ Requests state the minimum CPU and memory requirements for a container. This wil
 +
 [NOTE]
 ====
-It is important to know the resource needs of the application before setting limits and requests to avoid resource starvation or over allocating resources. If you are unsure of the resource consumption of your application, you can use 'oc adm top pods' to view the current memory and CPU being currently consumed by each pod. Running the following command multiple times while the application is running can help set a general picture. If you get an error that no metrics are available yet wait a few seconds and try again.
+It is important to know the resource needs of the application before setting limits and requests to avoid resource starvation or over allocating resources. If you are unsure of the resource consumption of your application, you can use 'oc adm top pods' to view the current memory and CPU being currently consumed by each pod. Running the following command multiple times while the application is running can help set a general picture. If you get an error that no metrics are available yet wait a few seconds and try again. It may take a few minutes for the metrics to be available.
 ====
 +
 [source,sh,role=execute]
@@ -49,7 +49,6 @@ We'll see a new pod (created 28 seconds earlier in this case):
 .Sample Output
 [source,text,options=nowrap]
 ----
-[user0_mobbws@bastion ~]$ oc get pods microsweeper-ex
 NAME                                       READY   STATUS      RESTARTS   AGE
 microsweeper-appservice-1-build            0/1     Completed   0          17h
 microsweeper-appservice-69596ccc54-fsw2b   1/1     Running     0          28s
@@ -257,7 +256,7 @@ FRONTEND_URL=http://$(oc -n microsweeper-ex get route microsweeper-appservice -o
 ab -c100 -n10000 ${FRONTEND_URL}
 ----
 
-. Apache Bench will take around 100 seconds to complete (you can also hit CTRL-C to kill the ab command). Then immediately check the status of Horizontal Pod Autoscaler. To do so, run the following command:
+. Apache Bench will take around 100 seconds to complete (you can also hit CTRL-C to kill the `ab` command). Then immediately check the status of Horizontal Pod Autoscaler. To do so, run the following command:
 +
 [source,sh,role=execute]
 ----

@@ -34,8 +34,8 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
-ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-057787b91b877ab8a  4.13.17  Yes
+ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
+workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  4.14.1   Yes
 ----
 +
 The *ID* of the MachinePool that you want to add autoscaling to is `workers`.
@@ -192,32 +192,7 @@ maxscale-5888n   1/1     Running   0          29s
 Notice that we see a lot of pods in a pending state.
 This should trigger the cluster autoscaler to create more machines using the MachineAutoscaler we created.
 
-. It will take a few minutes (like 5) for the new nodes to be available.
-Check that the `MachinePool` is provioning new nodes.
-+
-[source,sh,role=execute]
-----
-rosa list machinepools --cluster rosa-$GUID
-----
-+
-ifeval::["{rosa_deploy_hcp}" == "false"]
-.Sample Output
-[source,texinfo,option=nowrap]
-----
-ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE  
-worker  Yes          2-4       m5.xlarge                          us-east-2a                       No              300 GiB
-----
-+
-You should see the text `WaitingForAvailableMachines: NodeProvisioning` to indicate that new nodes are being brought online.
-endif::[]
-ifeval::["{rosa_deploy_hcp}" == "true"]
-.Sample Output
-[source,texinfo,option=nowrap]
-----
-ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR
-workers  Yes          2/2-4     m5.xlarge                          us-east-2a         subnet-057787b91b877ab8a  4.13.17  Yes
-----
-endif::[]
+. It will take a few minutes (like 5 minutes) for the new nodes to be available.
 
 ifeval::["{rosa_deploy_hcp}" == "false"]
 . Check the number of nodes in your cluster (repeat this command until you see 9 nodes - 3 control plane nodes, 2 infra nodes and the maximum 4 that you configured for autoscaling the Machinepool):
@@ -286,10 +261,10 @@ oc get nodes
 [source,texinfo]
 ----
 NAME                                       STATUS   ROLES    AGE     VERSION
-ip-10-0-0-183.us-east-2.compute.internal   Ready    worker   59s     v1.25.12+ba5cc25
-ip-10-0-0-245.us-east-2.compute.internal   Ready    worker   3h49m   v1.25.12+ba5cc25
-ip-10-0-0-249.us-east-2.compute.internal   Ready    worker   69s     v1.25.12+ba5cc25
-ip-10-0-0-53.us-east-2.compute.internal    Ready    worker   3h49m   v1.25.12+ba5cc25
+ip-10-0-0-102.us-east-2.compute.internal   Ready    worker   2m9s    v1.27.6+f67aeb3
+ip-10-0-0-140.us-east-2.compute.internal   Ready    worker   2m11s   v1.27.6+f67aeb3
+ip-10-0-0-29.us-east-2.compute.internal    Ready    worker   127m    v1.27.6+f67aeb3
+ip-10-0-0-62.us-east-2.compute.internal    Ready    worker   128m    v1.27.6+f67aeb3
 ----
 endif::[]
 

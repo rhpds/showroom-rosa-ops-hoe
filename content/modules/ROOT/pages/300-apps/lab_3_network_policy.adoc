@@ -49,14 +49,14 @@ EOF
 pod/networkpolicy-pod created
 ----
 
-. Now we will change to the microsweeper-ex project to start applying the network policies
+. Now we will change to the microsweeper-ex project to start applying the network policies:
 +
 [source,sh,role=execute]
 ----
 oc project microsweeper-ex
 ----
 +
-. Fetch the IP address of the `microsweeper` Pod
+. Fetch the IP address of the `microsweeper` pod:
 +
 [source,sh,role=execute]
 ----
@@ -72,7 +72,7 @@ echo $MS_IP
 10.128.2.242
 ----
 
-. Check to see if the `networkpolicy-pod` can access the microsweeper pod.
+. Check to see if the `networkpolicy-pod` can access the microsweeper pod:
 +
 [source,sh,role=execute]
 ----
@@ -95,11 +95,12 @@ oc -n networkpolicy-test exec -ti pod/networkpolicy-pod -- curl $MS_IP:8080 | he
 ----
 
 . It's common to want to not allow Pods from another Project.
++
 This can be done by a fairly simple Network Policy.
 +
 [INFO]
 ====
-This Network Policy will restrict Ingress to the Pods in the project `microsweeper-ex` to just the OpenShift Ingress Pods and only on port 8080.
+This Network Policy will restrict Ingress to the pods in the project `microsweeper-ex` to just the OpenShift Ingress pods which run in the project with label `network.openshift.io/policy-group=ingress`.
 ====
 +
 [source,sh,role=execute]
@@ -141,10 +142,10 @@ Hit Ctrl-C to avoid having to wait until a timeout.
 +
 [TIP]
 ====
-If you have your browser still open to the microsweeper app, you can refresh and see that you can still access it.
+If you have your browser still open to the microsweeper app, you can refresh and see that you can still access it. This is because your web browser connect to the Ingress controllers - which per the NetworkPolicy are allowed to connect to this project.
 ====
 
-. Sometimes you want your application to be accessible to other namespaces. You can allow access to just your microsweeper frontend from the networkpolicy-pod in the `networkpolicy-test` namespace like so
+. Sometimes you want your application to be accessible to other namespaces. You can allow access to just your microsweeper frontend from the networkpolicy-pod in the `networkpolicy-test` namespace like so:
 +
 [source,sh,role=execute]
 ----
@@ -176,7 +177,7 @@ EOF
 networkpolicy.networking.k8s.io/allow-networkpolicy-pod-ap created
 ----
 
-. Check to see if 'networkpolicy-pod` can access the Pod.
+. Check to see if 'networkpolicy-pod` can access the pod:
 +
 [source,sh,role=execute]
 ----
@@ -236,7 +237,7 @@ oc -n networkpolicy-test exec -ti pod/new-test -- curl $MS_IP:8080 | head
 +
 This will fail with a timeout again.
 Hit Ctrl-C to avoid waiting for a timeout.
-
++
 [INFO]
 ====
 For information on setting default network policies for new projects you can read the OpenShift documentation on https://docs.openshift.com/container-platform/4.13/networking/network_policy/default-network-policy.html[modifying the default project template].

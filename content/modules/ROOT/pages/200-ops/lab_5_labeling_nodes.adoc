@@ -55,6 +55,8 @@ oc label nodes $(oc get nodes|grep -v NAME|awk -c '{print $1}') tier=frontend
 node/ip-10-0-0-209.us-east-2.compute.internal labeled
 node/ip-10-0-0-85.us-east-2.compute.internal labeled
 ----
++
+You may see between two and four nodes depending if you did the autoscaling lab or not - or depending how long it's been since you finished the autoscaling lab.
 endif::[]
 
 . Now, let's verify the nodes are properly labeled.

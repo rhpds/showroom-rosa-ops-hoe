@@ -1,6 +1,5 @@
 *Introduction*
 
-* xref:100-environment/lab_1_deploy_rosa.adoc[Deploy a ROSA Cluster - Video Review]
 * xref:100-environment/lab_2_explore_rosa.adoc[Explore the ROSA environment]
 
 *Basic Operational Tasks*
@@ -26,3 +25,7 @@
 * xref:400-service-mesh/lab_3_service_mesh_deploy_control_plane.adoc[Deploy Service Mesh Control Plane]
 * xref:400-service-mesh/lab_4_service_mesh_deploy_app.adoc[Deploy a Service Mesh example application]
 * xref:400-service-mesh/lab_5_service_mesh_observe.adoc[Configure and observe Service Mesh traffic]
+
+*Conclusion and What's Next*
+
+* xref:conclusion.adoc[Conclusion & What’s Next]

@@ -37,8 +37,8 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,text,options=nowrap]
 ----
-ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-057787b91b877ab8a  4.13.17  Yes
+ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
+workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  4.14.1   Yes
 ----
 endif::[]
 
@@ -130,6 +130,24 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workers
 ----
 I: Updated machine pool 'workers' on hosted cluster 'rosa-zwrzl'
 ----
+
+. It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit `Ctrl-C` to abort the watch):
++
+[source,sh,role=execute]
+----
+watch -n 10 oc get nodes
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Every 10.0s: oc get nodes                               bastion.7v44k.internal: Fri Nov  3 07:47:52 2023
+
+NAME                                      STATUS   ROLES    AGE    VERSION
+ip-10-0-0-29.us-east-2.compute.internal   Ready    worker   115m   v1.27.6+f67aeb3
+ip-10-0-0-59.us-east-2.compute.internal   Ready    worker   71s    v1.27.6+f67aeb3
+ip-10-0-0-62.us-east-2.compute.internal   Ready    worker   115m   v1.27.6+f67aeb3
+----
 endif::[]
 
 ifeval::["{rosa_deploy_hcp}" == "false"]
@@ -193,6 +211,8 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workers
 ----
++
+If you want to wait until the additional node has been removed repeat the previous command (`oc get nodes`) until you see just two worker nodes again.
 endif::[]
 
 ifeval::["{rosa_deploy_hcp}" == "false"]

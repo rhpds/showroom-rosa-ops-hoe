@@ -25,7 +25,7 @@ echo $POLICY_ARN
 arn:aws:iam::551773360602:policy/RosaCloudWatch-wkrh6
 ----
 
-. An AWS IAM role has been set up for the OpenShift Logging infrastructure to use.
+. As part of the hands on experience an AWS IAM role has been set up for the OpenShift Logging infrastructure to use.
 +
 Examine the role that has been created:
 +

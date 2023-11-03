@@ -1,6 +1,10 @@
 == Explore your ROSA environment
 
-As you have seen in the video your ROSA cluster has already been deployed for you. This is both to speed things up for this lab and because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions.
+In this Hands on experience ROSA has already been pre-installed for you.
+
+This was done both for speed of deployment but also for security reasons because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions
+
+If you are interested would like to know more about the installation there is a https://youtu.be/gAMr3sI5bdY?si=eD12Ab0XUJvCBrHR[video] explaining the process.
 
 All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
@@ -97,13 +101,13 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,texinfo,subs="attributes"]
 ----
 Name:                       rosa-{guid}
-ID:                         26rb36mq3avdbitdo3qv3t7sc7s4ui16
-External ID:                1f4e7022-6556-4529-af7d-b3b470091990
+ID:                         2793jurv02024q1uohvubgmkpstomo98
+External ID:                426a4915-0310-48ec-9448-7f1bb3ea3625
 Control Plane:              ROSA Service Hosted
-OpenShift Version:          4.12.36
+OpenShift Version:          4.14.1
 Channel Group:              stable
-DNS:                        rosa-{guid}.8ffn.p3.openshiftapps.com
-AWS Account:                237325068408
+DNS:                        rosa-{guid}.u7g2.p3.openshiftapps.com
+AWS Account:                842021278339
 API URL:                    {rosa_api_url}
 Console URL:                {rosa_console_url}
 Region:                     us-east-2
@@ -121,19 +125,19 @@ Network:
  - Host Prefix:             /23
 Workload Monitoring:        Enabled
 Ec2 Metadata Http Tokens:   optional
-STS Role ARN:               arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Installer-Role
-Support Role ARN:           arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Support-Role
+STS Role ARN:               arn:aws:iam::842021278339:role/ManagedOpenShift-HCP-ROSA-Installer-Role
+Support Role ARN:           arn:aws:iam::842021278339:role/ManagedOpenShift-HCP-ROSA-Support-Role
 Instance IAM Roles:
- - Worker:                  arn:aws:iam::237325068408:role/ManagedOpenShift-HCP-ROSA-Worker-Role
+ - Worker:                  arn:aws:iam::842021278339:role/ManagedOpenShift-HCP-ROSA-Worker-Role
 Operator IAM Roles:
- - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-kube-controller-manager
- - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-capa-controller-manager
- - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-control-plane-operator
- - arn:aws:iam::237325068408:role/rosa-{guid}-kube-system-kms-provider
- - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-image-registry-installer-cloud-credentials
- - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-ingress-operator-cloud-credentials
- - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-cluster-csi-drivers-ebs-cloud-credentials
- - arn:aws:iam::237325068408:role/rosa-{guid}-openshift-cloud-network-config-controller-cloud-crede
+ - arn:aws:iam::842021278339:role/rosa-{guid}-kube-system-kube-controller-manager
+ - arn:aws:iam::842021278339:role/rosa-{guid}-kube-system-capa-controller-manager
+ - arn:aws:iam::842021278339:role/rosa-{guid}-kube-system-control-plane-operator
+ - arn:aws:iam::842021278339:role/rosa-{guid}-kube-system-kms-provider
+ - arn:aws:iam::842021278339:role/rosa-{guid}-openshift-image-registry-installer-cloud-credentials
+ - arn:aws:iam::842021278339:role/rosa-{guid}-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::842021278339:role/rosa-{guid}-openshift-cluster-csi-drivers-ebs-cloud-credentials
+ - arn:aws:iam::842021278339:role/rosa-{guid}-openshift-cloud-network-config-controller-cloud-crede
 Managed Policies:           Yes
 State:                      ready 
 Private:                    No
@@ -172,12 +176,19 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 {rosa_console_url}
 ----
 
-. A temporary admin user has already been created for you on the ROSA OpenShift cluster.
+. A temporary admin user has already been created for you on the ROSA OpenShift cluster. 
 +
 [subs="attributes"]
 ====
 * *Admin user ID:* {rosa_admin_user}
 * *Admin user Password:* {rosa_admin_password}
+====
++
+[NOTE]
+====
+On a brand new ROSA deploy you would use the `rosa create admin -c rosa-{guid}` command to create this admin user.
+
+For this environment your admin user has already been created.
 ====
 
 . Now that you have the information about the Admin credentials and the API URL for your cluster you can log into your cluster:
@@ -194,7 +205,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 Login successful.
 
-You have access to 75 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 77 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "default".
 Welcome! See 'oc help' to get started.
@@ -248,6 +259,8 @@ oc whoami --show-console
 ----
 
 . Next, open the printed URL in a web browser.
-. Enter the username (`{rosa_admin_user}`) and password from the previous section (`{rosa_admin_password}`.
+. Enter the credentials from the previous section:
+* Username: `{rosa_admin_user}`
+* Password: `{rosa_admin_password}`
 
 If you don't see an error, congratulations! You're now logged into the cluster and ready to move on to the workshop content.

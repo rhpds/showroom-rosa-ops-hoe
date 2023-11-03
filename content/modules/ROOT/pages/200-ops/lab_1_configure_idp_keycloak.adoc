@@ -6,7 +6,7 @@ This uses htpasswd as a local identity provider to allow you to access the clust
 
 Most ROSA users will want to connect ROSA to a single-sign-on provider, such as Red Hat SSO.
 
-In this section of the workshop, we'll deploy Red Hat SSO on your cluster and configure ROSA to use it for identity management.
+In this section of the workshop, we will use the Red Hat SSO Operator to deploy Red Hat SSO on your cluster and configure ROSA to use it for identity management.
 
 [NOTE]
 ====
@@ -18,14 +18,16 @@ In the real world you would obviously use an already existing keycloak environme
 
 === Deploy the operator
 
-. Set up a few variables
+In this lab you will deploy the operator using the command line. You could also use the OpenShift console's OperatorHub to deploy the operator - you will do that later in this hands on experience.
+
+. Set an environment variable to specify the project into which to deploy the operator and Red Hat SSO:
 +
 [source,sh,role=execute]
 ----
 export SSO_NAMESPACE=keycloak
 ----
 
-. Create a project where your operator will be installed to:
+. Create the project where your operator will be installed to:
 +
 [source,sh,role=execute]
 ----
@@ -46,7 +48,7 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
     kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.43 -- /agnhost serve-hostname
 ----
 
-. To install, first create an Operator Group for the operator:
+. To install, first create an Operator Group for the operator (the Operator Group allows the operator to manage a set of projects - in this case our `keycloak` project):
 +
 [source,sh,role=execute]
 ----
@@ -69,7 +71,7 @@ EOF
 operatorgroup.operators.coreos.com/keycloak-operator created
 ----
 
-. Next, install the subscription:
+. Next, install the subscription - this tells the Operator Lifecycle Manager in ROSA to install the Red Hat SSO operator. The most important setting is the `channel` - we are using the latest available version in the *stable* channel:
 +
 [source,sh,role=execute]
 ----
@@ -95,7 +97,7 @@ EOF
 subscription.operators.coreos.com/rhsso-operator created
 ----
 
-. Wait until the operator is running (repeat until it is and your output looks similar to the one below):
+. Wait until the operator pod is running (repeat until it is and your output looks similar to the one below):
 +
 [source,sh,role=execute]
 ----
@@ -111,9 +113,9 @@ rhsso-operator-74d7955b8c-77jnb   1/1     Running   0          2m
 
 === Deploy Red Hat SSO
 
-Now you can deploy the Red Hat SSO server:
+Now that the operator is available you can use it to set up the Red Hat SSO server:
 
-. Create the `Keycloak` object:
+. Create the `Keycloak` object - which deploys the Red Hat SSO server. Note that we are using 2 instances of the server for redundancy:
 +
 [source,sh,role=execute]
 ----
@@ -171,7 +173,7 @@ true
 
 === Retrieve Information about your Red Hat SSO Installation
 
-. Set some Environment Variables:
+. Set some environment variables to use when setting up the Keycloak Client on Red Hat SSO:
 +
 [source,sh,role=execute]
 ----
@@ -205,7 +207,15 @@ endif::[]
 
 === Configure Red Hat SSO
 
-. Create Realm:
+In order to set up Red Hat SSO you need to create the following objects:
+
+* Keycloak Realm
+* Keycloak Client
+* Keycloak User(s)
+
+Note that you could create all of these in the Keycloak console page as well - but for efficiency reasons you are using the operator in this hands on experience.
+
+. Create a Keycloak Realm to use with ROSA:
 +
 [source,sh,role=execute]
 ----
@@ -235,7 +245,7 @@ EOF
 keycloakrealm.keycloak.org/rosa created
 ----
 
-. Create Client:
+. Create the Keycloak Client. The most important setting to get right is the `redirectUri` which points back to the ROSA OAuth endpoint (remember you set a variable before for this URL):
 +
 [source,sh,role=execute]
 ----
@@ -255,7 +265,7 @@ spec:
   client:
     clientId: rosa
     name: rosa
-    description: "Red Hat OpenShift on AWS"
+    description: "Red Hat OpenShift Service on AWS"
     protocol: openid-connect
     enabled: true
     publicClient: false
@@ -290,7 +300,7 @@ EOF
 keycloakclient.keycloak.org/rosa created
 ----
 
-. Create a user which will become the ROSA admin:
+. Now that your Keycloak has been configured you can create a user which will become the ROSA admin (for security reasons you are using a random password for this user):
 +
 [source,sh,role=execute,subs=attributes]
 ----
@@ -326,7 +336,7 @@ spec:
 keycloakuser.keycloak.org/rosa-admin created
 ----
 
-. Create a user which will become the just a regular developer user:
+. Then create a user which will become the just a regular developer user:
 +
 [source,sh,role=execute,subs=attributes]
 ----
@@ -362,16 +372,20 @@ spec:
 keycloakuser.keycloak.org/rosa-developer created
 ----
 
+Your Red Hat SSO is now configured to be used by ROSA.
+
 == Set up OpenShift authentication to use Red Hat SSO
 
-. Retrieve the client secret:
+The next step is to tell ROSA to use the Red Hat SSO configuration that you just created. You must do that via the `rosa` command line tool (or the Red Hat Console) - you can not use the usual OpenShift mechanisms for this - Open Cluster Manager would override what you set if you don't set it via the `rosa` command line tool.
+
+. First retrieve the client secret for your configured Keycloak Client:
 +
 [source,sh,role=execute]
 ----
 export SSO_CLIENT_SECRET=$(oc get secret keycloak-client-secret-rosa -o json | jq -r '.data.CLIENT_SECRET' | base64 -d)
 ----
 
-. Set up the identity provider in ROSA:
+. Now you can set up the identity provider in ROSA:
 +
 [source,sh,role=execute]
 ----
@@ -576,7 +590,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 Login successful.
 
-You have access to 76 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 78 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----

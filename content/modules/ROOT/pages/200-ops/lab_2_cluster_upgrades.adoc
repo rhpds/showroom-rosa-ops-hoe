@@ -19,10 +19,10 @@ oc version
 .Sample Output
 [source,text,options=nowrap]
 ----
-Client Version: 4.13.17
-Kustomize Version: v4.5.7
-Server Version: 4.13.17
-Kubernetes Version: v1.26.9+c7606e7
+Client Version: 4.14.1
+Kustomize Version: v5.0.1
+Server Version: 4.14.1
+Kubernetes Version: v1.27.6+f67aeb3
 ----
 +
 [NOTE]
@@ -30,7 +30,20 @@ Kubernetes Version: v1.26.9+c7606e7
 Actual versions displayed in your environment will be different than the example above.
 ====
 
-. Find out the available versions:
+. List available versios for the ROSA upgrade (depending on when you run this command there may not be any upgrades available):
++
+[source,sh,role=execute]
+----
+rosa list upgrades -c rosa-$GUID
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+I: There are no available upgrades for cluster 'rosa-7v44k'
+----
+
+. You can also use the OpenShift CLI to list available versions - but for ROSA it's preferred to use the rosa cli.:
 +
 [source,sh,role=execute]
 ----
@@ -40,37 +53,26 @@ oc adm upgrade
 .Sample Output
 [source,text,options=nowrap]
 ----
-Cluster version is 4.13.17
-
-Upgradeable=False
-
-  Reason: AdminAckRequired
-  Message: Kubernetes 1.27 and therefore OpenShift 4.14 remove several APIs which require admin consideration. Please see the knowledge article https://access.redhat.com/articles/6958395 for details and instructions.
+Cluster version is 4.14.1
 
 Upstream is unset, so the cluster will use an appropriate default.
-Channel: stable-4.13 (available channels: candidate-4.13, candidate-4.14, fast-4.13, stable-4.13)
+Channel: stable-4.14 (available channels: candidate-4.14, candidate-4.15, eus-4.14, fast-4.14, stable-4.14)
 No updates available. You may still upgrade to a specific release image with --to-image or wait for new updates to be available.
-
 Recommended updates:
 
   VERSION     IMAGE
-  4.13.18     quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
+  4.14.2      quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
 ----
 +
-[NOTE]
-====
-Note the message that is printed. OpenShift will tell you that in order to upgrade to the next *major* version (e.g. 4.14 in the example above) an administrator needs to acknowledge that all incompatible API objects have been removed from the cluster. Minor upgrades (e.g. to 4.13.18) will work regardless of the message.
-
-Also depending on when you run this command the available version list may be longer than just the next release.
-
+Depending on when you run this command the available version list may be longer than just the next release.
++
 Or there may not be any available upgrades at all. In that case you are already on the latest minor release for your major OpenShift release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
-====
 
 . Set a variable for the cluster version you want to upgrade to. For the example above this would be:
 +
 [source,sh]
 ----
-export CLUSTER_VERSION=4.13.18
+export CLUSTER_VERSION=4.14.2
 ----
 
 . You probably don't want to actually upgrade the cluster right now since that may disrupt your lab environment. Luckily it is possible to schedule an update at a less inconvenient time.
@@ -91,7 +93,7 @@ echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 Date: 2023-10-31, Time: 11:09
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.13.18`).
+. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.14.2`).
 +
 ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
