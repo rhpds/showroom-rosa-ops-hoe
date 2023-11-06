@@ -54,7 +54,7 @@ Name:                       rosa-{guid}
 ID:                         26rate9v2s9k7mjgtag8gcoh3kkdl6qj
 External ID:                ef03828c-43bb-4e49-b8fc-20f0be436154
 Control Plane:              Customer Hosted
-OpenShift Version:          4.12.36
+OpenShift Version:          4.14.1
 Channel Group:              stable
 DNS:                        rosa-{guid}.z6qe.p1.openshiftapps.com
 AWS Account:                698064993456
