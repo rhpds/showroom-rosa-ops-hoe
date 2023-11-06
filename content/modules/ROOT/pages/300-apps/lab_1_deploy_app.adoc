@@ -6,7 +6,7 @@ This lab demonstrates how ROSA (an AWS native service) can easily and securely a
 
 [TIP]
 ====
-You are working in an environment where your AWS credentials have been setup with exactly the permissions you need to complete this lab. AWS commands other than the ones in this lab will fail with missing authorization.
+You are working in an environment where your AWS credentials have been set up with exactly the permissions you need to complete this lab. AWS commands other than the ones in this lab will fail with missing authorization.
 ====
 
 :numbered:
@@ -241,7 +241,7 @@ Looking for the newly published extensions in registry.quarkus.io
 ----
 
 . Now, we'll configure Quarkus to use the DynamoDB instance that we created earlier in this section.
-To do so, we'll create an `application.properties` file using by running the following command:
+To do so, we'll create an `application.properties` file by running the following command:
 +
 [source,sh,role=execute]
 ----
@@ -321,14 +321,14 @@ This is the image for the application that was built automatically for you and p
 
 === Image Build
 
-How did those images get built you ask?
+How did those images get built, you ask?
 Back on the OpenShift Web Console, click on _BuildConfigs_ and then the _microsweeper-appservice_ entry.
 
 image::rosa-console-buildconfigs.png[OpenShift Web Console - BuildConfigs]
 image::rosa-console-microsweeper-appservice-buildconfig.png[OpenShift Web Console - microsweeper-appservice BuildConfig]
 
 When you ran the `quarkus build` command, this created the BuildConfig you can see here.
-In our quarkus settings, we set the deployment strategy to build the image using Docker.
+In our Quarkus settings, we set the deployment strategy to build the image using Docker.
 The Dockerfile file from the git repo that we cloned was used for this BuildConfig.
 
 [INFO]
@@ -337,12 +337,12 @@ A build configuration describes a single build definition and a set of triggers 
 Build configurations are defined by a BuildConfig, which is a REST object that can be used in a POST to the API server to create a new instance.
 ====
 
-You can read more about BuildConfigs https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-buildconfigs.html[here]
+You can read more about BuildConfigs https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-buildconfigs.html[here].
 
 Once the BuildConfig was created, the source-to-image process kicked off a Build of that BuildConfig.
-The build is what actually does the work in building and deploying the image.
+The Build is what actually does the work in building and deploying the image.
 We started with defining what to be built with the BuildConfig and then actually did the work with the Build.
-You can read more about Builds https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-image-builds.html[here]
+You can read more about Builds https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-image-builds.html[here].
 
 To look at what the build actually did, click on Builds tab and then into the first Build in the list.
 
@@ -350,14 +350,14 @@ image::rosa-console-builds.png[OpenShift Web Console - Builds]
 
 On the next screen, explore around.
 Look specifically at the YAML definition of the build and the logs to see what the build actually did.
-If you build failed for some reason, the logs are a great first place to start to look at to debug what happened.
+If your build failed for some reason, the logs are a great first place to start looking to debug what happened.
 
 image::rosa-console-build-logs.png[OpenShift Web Console - Build Logs]
 
 === Image Deployment
 
 After the image was built, the source-to-image process then deployed the application for us.
-You can view the deployment under _Workloads_ \-> _Deployments_, and then click on the Deployment name.
+You can view the deployment under _Workloads_ \-> _Deployments_, and then click on the `microsweeper-appservice` deployment.
 
 image::rosa-console-deployments.png[OpenShift Web Console - Deployments]
 
@@ -370,10 +370,10 @@ Look at the pod the deployment created, and see that it is running.
 image::rosa-console-deployment-pods.png[OpenShift Web Console - Deployment Pods]
 
 The last thing we will look at is the route that was created for our application.
-In the quarkus properties file, we specified that the application should be exposed to the Internet.
+In the Quarkus properties file, we specified that the application should be exposed to the Internet.
 When you create a Route, you have the option to specify a hostname.
-To start with, we will just use the default domain that comes with ROSA (`openshiftapps.com` in our case).
-In next section, we will expose the same application to a custom domain leveraging Azure Front Door.
+To start with, we will use the default domain that comes with ROSA (`openshiftapps.com` in our case).
+In the next section, we will expose the same application to a custom domain leveraging Azure Front Door.
 
 You can read more about routes https://docs.openshift.com/container-platform/latest/networking/routes/route-configuration.html[in the Red Hat documentation]
 
@@ -435,6 +435,6 @@ This could be via a VPN connection, AWS DirectConnect, or something else.
 Here you learned:
 
 * Create an AWS DynamoDB table for your application to use
-* Create a service account to use IAM Roles for Service Accounts (IRSA).
+* Create a service account to use IAM Roles for Service Accounts (IRSA)
 * Deploy the Microsweeper app and connect it to AWS DynamoDB as the backend database
-* Access the publicly exposed Microsweeper app using OpenShift routes.
+* Access the publicly exposed Microsweeper app using OpenShift routes

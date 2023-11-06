@@ -2,7 +2,7 @@
 
 Red Hat OpenShift Service on AWS (ROSA) clusters store log data inside the cluster by default. Understanding metrics and logs is critical in successfully running your cluster. Included with ROSA is the OpenShift Cluster Logging Operator, which is intended to simplify log management and analysis within a ROSA cluster, offering centralized log collection, powerful search capabilities, visualization tools, and integration with other monitoring systems like https://aws.amazon.com/cloudwatch/[Amazon CloudWatch].
 
-Amazon CloudWatch is a monitoring and observability service provided by Amazon Web Services. It allows you to collect, store, analyze and visualize logs, metrics and events from various AWS resources and applications. Since ROSA is a first party AWS service, it integrates with Amazon CloudWatch and forwards its infrastructure, audit and application logs to Amazon CloudWatch.
+Amazon CloudWatch is a monitoring and observability service provided by Amazon Web Services. It allows you to collect, store, analyze, and visualize logs, metrics and events from various AWS resources and applications. Since ROSA is a first party AWS service, it integrates with Amazon CloudWatch and forwards its infrastructure, audit and application logs to Amazon CloudWatch.
 
 In this section of the workshop, we'll configure ROSA to forward logs to Amazon CloudWatch.
 
@@ -275,4 +275,4 @@ Here you learned:
 
 * Use a previously created AWS IAM trust policy and role to grant your cluster access to Amazon CloudWatch
 * Install the OpenShift Cluster Logging Operator in your cluster
-* Configure `ClusterLogForwarder` and `ClusterLogging` objects to forward infrastructure, audit and application logs to Amazon CloudWatch
+* Configure `ClusterLogForwarder` and `ClusterLogging` objects to forward infrastructure, audit, and application logs to Amazon CloudWatch

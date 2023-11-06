@@ -192,7 +192,6 @@ For this environment your admin user has already been created.
 ====
 
 . Now that you have the information about the Admin credentials and the API URL for your cluster you can log into your cluster:
-cmdo
 +
 [source,sh,role=execute,subs="attributes"]
 ----

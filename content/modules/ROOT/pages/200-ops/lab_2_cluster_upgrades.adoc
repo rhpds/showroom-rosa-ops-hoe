@@ -30,7 +30,7 @@ Kubernetes Version: v1.27.6+f67aeb3
 Actual versions displayed in your environment will be different than the example above.
 ====
 
-. List available versios for the ROSA upgrade (depending on when you run this command there may not be any upgrades available):
+. List available versions for the ROSA upgrade (depending on when you run this command there may not be any upgrades available):
 +
 [source,sh,role=execute]
 ----

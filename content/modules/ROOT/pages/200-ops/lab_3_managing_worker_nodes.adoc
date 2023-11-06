@@ -6,10 +6,10 @@ Many of these changes are done using Machine Pools. Machine Pools ensure that a 
 
 Here are some of the advantages of using ROSA Machine Pools to manage the size of your cluster
 
-* Scalability - ROSA Machine Pool enables horizontal scaling of your cluster. It can easily add or remove worker to handle the changes in workload. This flexibility ensures that your cluster can dynamically scale to meet the needs of your applications
+* Scalability - ROSA Machine Pool enables horizontal scaling of your cluster. It can easily add or remove workers to handle the changes in workload. This flexibility ensures that your cluster can dynamically scale to meet the needs of your applications
 * High Availability - ROSA Machine Pool supports the creation of 3 replicas of workers across different availability zones. This redundancy helps ensure high availability of applications by distributing workloads.
-* Infrastructure Diversity - ROSA Machine Pool allow you to provision worker nodes of different instance type. This enables you you leverage the best kind of instance family for different workloads.
-* Integration with Cluster Autoscaler - ROSA Machine Pool seamlessly integrate with the Cluster Autoscaler feature, which automatically adjusts the number of worker nodes based on the current demand. This integration ensures efficient resource utilization by scaling the cluster up or down as needed, optimizing costs and performance.
+* Infrastructure Diversity - ROSA Machine Pool allows you to provision worker nodes of different instance type. This enables you you leverage the best kind of instance family for different workloads.
+* Integration with Cluster Autoscaler - ROSA Machine Pool seamlessly integrates with the Cluster Autoscaler feature, which automatically adjusts the number of worker nodes based on the current demand. This integration ensures efficient resource utilization by scaling the cluster up or down as needed, optimizing costs and performance.
 
 image::scale_machinepool.png[scale_machinepool]
 
@@ -196,7 +196,7 @@ rosa-82prr-dw6cz-workshop-us-east-2a-sstzd    Provisioned   m5.xlarge    us-east
 . Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit `CTRL-C` to exit the `oc` command.
 endif::[]
 
-. We don't actually need these extra worker nodes so let's scale the cluster back down to a total of 2 worker nodes by scaling down the Machine Pool.
+. We don't actually need this extra worker node so let's scale the cluster back down to a total of 2 worker nodes by scaling down the Machine Pool.
 +
 To do so, run the following command:
 +
