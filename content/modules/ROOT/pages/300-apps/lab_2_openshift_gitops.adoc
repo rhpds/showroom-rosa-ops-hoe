@@ -1,20 +1,21 @@
 == Introduction
 
-Red Hat® OpenShift® GitOps is an operator that provides a workflow that integrates git repositories, continuous integration/continuous delivery (CI/CD) tools, and Kubernetes to realize faster, more secure, scalable software development, without compromising quality.
+Red Hat® OpenShift® GitOps is an operator that provides tools to enable continuous deployment (CD). Making GitOps workflows available to your platform and development teams, OpenShift GitOps helps you to realize faster, more secure, and more scalable software development, without compromising on quality.
 
-OpenShift GitOps enables customers to build and integrate declarative git-driven CD workflows directly into their application development platform. 
+OpenShift GitOps enables customers to build and integrate declarative, git-driven CD workflows directly into their development lifecycle. 
 
-There's no single tool that converts a development pipeline to "DevOps". By implementing a GitOps framework, updates and changes are pushed through declarative code, automating infrastructure and deployment requirements, and CI/CD.
+There's no single tool that converts a development pipeline to "DevOps", but implementing a GitOps framework starts you on the path. Updates and changes are made declaratively in code, bringing automation and a single source of truth to your infrastructure, configuration, and application deployments.
 
-OpenShift GitOps takes advantage of https://argoproj.github.io/cd[Argo CD] and integrates it into Red Hat OpenShift to deliver a consistent, fully supported, declarative Kubernetes platform to configure and use with GitOps principles.
+OpenShift GitOps is built on https://argoproj.github.io/cd[Argo CD], integrating it into Red Hat OpenShift to deliver a consistent, fully supported, declarative, cloud native platform for deployment using GitOps principles.
 
-OpenShift and OpenShift GitOps:
+OpenShift with OpenShift GitOps enables you to:
 
 * Apply consistency across cluster and deployment lifecycles
 * Consolidate administration and management of applications across on-premises and cloud environments
-* Check the state of clusters making application constraints known early
-* Rollback code changes across clusters
+* Monitor the state deployed applications across your clusters
+* Roll back code changes across clusters
 * Roll out new changes submitted via Git
+* Have confidence in the state of your resources
 
 :numbered:
 == Deploying your Application with OpenShift GitOps
@@ -48,9 +49,9 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
     kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
 ----
 
-. The OpenShift Gitops operator includes the capability to deploy individual instances of ArgoCD for developers.
+. The OpenShift GitOps operator includes the capability to deploy individual instances of Argo CD for developers.
 +
-Deploy your personal ArgoCD into your development project:
+Deploy your personal Argo CD into your development project:
 +
 [source,sh,role=execute]
 ----
@@ -93,7 +94,7 @@ EOF
 argocd.argoproj.io/argocd created
 ----
 
-. Wait for your ArgoCD server to be ready:
+. Wait for your Argo CD server to be ready:
 +
 [source,sh,role=execute]
 ----
@@ -106,7 +107,7 @@ oc rollout status deploy/argocd-server -n bgd
 deployment "argocd-server" successfully rolled out
 ----
 
-. Now that you ArgoCD server is ready you can use it to deploy an application from a git repository. In this case the Kubernetes / OpenShift definition of the application is in the git repository https://github.com/rh-mobb/gitops-bgd-app. We won't have time to go into all the options but creating the `Application` tells ArgoCD to deploy the application from the Git repository into the namespace `bgd`.
+. Now that your Argo CD server is ready you can use it to deploy an application from a git repository. In this case the Kubernetes / OpenShift definition of the application is in the git repository https://github.com/rh-mobb/gitops-bgd-app. We won't have time to go into all the options, but creating the `Application` tells Argo CD to deploy the application from the git repository into the namespace `bgd`.
 +
 Create the Application:
 +
@@ -156,7 +157,7 @@ echo "https://$(oc -n bgd get route argocd-server -o jsonpath='{.spec.host}')"
 https://argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
 
-. ArgoCD is configured for single sign on with OpenShift. Therefore your admin credentials also work in ArgoCD. Click on the *Log in via OpenShift* button and use the admin credentials to log in (you may need to click on *Allow selected permissions* after the login step):
+. Argo CD is configured for single sign on with OpenShift. Therefore your admin credentials also work in Argo CD. Click on the *Log in via OpenShift* button and use the admin credentials to log in (you may need to click on *Allow selected permissions* after the login step):
 +
 [subs="attributes"]
 ====
@@ -164,7 +165,7 @@ https://argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 * *Admin user Password:* {rosa_user_password}
 ====
 
-. Once you have logged into ArgoCD yoiu should see the ArgoCD application dashboard.
+. Once you have logged into Argo CD you should see the Argo CD application dashboard.
 +
 image::argo_app1.png[]
 
@@ -202,7 +203,7 @@ bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 +
 image::bgd_green.png[]
 
-. Patch the OpenShift resource to force it to be out of sync with the github repository:
+. Patch the OpenShift resource to force it to be out of sync with the GitHub repository:
 +
 [source,sh,role=execute]
 ----
@@ -217,11 +218,11 @@ oc -n bgd patch deploy/bgd --type='json' \
 deployment.apps/bgd patched
 ----
 
-. Refresh Your browser and you should see a blue box in the website like so:
+. Refresh your browser and you should see a blue box in the website like so:
 +
 image::app_blue.png[]
 
-. Meanwhile check ArgoCD it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift:
+. Meanwhile check Argo CD - it should show the application as out of sync. Click the *Sync* button and then click on *Synchronize* to have it revert the change you made in OpenShift:
 +
 image::sync_bgd.png[]
 
@@ -231,4 +232,4 @@ image::bgd_green.png[]
 
 *Congratulations!*
 
-You have successfully deployed Red Hat OpenShift Gitops and used it to deploy and heal an application to your ROSA cluster.
+You have successfully deployed Red Hat OpenShift GitOps and used it to deploy and heal an application to your ROSA cluster.

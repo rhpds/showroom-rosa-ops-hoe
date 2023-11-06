@@ -8,12 +8,11 @@ In this experience, you will learn how you can take advantage of Red Hat OpenShi
 
 *What you will learn:*
 
-.  How to deploy a Red Hat OpenShift Service on AWS (ROSA) cluster (video)
 . Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
 . Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
-. Make an application on OpenShift scalable and resistant to node failures and upgrades
+. Make an application on OpenShift scalable and resistant to node failures and upgrades.
 . Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
-. Learn how to use OpenShift Service Mesh for application observability and tracing
+. Learn how to use OpenShift Service Mesh for application observability and tracing.
 
 After completing this workshop, you will understand the concepts of modern application platforms, and will have begun to lay the foundations with Red Hat OpenShift.
 
