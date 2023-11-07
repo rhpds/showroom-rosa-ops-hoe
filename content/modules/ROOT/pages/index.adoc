@@ -8,6 +8,7 @@ In this experience, you will learn how you can take advantage of Red Hat OpenShi
 
 *What you will learn:*
 
+. Explore the ROSA environment that has been predeployed for you.
 . Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
 . Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
 . Make an application on OpenShift scalable and resistant to node failures and upgrades.

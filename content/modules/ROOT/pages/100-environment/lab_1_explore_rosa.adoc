@@ -66,7 +66,6 @@ Nodes:
  - Control plane:           3
  - Infra:                   2
  - Compute:                 2
-   - Root disk size:        300 GiB
 Network:
  - Type:                    OVNKubernetes
  - Service CIDR:            172.30.0.0/16
@@ -216,7 +215,7 @@ ifndef::rosa_deploy_hcp[]
 ----
 Login successful.
 
-You have access to 100 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 101 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "default".
 Welcome! See 'oc help' to get started.

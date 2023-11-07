@@ -472,14 +472,14 @@ oc get oauth cluster -o json | jq .spec.identityProviders
         "name": "htpasswd-secret-256is6i9vt46rsp2onu4htcv0vitkob8"
       }
     },
-    "mappingMethod": "claim",
-    "name": "htpasswd",
+   "mappingMethod": "claim",
+    "name": "cluster-admin",
     "type": "HTPasswd"
-  }
+   }
 ]
 ----
 +
-You will notice that there are two authentication providers configured: RosaKeycloak and htpasswd. The htpasswd authentication provider got added when you added the admin user in a previous lab. In the last step of this lab you will clean that up.
+You will notice that there are two authentication providers configured: *RosaKeycloak* and *cluster-admin*. The *cluster-admin* authentication provider got added when the admin user got created for you when deploying the hands-on experience. In the last step of this lab you will clean that up.
 
 . To display just the names of the configured identity providers use this command:
 +
@@ -492,7 +492,7 @@ oc get oauth cluster -o json | jq -r '.spec.identityProviders[].name'
 [source,text,options=nowrap]
 ----
 RosaKeycloak
-htpasswd
+cluster-admin
 ----
 
 . It will take a few minutes for the authentication operator to redeploy the authentication pods. Watch the pods until all three pods have been updated - when all three pods are running again (with an age of less than a few minutes) hit `Ctrl-C` to stop the watch:
@@ -524,6 +524,8 @@ If you do not see the *RosaKeycloak* option wait a few seconds and refresh the s
 ====
 
 . Click on *RosaKeycloak* and use the userid `rosa-admin` with password `{rosa_user_password}`.
++
+You will notice that your `rosa-admin` user is just a regular user at the moment - and you can not see any cluster administration pages in the OpenShift console.
 
 . Let's give Cluster Admin permissions to your RosaKeycloak admin.
 +
@@ -579,7 +581,7 @@ ifndef::rosa_deploy_hcp[]
 ----
 Login successful.
 
-You have access to 101 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 102 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----

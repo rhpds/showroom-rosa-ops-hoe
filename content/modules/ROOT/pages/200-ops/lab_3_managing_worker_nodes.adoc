@@ -93,14 +93,14 @@ rosa create machinepool -c rosa-$GUID --replicas 1 --name workshop --instance-ty
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 I: Fetching instance types
-I: Machine pool 'workshop' created successfully on cluster 'rosa-82prr'
-I: To view all machine pools, run 'rosa list machinepools -c rosa-82prr'
+I: Machine pool 'workshop' created successfully on cluster 'rosa-{guid}'
+I: To view all machine pools, run 'rosa list machinepools -c rosa-{guid}'
 ----
 +
-This command adds a single m5.xlarge instance to the first AWS availability zone in the region your cluster is deployed in.
+This command adds a single `m5.xlarge` instance to the first AWS availability zone in the region your cluster is deployed in.
 endif::[]
 
 . Now, let's scale up our MachinePool from two to three machines.
@@ -113,9 +113,9 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workshop
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'workshop' on cluster 'rosa-6n4s8'
+I: Updated machine pool 'workshop' on cluster 'rosa-{guid}'
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -126,9 +126,9 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workers
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'workers' on hosted cluster 'rosa-zwrzl'
+I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
 
 . It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit `Ctrl-C` to abort the watch):
@@ -243,9 +243,9 @@ rosa delete machinepool -c rosa-$GUID workshop --yes
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Successfully deleted machine pool 'workshop' from cluster 'rosa-6n4s8'
+I: Successfully deleted machine pool 'workshop' from cluster 'rosa-{guid}'
 ----
 +
 . You can validate that the MachinePool has been deleted by using the `rosa` cli:

@@ -1,6 +1,6 @@
 *Introduction*
 
-* xref:100-environment/lab_2_explore_rosa.adoc[Explore the ROSA environment]
+* xref:100-environment/lab_1_explore_rosa.adoc[Explore the ROSA environment]
 
 *Basic Operational Tasks*
 
