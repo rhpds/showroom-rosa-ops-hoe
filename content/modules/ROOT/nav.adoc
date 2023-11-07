@@ -14,7 +14,7 @@
 *Deploy an Application to ROSA*
 
 * xref:300-apps/lab_1_deploy_app.adoc[Deploy an Application with AWS Database]
-* xref:300-apps/lab_2_openshift_gitops.adoc[Deploy an Application with Red Hat OpenShift Gitops]
+* xref:300-apps/lab_2_openshift_gitops.adoc[Deploy an Application with Red Hat OpenShift GitOps]
 * xref:300-apps/lab_3_network_policy.adoc[Secure your applications with Network Policies]
 * xref:300-apps/lab_4_resilient_app.adoc[Make your application resilient]
 

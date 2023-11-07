@@ -214,7 +214,7 @@ To do so, run the following command:
 ----
 cd $HOME
 
-git clone https://github.com/rh-mobb/rosa-workshop-app.git
+git clone https://github.com/rhpds/rosa-workshop-app.git
 ----
 
 . Next, let's change directory into the newly cloned Git repository.
@@ -298,7 +298,7 @@ Return to your OpenShift Web Console.
 
 [NOTE]
 ====
-Reminder that you can get the URLby running the following command:
+Reminder that you can get the URL by running the following command:
 [source,sh,role=execute]
 ----
 oc whoami --show-console
@@ -399,6 +399,11 @@ echo "http://$(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpa
 ----
 http://microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
++
+[WARNING]
+====
+The URL that is printed is a `http` URL - some browsers (like Chrome) replace `http` automatically with `https` resulting in a page not found error.
+====
 
 === Application IP
 

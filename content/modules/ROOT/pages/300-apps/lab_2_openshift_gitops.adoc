@@ -107,7 +107,7 @@ oc rollout status deploy/argocd-server -n bgd
 deployment "argocd-server" successfully rolled out
 ----
 
-. Now that your Argo CD server is ready you can use it to deploy an application from a git repository. In this case the Kubernetes / OpenShift definition of the application is in the git repository https://github.com/rh-mobb/gitops-bgd-app. We won't have time to go into all the options, but creating the `Application` tells Argo CD to deploy the application from the git repository into the namespace `bgd`.
+. Now that your Argo CD server is ready you can use it to deploy an application from a git repository. In this case the Kubernetes / OpenShift definition of the application is in the git repository https://github.com/rhpds/gitops-bgd-app. We won't have time to go into all the options, but creating the `Application` tells Argo CD to deploy the application from the git repository into the namespace `bgd`.
 +
 Create the Application:
 +
@@ -127,7 +127,7 @@ spec:
   project: default
   source:
     path: apps/bgd/base
-    repoURL: https://github.com/rh-mobb/gitops-bgd-app
+    repoURL: https://github.com/rhpds/gitops-bgd-app
     targetRevision: main
   syncPolicy:
     automated:
@@ -196,8 +196,13 @@ echo "http://$(oc -n bgd get route bgd -o jsonpath='{.spec.host}')"
 .Sample Output
 [source,text,options=nowrap]
 ----
-bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+http://bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
++
+[WARNING]
+====
+The URL that is printed is a `http` URL - some browsers (like Chrome) replace `http` automatically with `https` resulting in a page not found error.
+====
 
 . You should see a green box in the website like so:
 +

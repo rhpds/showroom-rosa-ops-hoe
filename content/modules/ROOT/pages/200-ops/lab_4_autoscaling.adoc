@@ -50,9 +50,9 @@ rosa edit machinepool --cluster rosa-$GUID worker --enable-autoscaling --min-rep
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'worker' on cluster 'rosa-6n4s8'
+I: Updated machine pool 'worker' on cluster 'rosa-{guid}'
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -62,9 +62,9 @@ rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling --min-re
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'workers' on cluster 'rosa-6n4s8'
+I: Updated machine pool 'workers' on cluster 'rosa-{guid}'
 ----
 endif::[]
 

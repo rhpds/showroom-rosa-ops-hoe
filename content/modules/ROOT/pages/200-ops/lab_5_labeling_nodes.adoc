@@ -17,9 +17,9 @@ rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'worker' on cluster 'rosa-82prr'
+I: Updated machine pool 'worker' on cluster 'rosa-{guid}'
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -29,9 +29,9 @@ rosa edit machinepool -c rosa-$GUID --labels tier=frontend --min-replicas=2 --ma
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Updated machine pool 'workers' on hosted cluster 'rosa-zwrzl'
+I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
 endif::[]
 

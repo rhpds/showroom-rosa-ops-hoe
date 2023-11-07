@@ -196,17 +196,21 @@ rosa-82prr-dw6cz-workshop-us-east-2a-sstzd    Provisioned   m5.xlarge    us-east
 . Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit `CTRL-C` to exit the `oc` command.
 endif::[]
 
-. We don't actually need this extra worker node so let's scale the cluster back down to a total of 2 worker nodes by scaling down the Machine Pool.
+ifndef::rosa_deploy_hcp[]
+. We don't actually need this extra worker node so let's scale the cluster back down to a total of 4 worker nodes (2 from the *worker* machine pool and 2 from the *workshop* machine pool) by scaling down the Machine Pool.
 +
 To do so, run the following command:
 +
-ifndef::rosa_deploy_hcp[]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workshop
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
+. We don't actually need this extra worker node so let's scale the cluster back down to a total of 2 worker nodes by scaling down the Machine Pool.
++
+To do so, run the following command:
++
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workers

@@ -134,16 +134,16 @@ To do so, we can run the following command to watch the status of the installati
 oc -n openshift-logging rollout status deployment cluster-logging-operator
 ----
 +
+[TIP]
+====
+If you get an error `Error from server (NotFound): deployments.apps "cluster-logging-operator" not found` wait a few seconds and try again.
+====
++
 .After a minute or two, your output should look something like this:
 [source,text,options=nowrap]
 ----
 deployment "cluster-logging-operator" successfully rolled out
 ----
-+
-[TIP]
-====
-If you get an error `Error from server (NotFound): deployments.apps "cluster-logging-operator" not found` wait a few seconds and try again.
-====
 
 . Next, we need to create a secret containing the ARN of the IAM role that was previously created.
 To do so, run the following command:
@@ -234,7 +234,7 @@ EOF
 clusterlogging.logging.openshift.io/instance created
 ----
 
-. After a few minutes, you should begin to see log groups inside of Amazon CloudWatch.
+. After a few minutes, you should begin to see log groups inside of Amazon CloudWatch. Repeat this command until you see output resembling the example output below.
 +
 [source,sh,role=execute]
 ----
