@@ -25,7 +25,7 @@ image::scale_machinepool.png[scale_machinepool]
 rosa list machinepools -c rosa-$GUID
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -42,7 +42,7 @@ workers  No           2/2       m5.xlarge                          us-east-2a   
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Now, let's take a look at the MachineSets inside of the ROSA cluster that have been created according to the instructions provided by the above MachinePools. To do so, run the following command:
 +
 [source,sh,role=execute]
@@ -105,7 +105,7 @@ endif::[]
 
 . Now, let's scale up our MachinePool from two to three machines.
 To do so, run the following command:
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 +
 [source,sh,role=execute]
 ----
@@ -150,7 +150,7 @@ ip-10-0-0-62.us-east-2.compute.internal   Ready    worker   115m   v1.27.6+f67ae
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Now that we've scaled the MachinePool to three machines, we can see that the machines are already being created.
 First, let's quickly check the output of the `oc get machinesets` command we ran earlier:
 +
@@ -200,7 +200,7 @@ endif::[]
 +
 To do so, run the following command:
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 [source,sh,role=execute]
 ----
 rosa update machinepool -c rosa-$GUID --replicas 2 workshop
@@ -215,7 +215,7 @@ rosa update machinepool -c rosa-$GUID --replicas 2 workers
 If you want to wait until the additional node has been removed repeat the previous command (`oc get nodes`) until you see just two worker nodes again.
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Now that we've scaled the MachinePool (and therefore the MachineSet) back down to one machine, we can see the change reflected in the cluster almost immediately.
 Let's quickly check the output of the same command we ran before:
 +
@@ -271,7 +271,7 @@ You've successfully scaled your cluster up and back down to two worker nodes.
 
 Here you learned:
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 * Creating new Machine Pool for your ROSA cluster to add additional nodes to the cluster
 endif::[]
 * Scaling a Machine Pool up to add more nodes to the cluster

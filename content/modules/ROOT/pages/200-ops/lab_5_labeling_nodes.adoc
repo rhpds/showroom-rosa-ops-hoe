@@ -10,7 +10,7 @@ While you can directly add a label to a node, it is not recommended because node
 . Just like the last section, let's use the default machine pool to add our label.
 To do so, run the following command:
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 [source,sh,role=execute]
 ----
 rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker

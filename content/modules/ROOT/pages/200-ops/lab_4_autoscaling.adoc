@@ -20,7 +20,7 @@ You will need to set up autoscaling for each MachinePool in the cluster separate
 rosa list machinepools --cluster rosa-$GUID
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -43,7 +43,7 @@ endif::[]
 
 . To enable autoscaling on a machine pool, enter the following command:
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 [source,sh,role=execute]
 ----
 rosa edit machinepool --cluster rosa-$GUID worker --enable-autoscaling --min-replicas=2 --max-replicas=4
@@ -68,7 +68,7 @@ I: Updated machine pool 'workers' on cluster 'rosa-6n4s8'
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Next, let's check to see that our managed machine autoscalers have been created.
 To do so, run the following command:
 +
@@ -194,7 +194,7 @@ This should trigger the cluster autoscaler to create more machines using the Mac
 
 . It will take a few minutes (around 5 minutes) for the new nodes to be available.
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Check the number of nodes in your cluster (repeat this command until you see 9 nodes - 3 control plane nodes, 2 infra nodes and the maximum 4 that you configured for autoscaling the Machinepool):
 +
 [source,sh,role=execute]

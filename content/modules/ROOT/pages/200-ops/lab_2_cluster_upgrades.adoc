@@ -118,7 +118,7 @@ I: Account and operator roles for cluster 'rosa-6lzvq' are compatible with upgra
 I: Upgrade successfully scheduled for cluster 'rosa-6lzvq'
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \

@@ -23,7 +23,7 @@ ID                                NAME        STATE  TOPOLOGY
 26rb36mq3avdbitdo3qv3t7sc7s4ui16  rosa-{guid}  ready  Hosted CP
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,texinfo,options=nowrap,subs=attributes]
 ----
@@ -46,7 +46,7 @@ Also notice the Topology and state. State should be *ready* and Topology could b
 rosa describe cluster --cluster rosa-$GUID
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
@@ -210,7 +210,7 @@ Using project "default".
 Welcome! See 'oc help' to get started.
 ----
 endif::[]
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----

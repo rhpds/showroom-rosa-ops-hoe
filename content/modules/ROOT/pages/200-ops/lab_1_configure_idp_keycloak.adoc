@@ -187,7 +187,7 @@ export CLUSTER_DOMAIN=$(rosa describe cluster -c rosa-$GUID | grep "DNS" | grep 
 ----
 
 . Set your OAuth Callback URL base variable.
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .. Your cluster is a classic ROSA cluster. Therefore the command to determine the OAuth Callback URL is the following:
 +
 [source,sh,role=execute]
@@ -401,7 +401,7 @@ rosa create idp \
 --username-claims preferred_username
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -428,7 +428,7 @@ I: To log in to the console, open https://console-openshift-console.apps.rosa.ro
 ----
 endif::[]
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Validate that the cluster's `OAuth` resource has been updated (you may need to retry this command a few times until ROSA has updated the configuration):
 +
 [source,sh,role=execute]
@@ -573,7 +573,7 @@ image::cluster_admin_view.png[Cluster Admin View]
 oc login -u rosa-admin -p {rosa_user_password} {rosa_api_url}
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,text,options=nowrap]
 ----
@@ -609,7 +609,7 @@ rosa delete admin -c rosa-$GUID --yes
 I: Admin user 'cluster-admin' has been deleted from cluster 'rosa-{guid}'
 ----
 
-ifeval::["{rosa_deploy_hcp}" == "false"]
+ifndef::rosa_deploy_hcp[]
 . Validate that only the RosaKeycloak authentication provider is left in the OpenShift OAuth configuration:
 +
 [source,sh,role=execute]
