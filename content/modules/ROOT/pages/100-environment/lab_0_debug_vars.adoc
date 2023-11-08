@@ -5,15 +5,19 @@
 rosa_admin_user: {rosa_admin_user}
 rosa_admin_password: {rosa_admin_password}
 rosa_api_url: {rosa_api_url}
+rosa_console_url: {rosa_console_url}
+
+rosa_version: {rosa_version}
+rosa_version_next: {rosa_version_next}
+rosa_ocp_cli_version: {rosa_ocp_cli_version}
 rosa_deploy_hcp: {rosa_deploy_hcp}
 
 rosa_bastion_user_name: {rosa_bastion_user_name}
-rosa_console_url: {rosa_console_url}
 rosa_console_user_name: {rosa_console_user_name}
 rosa_console_password: {rosa_console_password}
 rosa_sandbox_account_id: {rosa_sandbox_account_id}
 
-rosa_subdomain_base: rosa_subdomain_base
+rosa_subdomain_base: {rosa_subdomain_base}
 rosa_token_warning: {rosa_token_warning}
 
 ssh_command: {ssh_command}
