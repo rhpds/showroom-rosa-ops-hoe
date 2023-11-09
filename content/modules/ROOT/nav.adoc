@@ -4,11 +4,11 @@
 
 *Basic Operational Tasks*
 
-* xref:200-ops/lab_1_configure_idp_keycloak.adoc[Configure Red Hat SSO IDP for ROSA]
-* xref:200-ops/lab_2_cluster_upgrades.adoc[Upgrade your ROSA cluster]
-* xref:200-ops/lab_3_managing_worker_nodes.adoc[Managing Worker Nodes]
-* xref:200-ops/lab_4_autoscaling.adoc[Autoscale your ROSA Cluster]
-* xref:200-ops/lab_5_labeling_nodes.adoc[Labeling your Worker Nodes]
+* xref:200-ops/lab_1_cluster_upgrades.adoc[Upgrade your ROSA cluster]
+* xref:200-ops/lab_2_managing_worker_nodes.adoc[Managing Worker Nodes]
+* xref:200-ops/lab_3_autoscaling.adoc[Autoscale your ROSA Cluster]
+* xref:200-ops/lab_4_labeling_nodes.adoc[Labeling your Worker Nodes]
+* xref:200-ops/lab_5_configure_idp_keycloak.adoc[Configure Red Hat SSO IDP for ROSA]
 * xref:200-ops/lab_6_cloudwatch.adoc[Configure Red Hat OpenShift Logging with AWS Cloudwatch]
 
 *Deploy an Application to ROSA*

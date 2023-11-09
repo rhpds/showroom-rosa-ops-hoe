@@ -17,11 +17,11 @@ oc version
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-Client Version: 4.14.1
+Client Version: {rosa_version}
 Kustomize Version: v5.0.1
-Server Version: 4.14.1
+Server Version: {rosa_version}
 Kubernetes Version: v1.27.6+f67aeb3
 ----
 +
@@ -38,9 +38,10 @@ rosa list upgrades -c rosa-$GUID
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: There are no available upgrades for cluster 'rosa-7v44k'
+VERSION  NOTES
+{rosa_version_next}   recommended
 ----
 
 . You can also use the OpenShift CLI to list available versions - but for ROSA it's preferred to use the rosa cli.:
@@ -51,28 +52,34 @@ oc adm upgrade
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-Cluster version is 4.14.1
+Cluster version is {rosa_version}
+
+Upgradeable=False
+
+  Reason: MissingUpgradeableAnnotation
+  Message: Cluster operator cloud-credential should not be upgraded between minor versions: Upgradeable annotation cloudcredential.openshift.io/upgradeable-to on cloudcredential.operator.openshift.io/cluster object needs updating before upgrade. See Manually Creating IAM documentation for instructions on preparing a cluster for upgrade.
 
 Upstream is unset, so the cluster will use an appropriate default.
 Channel: stable-4.14 (available channels: candidate-4.14, candidate-4.15, eus-4.14, fast-4.14, stable-4.14)
-No updates available. You may still upgrade to a specific release image with --to-image or wait for new updates to be available.
+
 Recommended updates:
 
   VERSION     IMAGE
-  4.14.2      quay.io/openshift-release-dev/ocp-release@sha256:38ccab25d5895a216a465a9f297541fbbebe7aa115fdaa9f2015c8d5a5d036eb
+  {rosa_version_next}      quay.io/openshift-release-dev/ocp-release@sha256:05ba8e63f8a76e568afe87f182334504a01d47342b6ad5b4c3ff83a2463018bd
 ----
 +
-Depending on when you run this command the available version list may be longer than just the next release.
-+
-Or there may not be any available upgrades at all. In that case you are already on the latest minor release for your major OpenShift release and can not upgrade your cluster any further. Please read through the rest of these instructions and then move on to the next lab.
+[NOTE]
+====
+You may ignore the warning that is printed - you are only upgrading to the next dot release within the minor release. 
+====
 
 . Set a variable for the cluster version you want to upgrade to. For the example above this would be:
 +
-[source,sh]
+[source,sh,role=execute,subs="attributes"]
 ----
-export CLUSTER_VERSION=4.14.2
+export CLUSTER_VERSION="{rosa_version_next}"
 ----
 
 . You probably don't want to actually upgrade the cluster right now since that may disrupt your lab environment. Luckily it is possible to schedule an update at a less inconvenient time.
@@ -90,10 +97,10 @@ echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
 .Sample Output
 [source,text,options=nowrap]
 ----
-Date: 2023-10-31, Time: 11:09
+Date: 2023-11-10, Time: 09:11
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions (in the example above that is `4.14.2`).
+. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions:
 +
 ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
@@ -109,7 +116,7 @@ rosa upgrade cluster \
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 I: Ensuring account and operator role policies for cluster '26pgsg3i77d9f85p7t6r89aar58liqpe' are compatible with upgrade.
 I: Account roles with the prefix 'ManagedOpenShift' have attached managed policies.
@@ -131,13 +138,13 @@ rosa upgrade cluster \
 ----
 +
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Ensuring account and operator role policies for cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are compatible with upgrade.
-I: Account roles/policies for cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are already up-to-date.
-I: Operator roles/policies associated with the cluster '26rate9v2s9k7mjgtag8gcoh3kkdl6qj' are already up-to-date.
-I: Account and operator roles for cluster 'rosa-82prr' are compatible with upgrade
-I: Upgrade successfully scheduled for cluster 'rosa-82prr'
+I: Ensuring account and operator role policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are compatible with upgrade.
+I: Account roles/policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
+I: Operator roles/policies associated with the cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
+I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
+I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
 ----
 endif::[]
 
