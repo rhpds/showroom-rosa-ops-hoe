@@ -77,7 +77,7 @@ node/ip-10-0-249-69.us-east-2.compute.internal
 ----
 +
 You may see between two and four nodes - depending if you did the autoscaling lab recently (if you did the cluster has probably not scaled down yet). This demonstrates that our machine pool and associated nodes are properly annotated!
-ifeval::["{rosa_deploy_hcp}" == "true"]
+ifndef::rosa_deploy_hcp[]
 +
 [TIP]
 ====

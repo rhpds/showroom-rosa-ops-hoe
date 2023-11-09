@@ -403,28 +403,28 @@ rosa create idp \
 +
 ifndef::rosa_deploy_hcp[]
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Configuring IDP for cluster 'rosa-9zlx8'
+I: Configuring IDP for cluster 'rosa-{guid}'
 I: Identity Provider 'RosaKeycloak' has been created.
    It may take several minutes for this access to become active.
    To add cluster administrators, see 'rosa grant user --help'.
 
-I: Callback URI: https://oauth-openshift.apps.rosa-9zlx8.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
-I: To log in to the console, open https://console-openshift-console.apps.rosa-9zlx8.999y.p1.openshiftapps.com and click on 'RosaKeycloak'.
+I: Callback URI: https://oauth-openshift.apps.rosa-{guid}.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
+I: To log in to the console, open {{rosa_console_url}} and click on 'RosaKeycloak'.
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
-I: Configuring IDP for cluster 'rosa-zwrzl'
+I: Configuring IDP for cluster 'rosa-{guid}'
 I: Identity Provider 'RosaKeycloak' has been created.
    It may take several minutes for this access to become active.
    To add cluster administrators, see 'rosa grant user --help'.
 
-I: Callback URI: https://oauth.rosa-zwrzl.8ffn.p3.openshiftapps.com:443/oauth2callback/RosaKeycloak
-I: To log in to the console, open https://console-openshift-console.apps.rosa.rosa-zwrzl.8ffn.p3.openshiftapps.com and click on 'RosaKeycloak'.
+I: Callback URI: https://oauth.rosa-{guid}.8ffn.p3.openshiftapps.com:443/oauth2callback/RosaKeycloak
+I: To log in to the console, open {{rosa_console_url}} and click on 'RosaKeycloak'.
 ----
 endif::[]
 
@@ -581,7 +581,7 @@ ifndef::rosa_deploy_hcp[]
 ----
 Login successful.
 
-You have access to 102 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 103 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----
@@ -592,7 +592,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 Login successful.
 
-You have access to 78 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 79 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----

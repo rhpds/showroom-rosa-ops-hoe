@@ -45,7 +45,7 @@ aws dynamodb create-table \
 ----
 +
 .Sample Output
-[source,json,options=nowrap]
+[source,json,options=nowrap,subs="attributes"]
 ----
 {
     "TableDescription": {
@@ -55,7 +55,7 @@ aws dynamodb create-table \
                 "AttributeType": "S"
             }
         ],
-        "TableName": "microsweeper-scores-6n4s8",
+        "TableName": "microsweeper-scores-{guid}",
         "KeySchema": [
             {
                 "AttributeName": "name",
@@ -71,7 +71,7 @@ aws dynamodb create-table \
         },
         "TableSizeBytes": 0,
         "ItemCount": 0,
-        "TableArn": "arn:aws:dynamodb:us-east-2:264091519843:table/microsweeper-scores-6n4s8",
+        "TableArn": "arn:aws:dynamodb:us-east-2:{rosa_sandbox_account_id}:table/microsweeper-scores-{guid}",
         "TableId": "37be72fe-3dea-411c-871d-467c12607691"
     }
 }
@@ -113,14 +113,14 @@ aws iam get-role --role-name irsa-$GUID --output json
 ----
 +
 .Sample Output
-[source,json]
+[source,json,subs="attributes"]
 ----
 {
     "Role": {
         "Path": "/",
-        "RoleName": "irsa-wkrh6",
+        "RoleName": "irsa-{guid}",
         "RoleId": "AROAYA6CBKHNIX2KS3MKM",
-        "Arn": "arn:aws:iam::551773360602:role/irsa-wkrh6",
+        "Arn": "arn:aws:iam::{rosa_sandbox_account_id}:role/irsa-{guid}",
         "CreateDate": "2023-10-04T09:41:29+00:00",
         "AssumeRolePolicyDocument": {
             "Version": "2012-10-17",
@@ -128,7 +128,7 @@ aws iam get-role --role-name irsa-$GUID --output json
                 {
                     "Effect": "Allow",
                     "Principal": {
-                        "Federated": "arn:aws:iam::551773360602:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
+                        "Federated": "arn:aws:iam::{rosa_sandbox_account_id}:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
                     },
                     "Action": "sts:AssumeRoleWithWebIdentity",
                     "Condition": {
@@ -139,7 +139,7 @@ aws iam get-role --role-name irsa-$GUID --output json
                 }
             ]
         },
-        "Description": "IRSA Role (wkrh6)",
+        "Description": "IRSA Role ({guid})",
         "MaxSessionDuration": 3600,
         "RoleLastUsed": {}
     }
@@ -158,9 +158,9 @@ echo $ROLE_ARN
 ----
 +
 .Sample Output
-[source,texinfo]
+[source,texinfo,subs="attributes"]
 ----
-arn:aws:iam::551773360602:role/irsa-wkrh6
+arn:aws:iam::{rosa_sandbox_account_id}:role/irsa-{guid}
 ----
 
 . Now you can annotate the service account with the ARN of the pre-created IAM role.
@@ -204,7 +204,7 @@ quarkus --version
 .Sample Output
 [source,text,options=nowrap]
 ----
-3.5.0
+3.5.1
 ----
 
 . Now, let's clone the application from GitHub.
@@ -399,7 +399,7 @@ echo "http://$(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpa
 ----
 http://microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
-+
+
 [WARNING]
 ====
 The URL that is printed is a `http` URL - some browsers (like Chrome) replace `http` automatically with `https` resulting in a page not found error.

@@ -27,7 +27,7 @@ rosa list machinepools -c rosa-$GUID
 +
 ifndef::rosa_deploy_hcp[]
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE
 worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
@@ -35,10 +35,10 @@ worker  No           2         m5.xlarge                          us-east-2a    
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  4.14.1   Yes
+workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 endif::[]
 
@@ -147,6 +147,20 @@ NAME                                      STATUS   ROLES    AGE    VERSION
 ip-10-0-0-29.us-east-2.compute.internal   Ready    worker   115m   v1.27.6+f67aeb3
 ip-10-0-0-59.us-east-2.compute.internal   Ready    worker   71s    v1.27.6+f67aeb3
 ip-10-0-0-62.us-east-2.compute.internal   Ready    worker   115m   v1.27.6+f67aeb3
+----
+
+. Double check your machine pool to validate that it also is now showing 3 replicas:
++
+[source,sh,role=execute]
+----
+rosa list machinepools -c rosa-$GUID
+----
++
+.Sample Output
+[source,text,options=nowrap,subs="attributes"]
+----
+ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
+workers  No           3/3       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 endif::[]
 

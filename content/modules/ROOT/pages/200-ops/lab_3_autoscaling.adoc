@@ -32,10 +32,10 @@ The *ID* of the MachinePool that you want to add autoscaling to is `worker`.
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
-[source,text,options=nowrap]
+[source,text,options=nowrap,subs="attributes"]
 ----
 ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  4.14.1   Yes
+workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 +
 The *ID* of the MachinePool that you want to add autoscaling to is `workers`.

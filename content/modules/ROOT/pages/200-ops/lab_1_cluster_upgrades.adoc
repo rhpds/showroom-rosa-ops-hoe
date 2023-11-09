@@ -24,11 +24,6 @@ Kustomize Version: v5.0.1
 Server Version: {rosa_version}
 Kubernetes Version: v1.27.6+f67aeb3
 ----
-+
-[NOTE]
-====
-Actual versions displayed in your environment may be different than the example above.
-====
 
 . List available versions for the ROSA upgrade (depending on when you run this command there may not be any upgrades available):
 +
@@ -51,6 +46,7 @@ VERSION  NOTES
 oc adm upgrade
 ----
 +
+ifndef::rosa_deploy_hcp[]
 .Sample Output
 [source,text,options=nowrap,subs="attributes"]
 ----
@@ -74,6 +70,22 @@ Recommended updates:
 ====
 You may ignore the warning that is printed - you are only upgrading to the next dot release within the minor release. 
 ====
+endif::[]
+ifeval::["{rosa_deploy_hcp}" == "true"]
+.Sample Output
+[source,text,options=nowrap,subs="attributes"]
+----
+Cluster version is {rosa_version}
+
+Upstream is unset, so the cluster will use an appropriate default.
+Channel: stable-4.14 (available channels: candidate-4.14, candidate-4.15, eus-4.14, fast-4.14, stable-4.14)
+
+Recommended updates:
+
+  VERSION     IMAGE
+  {rosa_version_next}      quay.io/openshift-release-dev/ocp-release@sha256:05ba8e63f8a76e568afe87f182334504a01d47342b6ad5b4c3ff83a2463018bd
+----
+endif::[]
 
 . Set a variable for the cluster version you want to upgrade to. For the example above this would be:
 +
@@ -118,11 +130,11 @@ rosa upgrade cluster \
 .Sample Output
 [source,text,options=nowrap,subs="attributes"]
 ----
-I: Ensuring account and operator role policies for cluster '26pgsg3i77d9f85p7t6r89aar58liqpe' are compatible with upgrade.
+I: Ensuring account and operator role policies for cluster '27d52mumr4suemsl365a7c107400jbct' are compatible with upgrade.
 I: Account roles with the prefix 'ManagedOpenShift' have attached managed policies.
-I: Cluster 'rosa-6lzvq' operator roles have attached managed policies. An upgrade isn't needed
-I: Account and operator roles for cluster 'rosa-6lzvq' are compatible with upgrade
-I: Upgrade successfully scheduled for cluster 'rosa-6lzvq'
+I: Cluster 'rosa-{guid}' operator roles have attached managed policies. An upgrade isn't needed
+I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
+I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
 ----
 endif::[]
 ifndef::rosa_deploy_hcp[]
