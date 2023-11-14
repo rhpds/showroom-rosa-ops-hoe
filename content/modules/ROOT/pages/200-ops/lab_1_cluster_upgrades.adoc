@@ -1,8 +1,7 @@
 == Disclaimer
 
-As of November 14th, we are currently operating on the latest version, 4.14.0. Consequently, there is no available upgrade at this time.
-
-This Disclaimer will be promptly removed upon the official release of version 4.14.1.
+As of November 14th, 2023, no upgrade is available for OpenShift 4.14.
+Because of this, it may not be possible to complete the exercises in this module.
 
 == Introduction
 
