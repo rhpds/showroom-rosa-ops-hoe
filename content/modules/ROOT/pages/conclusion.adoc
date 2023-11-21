@@ -4,7 +4,7 @@
 
 Now you have completed all the modules for the ROSA hands-on experience. We hope you found it valuable, saw the value of ROSA as an application platform, and learned something new!
 
-If you have suggestions for how we could make this experience better, please https://console.redhat.com/openshift/services/rosa/demo/?intercom_survey_id=36682628[let us know,window=_blank].
+If you have suggestions for how we could make this experience better, please https://console.redhat.com/openshift/overview/rosa/hands-on?intercom_survey_id=36682628[let us know,window=_blank].
 
 Take the next step and https://console.redhat.com/openshift/create/rosa/getstarted?source=rhhe6[get started,window=_blank] with ROSA in your AWS account.
 
