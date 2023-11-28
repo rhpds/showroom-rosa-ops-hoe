@@ -12,7 +12,7 @@ Our onboarding specialists are here to help. If you have any questions or need h
 
 Additional resources to help you get started:
 
-* ROSA https://youtu.be/gAMr3sI5bdY?si=eD12Ab0XUJvCBrHR[install video,window=_blank]
+* ROSA https://youtu.be/roiCLvcR8fE[install video,window=_blank]
 * ROSA https://www.redhat.com/en/technologies/cloud-computing/openshift/aws/learn[Learning Hub,window=_blank]
 * ROSA https://docs.aws.amazon.com/ROSA/latest/userguide/getting-started.html[user guide,window=_blank]
 
