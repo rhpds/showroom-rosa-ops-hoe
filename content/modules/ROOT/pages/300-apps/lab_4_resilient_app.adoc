@@ -254,7 +254,7 @@ FRONTEND_URL=http://$(oc -n microsweeper-ex get route microsweeper-appservice -o
 ab -c100 -n10000 ${FRONTEND_URL}
 ----
 
-. Apache Bench will take around 100 seconds to complete (you can also hit kbd:[CTRL+c] to kill the `ab` command). Then immediately check the status of Horizontal Pod Autoscaler. To do so, run the following command:
+. Apache Bench will take around 100 seconds to complete (you can also hit `Ctrl-c` to kill the `ab` command). Then immediately check the status of Horizontal Pod Autoscaler. To do so, run the following command:
 +
 [source,sh,role=execute]
 ----

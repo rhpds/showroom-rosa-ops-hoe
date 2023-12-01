@@ -104,7 +104,7 @@ prometheus-7db5b74ddf-5dgw6            2/2     Running   0          2m41s
 wasm-cacher-basic-58894856d5-jhwvm     1/1     Running   0          2m8s
 ----
 +
-Once all the pods are running (like in the example above), hit kbd:[CTRL+c] and proceed to the next step.
+Once all the pods are running (like in the example above), hit `Ctrl-c` and proceed to the next step.
 
 . Next, let's verify that the service mesh control plane is successfully installed.
 To do so, run the following command:

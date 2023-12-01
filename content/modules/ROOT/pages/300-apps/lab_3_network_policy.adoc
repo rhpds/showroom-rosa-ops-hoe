@@ -138,7 +138,7 @@ oc -n networkpolicy-test exec -ti pod/networkpolicy-pod -- curl $MS_IP:8080 | he
 ----
 +
 This time it should fail to connect - it will just sit there.
-Hit kbd:[CTRL+c] to avoid having to wait until a timeout.
+Hit `Ctrl-c` to avoid having to wait until a timeout.
 +
 [TIP]
 ====
@@ -236,7 +236,7 @@ oc -n networkpolicy-test exec -ti pod/new-test -- curl $MS_IP:8080 | head
 ----
 +
 This will fail with a timeout again.
-Hit kbd:[CTRL+c] to avoid waiting for a timeout.
+Hit `Ctrl-c` to avoid waiting for a timeout.
 +
 [INFO]
 ====

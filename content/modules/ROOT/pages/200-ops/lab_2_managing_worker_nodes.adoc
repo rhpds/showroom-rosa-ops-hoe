@@ -131,7 +131,7 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workers
 I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
 
-. It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit kbd:[CTRL+b] to abort the watch):
+. It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit `Ctrl-c` to abort the watch):
 +
 [source,sh,role=execute]
 ----
@@ -207,7 +207,7 @@ rosa-82prr-dw6cz-workshop-us-east-2a-s6hpf    Running       m6a.xlarge   us-east
 rosa-82prr-dw6cz-workshop-us-east-2a-sstzd    Provisioned   m6a.xlarge   us-east-2   us-east-2a   3m18s
 ----
 
-. Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit kbd:[CTRL+c] to exit the `oc` command.
+. Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit `Ctrl-c` to exit the `oc` command.
 endif::[]
 
 ifndef::rosa_deploy_hcp[]
