@@ -185,7 +185,7 @@ The example application that we use is a Quarkus application. You can find the s
 
 . Create the *microsweeper-appservice* `Deployment`:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 cat <<EOF | oc apply -f -
 ---
@@ -244,7 +244,7 @@ The application is configured using environment variables and the service accoun
 +
 Create the `Service` for the application:
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 oc -n microsweeper-ex expose deployment microsweeper-appservice
 ----
@@ -257,7 +257,7 @@ service/microsweeper-appservice exposed
 
 . And finally create a `Route` that publishes this application. This particular route will have TLS encryption (`edge`) and redirect `http` requests to `https` (`Redirect)`.
 +
-[source,sh]
+[source,sh,role=execute]
 ----
 oc -n microsweeper-ex create route edge --service=microsweeper-appservice --insecure-policy=Redirect
 ----
