@@ -8,3 +8,4 @@ asciidoc:
     lab_name: ROSA Hands-on Experience
     release_version: master
     page-pagination: true  
+    experimental: true

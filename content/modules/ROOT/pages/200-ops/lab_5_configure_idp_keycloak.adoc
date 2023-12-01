@@ -495,7 +495,7 @@ RosaKeycloak
 cluster-admin
 ----
 
-. It will take a few minutes for the authentication operator to redeploy the authentication pods. Watch the pods until all three pods have been updated - when all three pods are running again (with an age of less than a few minutes) hit `Ctrl-c` to stop the watch:
+. It will take a few minutes for the authentication operator to redeploy the authentication pods. Watch the pods until all three pods have been updated - when all three pods are running again (with an age of less than a few minutes) hit kbd:[CTRL+c] to stop the watch:
 +
 [source,sh,role=execute]
 ----
