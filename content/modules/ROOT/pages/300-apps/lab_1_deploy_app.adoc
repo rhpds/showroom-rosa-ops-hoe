@@ -276,7 +276,7 @@ route.route.openshift.io/microsweeper-appservice created
 ----
 echo "https://$(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpath='{.spec.host}')"
 ----
-
++
 .Sample Output
 [source,text,options=nowrap]
 ----
