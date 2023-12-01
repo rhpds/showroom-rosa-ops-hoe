@@ -185,6 +185,11 @@ echo "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.
 ----
 http://istio-ingressgateway-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/productpage
 ----
++
+[WARNING]
+====
+This is a `http` URL. Some browsers convert that automatically to `https` and will not show the page.
+====
 
 . Copy and paste the URL provided in the previous step into your web browser and verify the Bookinfo product page is successfully deployed.
 +

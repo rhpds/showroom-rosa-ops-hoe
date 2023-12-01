@@ -25,7 +25,7 @@ endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
 ----
-rosa edit machinepool -c rosa-$GUID --labels tier=frontend --min-replicas=2 --max-replicas=4 workers 
+rosa edit machinepool -c rosa-$GUID --labels tier=frontend workers 
 ----
 +
 .Sample Output

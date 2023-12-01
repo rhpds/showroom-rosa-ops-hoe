@@ -249,17 +249,19 @@ aws logs describe-log-groups \
     "logGroups": [
         {
             "logGroupName": "rosa-{guid}.infrastructure",
-            "creationTime": 1696414604147,
+            "creationTime": 1701442480817,
             "metricFilterCount": 0,
             "arn": "arn:aws:logs:us-east-2:{rosa_sandbox_account_id}:log-group:rosa-{guid}.infrastructure:*",
-            "storedBytes": 0
+            "storedBytes": 0,
+            "logGroupClass": "STANDARD"
         },
         {
-            "logGroupName": "rosa-{guid}.microsweeper-ex",
-            "creationTime": 1696414623988,
+            "logGroupName": "rosa-{guid}.keycloak",
+            "creationTime": 1701442481598,
             "metricFilterCount": 0,
-            "arn": "arn:aws:logs:us-east-2:{rosa_sandbox_account_id}:log-group:rosa-{guid}.microsweeper-ex:*",
-            "storedBytes": 0
+            "arn": "arn:aws:logs:us-east-2:{rosa_sandbox_account_id}:log-group:rosa-{guid}.keycloak:*",
+            "storedBytes": 0,
+            "logGroupClass": "STANDARD"
         }
     ]
 }
