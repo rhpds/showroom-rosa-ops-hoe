@@ -30,7 +30,7 @@ ifndef::rosa_deploy_hcp[]
 [source,text,options=nowrap,subs="attributes"]
 ----
 ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE
-worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
+worker  No           2         m6a.xlarge                         us-east-2a                       No              300 GiB
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -38,7 +38,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,text,options=nowrap,subs="attributes"]
 ----
 ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
+workers  No           2/2       m6a.xlarge                         us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 endif::[]
 
@@ -74,11 +74,11 @@ oc -n openshift-machine-api get machine
 NAME                                       PHASE     TYPE         REGION      ZONE         AGE
 rosa-6n4s8-7hbhw-infra-us-east-2a-bgr86    Running   r5.xlarge    us-east-2   us-east-2a   22h
 rosa-6n4s8-7hbhw-infra-us-east-2a-xthr6    Running   r5.xlarge    us-east-2   us-east-2a   22h
-rosa-6n4s8-7hbhw-master-0                  Running   m5.2xlarge   us-east-2   us-east-2a   23h
-rosa-6n4s8-7hbhw-master-1                  Running   m5.2xlarge   us-east-2   us-east-2a   23h
-rosa-6n4s8-7hbhw-master-2                  Running   m5.2xlarge   us-east-2   us-east-2a   23h
-rosa-6n4s8-7hbhw-worker-us-east-2a-xc8g2   Running   m5.xlarge    us-east-2   us-east-2a   22h
-rosa-6n4s8-7hbhw-worker-us-east-2a-zxm8j   Running   m5.xlarge    us-east-2   us-east-2a   22h
+rosa-6n4s8-7hbhw-master-0                  Running   m6a.2xlarge  us-east-2   us-east-2a   23h
+rosa-6n4s8-7hbhw-master-1                  Running   m6a.2xlarge  us-east-2   us-east-2a   23h
+rosa-6n4s8-7hbhw-master-2                  Running   m6a.2xlarge  us-east-2   us-east-2a   23h
+rosa-6n4s8-7hbhw-worker-us-east-2a-xc8g2   Running   m6a.xlarge   us-east-2   us-east-2a   22h
+rosa-6n4s8-7hbhw-worker-us-east-2a-zxm8j   Running   m6a.xlarge   us-east-2   us-east-2a   22h
 ----
 +
 For this workshop, we've deployed your ROSA cluster with seven total machines (two workers, three control planes, and two infrastructure nodes).
@@ -89,7 +89,7 @@ To create the machine pool, run the following command:
 +
 [source,sh,role=execute]
 ----
-rosa create machinepool -c rosa-$GUID --replicas 1 --name workshop --instance-type m5.xlarge --use-spot-instances
+rosa create machinepool -c rosa-$GUID --replicas 1 --name workshop --instance-type m6a.xlarge --use-spot-instances
 ----
 +
 .Sample Output
@@ -131,7 +131,7 @@ rosa update machinepool -c rosa-$GUID --replicas 3 workers
 I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
 
-. It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit `Ctrl-C` to abort the watch):
+. It will take about 5 minutes for the additional worker node to be available. You can either continue to the next step - or if you want to see the worker node just run the following command until you see three worker nodes (then hit kbd:[CTRL+c] to abort the watch):
 +
 [source,sh,role=execute]
 ----
@@ -160,7 +160,7 @@ rosa list machinepools -c rosa-$GUID
 [source,text,options=nowrap,subs="attributes"]
 ----
 ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
-workers  No           3/3       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
+workers  No           3/3       m6a.xlarge                         us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 endif::[]
 
@@ -197,17 +197,17 @@ watch -n 10 oc -n openshift-machine-api get machine
 NAME                                          PHASE         TYPE         REGION      ZONE         AGE
 rosa-82prr-dw6cz-infra-us-east-2a-cbklb       Running       r5.xlarge    us-east-2   us-east-2a   78m
 rosa-82prr-dw6cz-infra-us-east-2a-f6v8n       Running       r5.xlarge    us-east-2   us-east-2a   3h13m
-rosa-82prr-dw6cz-master-0                     Running       m5.2xlarge   us-east-2   us-east-2a   3h33m
-rosa-82prr-dw6cz-master-1                     Running       m5.2xlarge   us-east-2   us-east-2a   3h33m
-rosa-82prr-dw6cz-master-2                     Running       m5.2xlarge   us-east-2   us-east-2a   3h33m
-rosa-82prr-dw6cz-worker-us-east-2a-g8f5m      Running       m5.xlarge    us-east-2   us-east-2a   3h29m
-rosa-82prr-dw6cz-worker-us-east-2a-stwdg      Running       m5.xlarge    us-east-2   us-east-2a   3h29m
-rosa-82prr-dw6cz-workshop-us-east-2a-2wqsr    Provisioned   m5.xlarge    us-east-2   us-east-2a   3m18s
-rosa-82prr-dw6cz-workshop-us-east-2a-s6hpf    Running       m5.xlarge    us-east-2   us-east-2a   22m
-rosa-82prr-dw6cz-workshop-us-east-2a-sstzd    Provisioned   m5.xlarge    us-east-2   us-east-2a   3m18s
+rosa-82prr-dw6cz-master-0                     Running       m6a.2xlarge  us-east-2   us-east-2a   3h33m
+rosa-82prr-dw6cz-master-1                     Running       m6a.2xlarge  us-east-2   us-east-2a   3h33m
+rosa-82prr-dw6cz-master-2                     Running       m6a.2xlarge  us-east-2   us-east-2a   3h33m
+rosa-82prr-dw6cz-worker-us-east-2a-g8f5m      Running       m6a.xlarge   us-east-2   us-east-2a   3h29m
+rosa-82prr-dw6cz-worker-us-east-2a-stwdg      Running       m6a.xlarge   us-east-2   us-east-2a   3h29m
+rosa-82prr-dw6cz-workshop-us-east-2a-2wqsr    Provisioned   m6a.xlarge   us-east-2   us-east-2a   3m18s
+rosa-82prr-dw6cz-workshop-us-east-2a-s6hpf    Running       m6a.xlarge   us-east-2   us-east-2a   22m
+rosa-82prr-dw6cz-workshop-us-east-2a-sstzd    Provisioned   m6a.xlarge   us-east-2   us-east-2a   3m18s
 ----
 
-. Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit `CTRL-C` to exit the `oc` command.
+. Let the above command run until all machines are in the *Running* phase. This means that they are ready and available to run Pods in the cluster. Hit kbd:[CTRL+c] to exit the `oc` command.
 endif::[]
 
 ifndef::rosa_deploy_hcp[]
@@ -277,7 +277,7 @@ rosa list machinepools -c rosa-$GUID
 [source,text,options=nowrap]
 ----
 ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE  
-worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
+worker  No           2         m6a.xlarge                         us-east-2a                       No              300 GiB
 ----
 endif::[]
 

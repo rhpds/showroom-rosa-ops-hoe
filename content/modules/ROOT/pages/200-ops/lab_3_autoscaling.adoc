@@ -25,7 +25,7 @@ ifndef::rosa_deploy_hcp[]
 [source,text,options=nowrap]
 ----
 ID      AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONES    SUBNETS    SPOT INSTANCES  DISK SIZE  
-worker  No           2         m5.xlarge                          us-east-2a                       No              300 GiB
+worker  No           2         m6a.xlarge                         us-east-2a                       No              300 GiB
 ----
 +
 The *ID* of the MachinePool that you want to add autoscaling to is `worker`.
@@ -35,7 +35,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,text,options=nowrap,subs="attributes"]
 ----
 ID       AUTOSCALING  REPLICAS  INSTANCE TYPE  LABELS    TAINTS    AVAILABILITY ZONE  SUBNET                    VERSION  AUTOREPAIR  
-workers  No           2/2       m5.xlarge                          us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
+workers  No           2/2       m6a.xlarge                         us-east-2a         subnet-02ee20ca64bb93535  {rosa_version}   Yes
 ----
 +
 The *ID* of the MachinePool that you want to add autoscaling to is `workers`.
@@ -243,10 +243,10 @@ oc -n openshift-machine-api get machines \
 [source,text,options=nowrap]
 ----
 NAME                                       PHASE         TYPE        REGION      ZONE         AGE
-rosa-82prr-dw6cz-worker-us-east-2a-g8f5m   Running       m5.xlarge   us-east-2   us-east-2a   4h46m
-rosa-82prr-dw6cz-worker-us-east-2a-q6l9r   Running       m5.xlarge   us-east-2   us-east-2a   5m12s
-rosa-82prr-dw6cz-worker-us-east-2a-qh5q4   Provisioned   m5.xlarge   us-east-2   us-east-2a   5m12s
-rosa-82prr-dw6cz-worker-us-east-2a-stwdg   Running       m5.xlarge   us-east-2   us-east-2a   4h46m
+rosa-82prr-dw6cz-worker-us-east-2a-g8f5m   Running       m6a.xlarge  us-east-2   us-east-2a   4h46m
+rosa-82prr-dw6cz-worker-us-east-2a-q6l9r   Running       m6a.xlarge  us-east-2   us-east-2a   5m12s
+rosa-82prr-dw6cz-worker-us-east-2a-qh5q4   Provisioned   m6a.xlarge  us-east-2   us-east-2a   5m12s
+rosa-82prr-dw6cz-worker-us-east-2a-stwdg   Running       m6a.xlarge  us-east-2   us-east-2a   4h46m
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -289,6 +289,21 @@ maxscale-5nwfz   0/1     Pending             0          5m18s
 maxscale-5p2n8   0/1     ContainerCreating   0          5m18s
 
 [...Output omitted...]
+----
+
+=== Turn off autoscaling
+
+Now that you have seen how autoscaling the cluster works you can turn it off again. To do so run the following command:
+
+[source,sh]
+----
+rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling=false --replicas=2
+----
++
+.Sample Output
+[source,texinfo,subs="attributes"]
+----
+I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
 
 *Congratulations!*

@@ -138,14 +138,14 @@ oc -n networkpolicy-test exec -ti pod/networkpolicy-pod -- curl $MS_IP:8080 | he
 ----
 +
 This time it should fail to connect - it will just sit there.
-Hit Ctrl-C to avoid having to wait until a timeout.
+Hit kbd:[CTRL+c] to avoid having to wait until a timeout.
 +
 [TIP]
 ====
 If you have your browser still open to the microsweeper app, you can refresh and see that you can still access it. This is because your web browser connect to the Ingress controllers - which per the NetworkPolicy are allowed to connect to this project.
 ====
 
-. Sometimes you want your application to be accessible to other namespaces. You can allow access to just your microsweeper frontend from the networkpolicy-pod in the `networkpolicy-test` namespace like so:
+. Sometimes you want your application to be accessible to other namespaces. You can allow access to just your microsweeper frontend from the `networkpolicy-pod` in the `networkpolicy-test` namespace like so:
 +
 [source,sh,role=execute]
 ----
@@ -177,7 +177,7 @@ EOF
 networkpolicy.networking.k8s.io/allow-networkpolicy-pod-ap created
 ----
 
-. Check to see if 'networkpolicy-pod` can access the pod:
+. Check to see if `networkpolicy-pod` can access the pod:
 +
 [source,sh,role=execute]
 ----
@@ -199,7 +199,7 @@ oc -n networkpolicy-test exec -ti pod/networkpolicy-pod -- curl $MS_IP:8080 | he
             src="https://code.jquery.com/jquery-3.2.1.min.js"
 ----
 
-. To verify that only the networkpolicy-pod app can access the microsweeper app, create a new pod with a different label in the networkpolicy-test namespace.
+. To verify that only the `networkpolicy-pod` app can access the microsweeper app, create a new pod with a different label in the networkpolicy-test namespace.
 +
 [source,sh,role=execute]
 ----
@@ -236,7 +236,7 @@ oc -n networkpolicy-test exec -ti pod/new-test -- curl $MS_IP:8080 | head
 ----
 +
 This will fail with a timeout again.
-Hit Ctrl-C to avoid waiting for a timeout.
+Hit kbd:[CTRL+c] to avoid waiting for a timeout.
 +
 [INFO]
 ====

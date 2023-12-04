@@ -128,7 +128,7 @@ image::graph-example.png[Kiali Console]
 +
 image::example-details-workload.png[Kiali Console]
 
-. In your terminal window stop the traffic generation by pressing `Ctrl-C`.
+. In your terminal window stop the traffic generation by pressing kbd:[CTRL+c].
 
 *Congratulations!*
 

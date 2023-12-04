@@ -20,7 +20,7 @@ OpenShift with OpenShift GitOps enables you to:
 :numbered:
 == Deploying your Application with OpenShift GitOps
 
-. From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for "openshift gitops" and click *Install*.
+. From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for *"openshift gitops"* and click *Install*.
 +
 For the update channel select *gitops-1.10*. Leave all other defaults and click *Install*.
 +
@@ -190,19 +190,14 @@ deployment "bgd" successfully rolled out
 +
 [source,sh,role=execute]
 ----
-echo "http://$(oc -n bgd get route bgd -o jsonpath='{.spec.host}')"
+echo "https://$(oc -n bgd get route bgd -o jsonpath='{.spec.host}')"
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-http://bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+https://bgd-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 ----
-+
-[WARNING]
-====
-The URL that is printed is a `http` URL - some browsers (like Chrome) replace `http` automatically with `https` resulting in a page not found error.
-====
 
 . You should see a green box in the website like so:
 +
