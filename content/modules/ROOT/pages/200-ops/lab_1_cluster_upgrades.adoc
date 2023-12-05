@@ -1,7 +1,7 @@
-== Disclaimer
+// == Disclaimer
 
-As of November 14th, 2023, no upgrade is available for OpenShift 4.14.
-Because of this, it may not be possible to complete the exercises in this module.
+// As of November 14th, 2023, no upgrade is available for OpenShift 4.14.
+// Because of this, it may not be possible to complete the exercises in this module.
 
 == Introduction
 
