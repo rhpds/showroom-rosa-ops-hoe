@@ -71,7 +71,7 @@ aws dynamodb create-table \
         },
         "TableSizeBytes": 0,
         "ItemCount": 0,
-        "TableArn": "arn:aws:dynamodb:us-east-2:{rosa_sandbox_account_id}:table/microsweeper-scores-{guid}",
+        "TableArn": "arn:aws:dynamodb:us-east-2:{rosa_aws_student_user_account_id}:table/microsweeper-scores-{guid}",
         "TableId": "37be72fe-3dea-411c-871d-467c12607691"
     }
 }
@@ -120,7 +120,7 @@ aws iam get-role --role-name irsa-$GUID --output json
         "Path": "/",
         "RoleName": "irsa-{guid}",
         "RoleId": "AROAYA6CBKHNIX2KS3MKM",
-        "Arn": "arn:aws:iam::{rosa_sandbox_account_id}:role/irsa-{guid}",
+        "Arn": "arn:aws:iam::{rosa_aws_student_user_account_id}:role/irsa-{guid}",
         "CreateDate": "2023-10-04T09:41:29+00:00",
         "AssumeRolePolicyDocument": {
             "Version": "2012-10-17",
@@ -128,7 +128,7 @@ aws iam get-role --role-name irsa-$GUID --output json
                 {
                     "Effect": "Allow",
                     "Principal": {
-                        "Federated": "arn:aws:iam::{rosa_sandbox_account_id}:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
+                        "Federated": "arn:aws:iam::{rosa_aws_student_user_account_id}:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
                     },
                     "Action": "sts:AssumeRoleWithWebIdentity",
                     "Condition": {
@@ -160,7 +160,7 @@ echo $ROLE_ARN
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
-arn:aws:iam::{rosa_sandbox_account_id}:role/irsa-{guid}
+arn:aws:iam::{rosa_aws_student_user_account_id}:role/irsa-{guid}
 ----
 
 . Now you can annotate the service account with the ARN of the pre-created IAM role.

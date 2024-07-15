@@ -326,7 +326,7 @@ spec:
     credentials:
     - temporary: false
       type: password
-      value: '{rosa_user_password}'
+      value: '{ssh_password}'
 " | oc apply -f -
 ----
 +
@@ -362,7 +362,7 @@ spec:
     credentials:
     - temporary: false
       type: password
-      value: '{rosa_user_password}'
+      value: '{ssh_password}'
 " | oc apply -f -
 ----
 +
@@ -411,7 +411,7 @@ I: Identity Provider 'RosaKeycloak' has been created.
    To add cluster administrators, see 'rosa grant user --help'.
 
 I: Callback URI: https://oauth-openshift.apps.rosa-{guid}.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
-I: To log in to the console, open {{rosa_console_url}} and click on 'RosaKeycloak'.
+I: To log in to the console, open {{rosa_openshift_console_url}} and click on 'RosaKeycloak'.
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -424,7 +424,7 @@ I: Identity Provider 'RosaKeycloak' has been created.
    To add cluster administrators, see 'rosa grant user --help'.
 
 I: Callback URI: https://oauth.rosa-{guid}.8ffn.p3.openshiftapps.com:443/oauth2callback/RosaKeycloak
-I: To log in to the console, open {{rosa_console_url}} and click on 'RosaKeycloak'.
+I: To log in to the console, open {{rosa_openshift_console_url}} and click on 'RosaKeycloak'.
 ----
 endif::[]
 
@@ -523,7 +523,7 @@ endif::[]
 If you do not see the *RosaKeycloak* option wait a few seconds and refresh the screen.
 ====
 
-. Click on *RosaKeycloak* and use the userid `rosa-admin` with password `{rosa_user_password}`.
+. Click on *RosaKeycloak* and use the userid `rosa-admin` with password `{ssh_password}`.
 +
 You will notice that your `rosa-admin` user is just a regular user at the moment - and you can not see any cluster administration pages in the OpenShift console.
 
@@ -572,7 +572,7 @@ image::cluster_admin_view.png[Cluster Admin View]
 +
 [source,sh,role=execute,subs="attributes"]
 ----
-oc login -u rosa-admin -p {rosa_user_password} {rosa_api_url}
+oc login -u rosa-admin -p {ssh_password} {rosa_openshift_api_url}
 ----
 +
 ifndef::rosa_deploy_hcp[]
