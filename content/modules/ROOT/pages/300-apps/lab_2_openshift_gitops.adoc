@@ -162,7 +162,7 @@ https://argocd-server-bgd.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
 [subs="attributes"]
 ====
 * *Admin user ID:* rosa-admin
-* *Admin user Password:* {rosa_user_password}
+* *Admin user Password:* {ssh_password}
 ====
 
 . Once you have logged into Argo CD you should see the Argo CD application dashboard.

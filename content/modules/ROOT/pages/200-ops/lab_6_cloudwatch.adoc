@@ -22,7 +22,7 @@ echo $POLICY_ARN
 .Sample Output
 [source,text,options=nowrap,subs="attributes"]
 ----
-arn:aws:iam::{rosa_sandbox_account_id}:policy/RosaCloudWatch-{guid}
+arn:aws:iam::{rosa_aws_student_user_account_id}:policy/RosaCloudWatch-{guid}
 ----
 
 . As part of the hands on experience an AWS IAM role has been set up for the OpenShift Logging infrastructure to use.
@@ -42,7 +42,7 @@ aws iam get-role --role-name RosaCloudWatch-$GUID --output json
         "Path": "/",
         "RoleName": "RosaCloudWatch-{guid}",
         "RoleId": "AROAYA6CBKHNI4MUHHX4Y",
-        "Arn": "arn:aws:iam::{rosa_sandbox_account_id}:role/RosaCloudWatch-{guid}",
+        "Arn": "arn:aws:iam::{rosa_aws_student_user_account_id}:role/RosaCloudWatch-{guid}",
         "CreateDate": "2023-10-04T09:41:39+00:00",
         "AssumeRolePolicyDocument": {
             "Version": "2012-10-17",
@@ -50,7 +50,7 @@ aws iam get-role --role-name RosaCloudWatch-$GUID --output json
                 {
                     "Effect": "Allow",
                     "Principal": {
-                        "Federated": "arn:aws:iam::{rosa_sandbox_account_id}:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
+                        "Federated": "arn:aws:iam::{rosa_aws_student_user_account_id}:oidc-provider/rh-oidc.s3.us-east-1.amazonaws.com/26le04kvuuni19cln8ojurfe98j02p3l"
                     },
                     "Action": "sts:AssumeRoleWithWebIdentity",
                     "Condition": {
@@ -88,7 +88,7 @@ echo $ROLE_ARN
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
-arn:aws:iam::{rosa_sandbox_account_id}:role/RosaCloudWatch-{guid}
+arn:aws:iam::{rosa_aws_student_user_account_id}:role/RosaCloudWatch-{guid}
 ----
 
 . Now you are ready to set up the Cluster Logging operator.
@@ -267,7 +267,7 @@ aws logs describe-log-groups \
             "logGroupName": "rosa-{guid}.infrastructure",
             "creationTime": 1701442480817,
             "metricFilterCount": 0,
-            "arn": "arn:aws:logs:us-east-2:{rosa_sandbox_account_id}:log-group:rosa-{guid}.infrastructure:*",
+            "arn": "arn:aws:logs:us-east-2:{rosa_aws_student_user_account_id}:log-group:rosa-{guid}.infrastructure:*",
             "storedBytes": 0,
             "logGroupClass": "STANDARD"
         },
@@ -275,7 +275,7 @@ aws logs describe-log-groups \
             "logGroupName": "rosa-{guid}.keycloak",
             "creationTime": 1701442481598,
             "metricFilterCount": 0,
-            "arn": "arn:aws:logs:us-east-2:{rosa_sandbox_account_id}:log-group:rosa-{guid}.keycloak:*",
+            "arn": "arn:aws:logs:us-east-2:{rosa_aws_student_user_account_id}:log-group:rosa-{guid}.keycloak:*",
             "storedBytes": 0,
             "logGroupClass": "STANDARD"
         }

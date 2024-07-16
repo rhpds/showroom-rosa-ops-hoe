@@ -90,7 +90,7 @@ https://kiali-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/console
 Remember your credentials:
 
 * *Admin user ID:* rosa-admin
-* *Admin user Password:* {rosa_user_password}
+* *Admin user Password:* {ssh_password}
 
 Also note that if you are logged into OpenShift in another browser tab then single sign on will not even prompt you for credentials after you click the `Login With OpenShift` button.
 ====

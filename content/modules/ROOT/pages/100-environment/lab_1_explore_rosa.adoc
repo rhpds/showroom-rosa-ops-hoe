@@ -57,9 +57,9 @@ Control Plane:              Customer Hosted
 OpenShift Version:          {rosa_version}
 Channel Group:              stable
 DNS:                        rosa-{guid}.z6qe.p1.openshiftapps.com
-AWS Account:                {rosa_sandbox_account_id}
-API URL:                    {rosa_api_url}
-Console URL:                {rosa_console_url}
+AWS Account:                {rosa_aws_student_user_account_id}
+API URL:                    {rosa_openshift_api_url}
+Console URL:                {rosa_openshift_console_url}
 Region:                     us-east-2
 Multi-AZ:                   false
 Nodes:
@@ -75,18 +75,18 @@ Network:
 Workload Monitoring:        Enabled
 Infra ID:                   rosa-{guid}-dw6cz
 Ec2 Metadata Http Tokens:   optional
-STS Role ARN:               arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-Installer-Role
-Support Role ARN:           arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-Support-Role
+STS Role ARN:               arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Installer-Role
+Support Role ARN:           arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Support-Role
 Instance IAM Roles:
- - Control plane:           arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-ControlPlane-Role
- - Worker:                  arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-Worker-Role
+ - Control plane:           arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-ControlPlane-Role
+ - Worker:                  arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Worker-Role
 Operator IAM Roles:
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-network-config-controller-cloud-
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-machine-api-aws-cloud-credentials
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-credential-operator-cloud-creden
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-image-registry-installer-cloud-credent
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-ingress-operator-cloud-credentials
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-r8e0-openshift-cluster-csi-drivers-ebs-cloud-credenti
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-network-config-controller-cloud-
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-machine-api-aws-cloud-credentials
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-credential-operator-cloud-creden
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-image-registry-installer-cloud-credent
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cluster-csi-drivers-ebs-cloud-credenti
 Managed Policies:           No
 State:                      ready 
 Private:                    No
@@ -106,9 +106,9 @@ Control Plane:              ROSA Service Hosted
 OpenShift Version:          {rosa_version}
 Channel Group:              stable
 DNS:                        rosa-{guid}.u7g2.p3.openshiftapps.com
-AWS Account:                {rosa_sandbox_account_id}
-API URL:                    {rosa_api_url}
-Console URL:                {rosa_console_url}
+AWS Account:                {rosa_aws_student_user_account_id}
+API URL:                    {rosa_openshift_api_url}
+Console URL:                {rosa_openshift_console_url}
 Region:                     us-east-2
 Availability:
  - Control Plane:           MultiAZ
@@ -124,19 +124,19 @@ Network:
  - Host Prefix:             /23
 Workload Monitoring:        Enabled
 Ec2 Metadata Http Tokens:   optional
-STS Role ARN:               arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-HCP-ROSA-Installer-Role
-Support Role ARN:           arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-HCP-ROSA-Support-Role
+STS Role ARN:               arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-HCP-ROSA-Installer-Role
+Support Role ARN:           arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-HCP-ROSA-Support-Role
 Instance IAM Roles:
- - Worker:                  arn:aws:iam::{rosa_sandbox_account_id}:role/ManagedOpenShift-HCP-ROSA-Worker-Role
+ - Worker:                  arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-HCP-ROSA-Worker-Role
 Operator IAM Roles:
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-kube-system-control-plane-operator
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-kube-system-kms-provider
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-openshift-cloud-network-config-controller-cloud-creden
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-openshift-image-registry-installer-cloud-credentials
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-openshift-ingress-operator-cloud-credentials
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-openshift-cluster-csi-drivers-ebs-cloud-credentials
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-kube-system-kube-controller-manager
- - arn:aws:iam::{rosa_sandbox_account_id}:role/rosa-{guid}-kube-system-capa-controller-manager
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-control-plane-operator
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-kms-provider
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-openshift-cloud-network-config-controller-cloud-creden
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-openshift-image-registry-installer-cloud-credentials
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-openshift-ingress-operator-cloud-credentials
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-openshift-cluster-csi-drivers-ebs-cloud-credentials
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-kube-controller-manager
+ - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-capa-controller-manager
 Managed Policies:           Yes
 State:                      ready 
 Private:                    No
@@ -159,7 +159,7 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .api.url
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
-{rosa_api_url}
+{rosa_openshift_api_url}
 ----
 
 . Get the OpenShift Console URL for your cluster:
@@ -172,15 +172,15 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
-{rosa_console_url}
+{rosa_openshift_console_url}
 ----
 
 . A temporary admin user has already been created for you on the ROSA OpenShift cluster. 
 +
 [subs="attributes"]
 ====
-* *Admin user ID:* {rosa_admin_user}
-* *Admin user Password:* {rosa_admin_password}
+* *Admin user ID:* {rosa_openshift_admin_user}
+* *Admin user Password:* {rosa_openshift_admin_password}
 ====
 +
 [NOTE]
@@ -194,7 +194,7 @@ For this environment your admin user has already been created.
 +
 [source,sh,role=execute,subs="attributes"]
 ----
-oc login --username {rosa_admin_user} --password {rosa_admin_password} {rosa_api_url}
+oc login --username {rosa_openshift_admin_user} --password {rosa_openshift_admin_password} {rosa_openshift_api_url}
 ----
 +
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -232,7 +232,7 @@ oc whoami
 .Sample Output
 [source,texinfo,options=nowrap,subs="attributes"]
 ----
-{rosa_admin_user}
+{rosa_openshift_admin_user}
 ----
 
 . You can now use the cluster as an admin user, which would suffice for this hands-on experience. Though, for any other use, it is highly recommended to set up an IdP. Which is why you will set up external authentication in the next module.
@@ -253,12 +253,12 @@ oc whoami --show-console
 .Sample Output
 [source,text,options=nowrap,subs="attributes"]
 ----
-{rosa_console_url}
+{rosa_openshift_console_url}
 ----
 
 . Next, open the printed URL in a web browser.
 . Enter the credentials from the previous section:
-* Username: `{rosa_admin_user}`
-* Password: `{rosa_admin_password}`
+* Username: `{rosa_openshift_admin_user}`
+* Password: `{rosa_openshift_admin_password}`
 
 If you don't see an error, congratulations! You're now logged into the cluster and ready to move on to the workshop content.
