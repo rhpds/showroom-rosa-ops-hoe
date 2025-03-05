@@ -295,7 +295,7 @@ maxscale-5p2n8   0/1     ContainerCreating   0          5m18s
 
 Now that you have seen how autoscaling the cluster works you can turn it off again. To do so run the following command:
 
-[source,sh]
+[source,sh,role=execute]
 ----
 rosa edit machinepool --cluster rosa-$GUID workers --enable-autoscaling=false --replicas=2
 ----
