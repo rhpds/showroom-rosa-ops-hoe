@@ -43,7 +43,7 @@ metadata:
   name: basic
   namespace: istio-system
 spec:
-  version: v2.2
+  version: v2.6
   security:
     identity:
       type: ThirdParty
@@ -91,17 +91,16 @@ watch oc get pods -n istio-system
 .Sample Output
 [source,text,options=nowrap]
 ----
-Every 2.0s: oc get pods -n istio-system                                                                                   bastion.6n4s8.internal: Wed Apr 19 22:43:25 2023
+Every 2.0s: oc get pods -n istio-system                  bastion.94rr7.internal: Wed Mar 12 16:05:27 2025
 
-NAME                                   READY   STATUS    RESTARTS   AGE
-grafana-5bb7dfcdc9-822b5               2/2     Running   0          2m26s
-istio-egressgateway-66488675c4-svskn   1/1     Running   0          2m27s
-istio-ingressgateway-6f8dd889f-q6p7z   1/1     Running   0          2m27s
-istiod-basic-877565cbf-tt9rt           1/1     Running   0          2m54s
-jaeger-85c5d7c6c4-fnbm2                2/2     Running   0          2m22s
-kiali-59956d7bb8-jzvnf                 1/1     Running   0          100s
-prometheus-7db5b74ddf-5dgw6            2/2     Running   0          2m41s
-wasm-cacher-basic-58894856d5-jhwvm     1/1     Running   0          2m8s
+NAME                                    READY   STATUS    RESTARTS   AGE
+grafana-65595d4c5c-d2b5m                2/2     Running   0          62s
+istio-egressgateway-686db4fbcd-bthzc    1/1     Running   0          62s
+istio-ingressgateway-866997b9d5-64p87   1/1     Running   0          62s
+istiod-basic-59c69d6d65-ff7tt           1/1     Running   0          102s
+jaeger-5994c96f-gbwm4                   2/2     Running   0          61s
+kiali-cc9dfdc56-zbwvj                   0/1     Running   0          14s
+prometheus-5d89c758f8-qnhrx             3/3     Running   0          93s
 ----
 +
 Once all the pods are running (like in the example above), hit kbd:[CTRL+c] and proceed to the next step.
@@ -118,7 +117,7 @@ oc -n istio-system get smcp
 [source,text,options=nowrap]
 ----
 NAME    READY   STATUS            PROFILES      VERSION   AGE
-basic   10/10   ComponentsReady   ["default"]   2.2.12    3m18s
+basic   9/9     ComponentsReady   ["default"]   2.6.6     90s
 ----
 +
 The installation has finished successfully when the STATUS column says `ComponentsReady`.

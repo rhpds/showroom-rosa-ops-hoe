@@ -2,7 +2,7 @@
 
 Red Hat® OpenShift® GitOps is an operator that provides tools to enable continuous deployment (CD). Making GitOps workflows available to your platform and development teams, OpenShift GitOps helps you to realize faster, more secure, and more scalable software development, without compromising on quality.
 
-OpenShift GitOps enables customers to build and integrate declarative, git-driven CD workflows directly into their development lifecycle. 
+OpenShift GitOps enables customers to build and integrate declarative, git-driven CD workflows directly into their development lifecycle.
 
 There's no single tool that converts a development pipeline to "DevOps", but implementing a GitOps framework starts you on the path. Updates and changes are made declaratively in code, bringing automation and a single source of truth to your infrastructure, configuration, and application deployments.
 
@@ -22,7 +22,7 @@ OpenShift with OpenShift GitOps enables you to:
 
 . From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for *"openshift gitops"* and click *Install*.
 +
-For the update channel select *gitops-1.10*. Leave all other defaults and click *Install*.
+For the update channel select *gitops-1.15.1*. Leave all other defaults and click *Install*.
 +
 image::gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
 

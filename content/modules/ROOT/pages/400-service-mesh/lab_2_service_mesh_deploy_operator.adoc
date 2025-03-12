@@ -19,7 +19,7 @@ It is based on the open source Jaeger project. Use the `stable` channel.
 * *Kiali Operator* - Provides observability for your service mesh.
 Allows you to view configurations, monitor traffic, and analyze traces in a single console.
 It is based on the open source Kiali project. Use the `stable` channel.
-* *Red Hat OpenShift Service Mesh* - Allows you to connect, secure, control, and observe the microservices that comprise your applications.
+* *Red Hat OpenShift Service Mesh 2* - Allows you to connect, secure, control, and observe the microservices that comprise your applications.
 The Service Mesh Operator defines and monitors the ServiceMeshControlPlane resources that manage the deployment, updating, and deletion of the Service Mesh components. It is based on the open source Istio project. Use the `stable` channel.
 
 === Operator installation Procedure
@@ -47,7 +47,7 @@ image::operatorhub.png[operator hub]
 * OpenShift Elasticsearch Operator
 * Red Hat OpenShift distributed tracing platform (*careful!* There is a second one with a very similar name!)
 * Kiali Operator
-* Red Hat OpenShift Service Mesh
+* Red Hat OpenShift Service Mesh 2
 
 . Repeat the following steps to install the operator:
 .. Type the name of the Operator into the filter box and select the *Red Hat version* of the Operator.
@@ -58,13 +58,6 @@ Community versions of the Operators are not supported.
 .. Wait until the Operator has installed before repeating the steps for the next Operator in the list.
 +
 image::operatorhub-click-install.png[Operator Install]
-+
-////
-* The *OpenShift Elasticsearch Operator* is installed in the `openshift-operators-redhat` namespace and is available for all namespaces in the cluster.
-* The *Red Hat OpenShift distributed tracing platform* is installed in the `openshift-distributed-tracing` namespace and is available for all namespaces in the cluster.
-* The *Kiali* operator is installed in the `openshift-operators` namespace and are available for all namespaces in the cluster.
-* The *Red Hat OpenShift Service Mesh* Operator is installed in the `openshift-operators` namespace and are available for all namespaces in the cluster.
-////
 
 . After all you have installed all four Operators, click *Operators → Installed Operators* to verify that your Operators installed (you may need to select the *openshift-operators* project to see all operators).
 +

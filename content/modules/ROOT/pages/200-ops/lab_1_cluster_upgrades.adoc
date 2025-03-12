@@ -44,54 +44,6 @@ VERSION  NOTES
 {rosa_version_next}   recommended
 ----
 
-. You can also use the OpenShift CLI to list available versions - but for ROSA it's preferred to use the rosa cli.:
-+
-[source,sh,role=execute]
-----
-oc adm upgrade
-----
-+
-ifndef::rosa_deploy_hcp[]
-.Sample Output
-[source,text,options=nowrap,subs="attributes"]
-----
-Cluster version is {rosa_version}
-
-Upgradeable=False
-
-  Reason: MissingUpgradeableAnnotation
-  Message: Cluster operator cloud-credential should not be upgraded between minor versions: Upgradeable annotation cloudcredential.openshift.io/upgradeable-to on cloudcredential.operator.openshift.io/cluster object needs updating before upgrade. See Manually Creating IAM documentation for instructions on preparing a cluster for upgrade.
-
-Upstream is unset, so the cluster will use an appropriate default.
-Channel: stable-4.14 (available channels: candidate-4.14, candidate-4.15, eus-4.14, fast-4.14, stable-4.14)
-
-Recommended updates:
-
-  VERSION     IMAGE
-  {rosa_version_next}      quay.io/openshift-release-dev/ocp-release@sha256:05ba8e63f8a76e568afe87f182334504a01d47342b6ad5b4c3ff83a2463018bd
-----
-+
-[NOTE]
-====
-You may ignore the warning that is printed - you are only upgrading to the next dot release within the minor release. 
-====
-endif::[]
-ifeval::["{rosa_deploy_hcp}" == "true"]
-.Sample Output
-[source,text,options=nowrap,subs="attributes"]
-----
-Cluster version is {rosa_version}
-
-Upstream is unset, so the cluster will use an appropriate default.
-Channel: stable-4.14 (available channels: candidate-4.14, candidate-4.15, eus-4.14, fast-4.14, stable-4.14)
-
-Recommended updates:
-
-  VERSION     IMAGE
-  {rosa_version_next}      quay.io/openshift-release-dev/ocp-release@sha256:05ba8e63f8a76e568afe87f182334504a01d47342b6ad5b4c3ff83a2463018bd
-----
-endif::[]
-
 . Set a variable for the cluster version you want to upgrade to. For the example above this would be:
 +
 [source,sh,role=execute,subs="attributes"]

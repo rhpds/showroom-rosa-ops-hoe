@@ -411,7 +411,7 @@ I: Identity Provider 'RosaKeycloak' has been created.
    To add cluster administrators, see 'rosa grant user --help'.
 
 I: Callback URI: https://oauth-openshift.apps.rosa-{guid}.999y.p1.openshiftapps.com/oauth2callback/RosaKeycloak
-I: To log in to the console, open {{rosa_openshift_console_url}} and click on 'RosaKeycloak'.
+I: To log in to the console, open {rosa_openshift_console_url} and click on 'RosaKeycloak'.
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -424,7 +424,7 @@ I: Identity Provider 'RosaKeycloak' has been created.
    To add cluster administrators, see 'rosa grant user --help'.
 
 I: Callback URI: https://oauth.rosa-{guid}.8ffn.p3.openshiftapps.com:443/oauth2callback/RosaKeycloak
-I: To log in to the console, open {{rosa_openshift_console_url}} and click on 'RosaKeycloak'.
+I: To log in to the console, open {rosa_openshift_console_url} and click on 'RosaKeycloak'.
 ----
 endif::[]
 
@@ -592,7 +592,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 Login successful.
 
-You have access to 79 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 82 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "keycloak".
 ----

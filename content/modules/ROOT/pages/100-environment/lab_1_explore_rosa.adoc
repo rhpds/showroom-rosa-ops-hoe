@@ -88,7 +88,7 @@ Operator IAM Roles:
  - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-ingress-operator-cloud-credentials
  - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cluster-csi-drivers-ebs-cloud-credenti
 Managed Policies:           No
-State:                      ready 
+State:                      ready
 Private:                    No
 Created:                    Nov  9 2023 08:59:12 UTC
 Details Page:               https://console.redhat.com/openshift/details/s/2WhVmXVt37Zln8gcdLq3eadaYeS
@@ -138,7 +138,7 @@ Operator IAM Roles:
  - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-kube-controller-manager
  - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-kube-system-capa-controller-manager
 Managed Policies:           Yes
-State:                      ready 
+State:                      ready
 Private:                    No
 Created:                    Nov  9 2023 08:59:12 UTC
 Details Page:               https://console.redhat.com/openshift/details/s/2WhXGgLtboCE2fadfRDSoGtt44H
@@ -175,7 +175,7 @@ rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 {rosa_openshift_console_url}
 ----
 
-. A temporary admin user has already been created for you on the ROSA OpenShift cluster. 
+. A temporary admin user has already been created for you on the ROSA OpenShift cluster.
 +
 [subs="attributes"]
 ====
@@ -203,7 +203,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 ----
 Login successful.
 
-You have access to 77 projects, the list has been suppressed. You can list all projects with 'oc projects'
+You have access to 79 projects, the list has been suppressed. You can list all projects with 'oc projects'
 
 Using project "default".
 Welcome! See 'oc help' to get started.
