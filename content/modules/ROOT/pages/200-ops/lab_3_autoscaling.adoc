@@ -268,7 +268,7 @@ ip-10-0-0-62.us-east-2.compute.internal    Ready    worker   128m    v1.27.6+f67
 ----
 endif::[]
 
-. Once the nodes are available re-run the command to display the pods for the job. You should see that more pods are now running. If you still see some pods in Pending state that is normal because even 4 worker nodes may not be enough to handle the node - but you limited the autoscaler to 4 worker nodes.
+. Once the nodes are available re-run the command to display the pods for the job. You should see that more pods are now running. If you still see some pods in Pending state that is normal because even 4 worker nodes may not be enough to handle the load - but you limited the autoscaler to 4 worker nodes.
 +
 [source,sh,role=execute]
 ----
