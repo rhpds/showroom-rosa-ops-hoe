@@ -28,4 +28,4 @@
 
 *Conclusion and What's Next*
 
-* xref:conclusion.adoc[Conclusion & What’s Next]
+* xref:conclusion.adoc[Conclusion & What's Next]
