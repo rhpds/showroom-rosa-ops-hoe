@@ -12,7 +12,7 @@ OpenShift with OpenShift GitOps enables you to:
 
 * Apply consistency across cluster and deployment lifecycles
 * Consolidate administration and management of applications across on-premises and cloud environments
-* Monitor the state deployed applications across your clusters
+* Monitor the state of deployed applications across your clusters
 * Roll back code changes across clusters
 * Roll out new changes submitted via Git
 * Have confidence in the state of your resources
