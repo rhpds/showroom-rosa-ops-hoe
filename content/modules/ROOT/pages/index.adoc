@@ -1,6 +1,6 @@
 == ROSA Hands-on Experience: Take advantage of a Modern Application Platform with ROSA
 
-In this experience, you will learn how you can take advantage of Red Hat OpenShift Service on AWS (ROSA) as a turnkey application platform and integrate with other AWS services to build, deploy, scale and manage applications in a native AWS environment. 
+In this experience, you will learn how you can take advantage of Red Hat OpenShift Service on AWS (ROSA) as a turnkey application platform and integrate with other AWS services to build, deploy, scale and manage applications in a native AWS environment.
 
 *Who this workshop is for:* This experience is aimed at Platform Engineers, DevOps Engineers, Cloud Operations, Architects, and Developers that want to learn what makes a modern application platform, and how they can leverage cloud services to streamline the delivery and operations of their application platforms.
 
@@ -9,8 +9,8 @@ In this experience, you will learn how you can take advantage of Red Hat OpenShi
 *What you will learn:*
 
 . Explore the ROSA environment that has been predeployed for you.
-. Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, configuring single-sign-on for the cluster using Amazon Cognito, and forwarding logs to Amazon CloudWatch.
-. Deploy an application that uses AWS IAM Roles for Service Accounts and AWS STS to connect to an Amazon DynamoDB table.
+. Complete Day 2 operations tasks including: configuring node and cluster scaling policies, configuring managed upgrades, and configuring single-sign-on for the cluster using Red Hat SSO.
+. Build and deploy a Node.js application.
 . Make an application on OpenShift scalable and resistant to node failures and upgrades.
 . Deploy an application using CI/CD tooling, including OpenShift GitOps and Source-to-Image, and use labels for deterministic app placement on nodes.
 . Learn how to use OpenShift Service Mesh for application observability and tracing.
