@@ -1,0 +1,145 @@
+== Introduction
+
+It's time for us to put our cluster to work and deploy a workload! We're going to build an example Node.js application, https://github.com/rhpds/microsweeper-rosa[microsweeper]. We'll then deploy the application to our ROSA cluster.
+
+This lab demonstrates how ROSA (an AWS native service) can easily and securely run applications. We will use both Node.js and Source-to-Image (S2I) - a toolkit for building container images from source code - to deploy the microsweeper application.
+
+:numbered:
+== Create an OpenShift Project
+
+. First, let's create a project (also known as namespace). A project is a unit of organization within OpenShift that provides isolation for applications and resources. To do so, run the following command:
++
+[source,sh,role=execute]
+----
+oc new-project microsweeper-ex
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+Now using project "microsweeper-ex" on server "https://api.rosa-6n4s8.1c1c.p1.openshiftapps.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
+----
+
+== Build and deploy the Microsweeper app
+
+The example application that we use is a Node.js application. You can find the source code for the application at https://github.com/rhpds/microsweeper-rosa. You will build and deploy the application using OpenShift's Source to Image (S2I) process.
+
+The magic of the S2I process is that you can just point it at a Git repository and it will attempt to determine the correct build- and runtime options - in your case Node.js.
+
+. Create the *microsweeper-appservice* application:
++
+[source,sh,role=execute]
+----
+oc new-app https://github.com/rhpds/microsweeper-rosa \
+  --name=microsweeper-appservice \
+  --labels "app.kubernetes.io/name=microsweeper-appservice"
+----
++
+.Sample Output
+[source,texinfo]
+----
+--> Found image 2488986 (11 months old) in image stream "openshift/nodejs" under tag "16-ubi8" for "nodejs"
+
+    Node.js 16
+    ----------
+    Node.js 16 available as container is a base platform for building and running various Node.js 16 applications and frameworks. Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+
+    Tags: builder, nodejs, nodejs16
+
+    * The source repository appears to match: nodejs
+    * A source build using source code from https://github.com/rhpds/microsweeper-rosa will be created
+      * The resulting image will be pushed to image stream tag "microsweeper-appservice:latest"
+      * Use 'oc start-build' to trigger a new build
+
+--> Creating resources ...
+    imagestream.image.openshift.io "microsweeper-appservice" created
+    buildconfig.build.openshift.io "microsweeper-appservice" created
+    deployment.apps "microsweeper-appservice" created
+    service "microsweeper-appservice" created
+--> Success
+    Build scheduled, use 'oc logs -f buildconfig/microsweeper-appservice' to track its progress.
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/microsweeper-appservice'
+    Run 'oc status' to view your app.
+----
+
+. Now that your application is running we need to make the application accessible outside of your OpenShift cluster so that you can test it.
++
+Create a `Route` that publishes this application. This particular route will have TLS encryption (`edge`) and redirect `http` requests to `https` (`Redirect)`.
++
+[source,sh,role=execute]
+----
+oc -n microsweeper-ex create route edge --service=microsweeper-appservice --insecure-policy=Redirect
+----
++
+.Sample Output
+[source,texinfo]
+----
+route.route.openshift.io/microsweeper-appservice created
+----
+
+=== Test the application
+
+. Get the the URL for your application route:
+
+[source,sh,role=execute]
+----
+echo "https://$(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpath='{.spec.host}')"
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+https://microsweeper-appservice-microsweeper-ex.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com
+----
+
+. Use the returned URL to open the Microsweeper application in a web browser of your choice.
++
+You should be able to play a few games.
+
+=== Application IP
+
+Let's take a quick look at what IP the application resolves to.
+
+Back in your terminal, run the following command:
+
+[source,sh,role=execute]
+----
+nslookup $(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpath='{.spec.host}')
+----
+
+.Sample Output
+[source,text,options=nowrap]
+----
+Server:         192.168.0.2
+Address:        192.168.0.2#53
+
+Non-authoritative answer:
+Name:   microsweeper-appservice-microsweeper-ex.apps.rosa.rosa-7v44k.u7g2.p3.openshiftapps.com
+Address: 3.21.3.12
+----
+
+Notice the IP address;
+can you guess where it comes from?
+
+It comes from the ROSA Load Balancer.
+In this workshop, we are using a public cluster which means the load balancer is exposed to the Internet.
+If this was a private cluster, you would have to have connectivity to the VPC ROSA is running on.
+This could be via a VPN connection, AWS DirectConnect, or something else.
+
+== Summary
+
+Here you learned:
+
+* Create an OpenShift project
+* Build a Node.js application from a Git repository.
+* Expose the Microsweeper application
+* Access the publicly exposed Microsweeper app using OpenShift routes

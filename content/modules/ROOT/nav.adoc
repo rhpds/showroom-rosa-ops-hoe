@@ -9,11 +9,11 @@
 * xref:200-ops/lab_3_autoscaling.adoc[Autoscale your ROSA Cluster]
 * xref:200-ops/lab_4_labeling_nodes.adoc[Labeling your Worker Nodes]
 * xref:200-ops/lab_5_configure_idp_keycloak.adoc[Configure Red Hat SSO IDP for ROSA]
-* xref:200-ops/lab_6_cloudwatch.adoc[Configure Red Hat OpenShift Logging with AWS Cloudwatch]
+// * xref:200-ops/lab_6_cloudwatch.adoc[Configure Red Hat OpenShift Logging with AWS Cloudwatch]
 
 *Deploy an Application to ROSA*
 
-* xref:300-apps/lab_1_deploy_app.adoc[Deploy an Application with AWS Database]
+* xref:300-apps/lab_1_deploy_app_no_db.adoc[Deploy an Application with AWS Database]
 * xref:300-apps/lab_2_openshift_gitops.adoc[Deploy an Application with Red Hat OpenShift GitOps]
 * xref:300-apps/lab_3_network_policy.adoc[Secure your applications with Network Policies]
 * xref:300-apps/lab_4_resilient_app.adoc[Make your application resilient]

@@ -33,15 +33,15 @@ oc adm top pod -n microsweeper-ex -l app.kubernetes.io/name=microsweeper-appserv
 .Sample Output
 [source,text,options=nowrap]
 ----
-NAME                                       CPU(cores)   MEMORY(bytes)   
-microsweeper-appservice-5fb77584fb-sfx2m   55m          67Mi            
+NAME                                       CPU(cores)   MEMORY(bytes)
+microsweeper-appservice-5fb77584fb-sfx2m   55m          67Mi
 ----
 +
 . Now that we've updated the resource, we can see that a new pod was automatically rolled out with these new limits and requests. To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-oc get pods -n microsweeper-ex
+oc get pods -n microsweeper-ex -l app.kubernetes.io/name=microsweeper-appservice
 ----
 +
 We'll see a new pod (created 28 seconds earlier in this case):
@@ -50,7 +50,7 @@ We'll see a new pod (created 28 seconds earlier in this case):
 [source,text,options=nowrap]
 ----
 NAME                                       READY   STATUS      RESTARTS   AGE
-microsweeper-appservice-69596ccc54-fsw2b   1/1     Running     0          28s
+microsweeper-appservice-7f6ff4f84f-qlzv4   1/1     Running     0          61s
 ----
 +
 To see what the limits and requests added to the pod, run the following command, being sure to change the Pod name to the name shown in the above output:
@@ -102,7 +102,7 @@ oc -n microsweeper-ex scale deployment \
 +
 [source,sh,role=execute]
 ----
-oc -n microsweeper-ex get pods
+oc -n microsweeper-ex get pods -l app.kubernetes.io/name=microsweeper-appservice
 ----
 +
 .Sample Output
@@ -151,6 +151,7 @@ A maxUnavailable of 0% or 0 or a minAvailable of 100% or equal to the number of 
 [source,sh,role=execute]
 ----
 cat <<EOF | oc apply -f -
+---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -176,8 +177,8 @@ oc -n microsweeper-ex get poddisruptionbudgets
 .Sample Output
 [source,text,options=nowrap]
 ----
-NAME              MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
-microsweeper-appservice-pdb   1               N/A               0         39s
+NAME                          MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+microsweeper-appservice-pdb   1               N/A               2                     24s
 ----
 
 == Horizontal Pod Autoscaler (HPA)
@@ -197,6 +198,7 @@ In this exercise we will scale the `microsweeper-appservice` application based o
 [source,sh,role=execute]
 ----
 cat <<EOF | oc apply -f -
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -251,7 +253,7 @@ You may see `<unknown>` for the target - this is normal until the HPA has been i
 ----
 FRONTEND_URL=http://$(oc -n microsweeper-ex get route microsweeper-appservice -o jsonpath='{.spec.host}')/
 
-ab -c100 -n10000 ${FRONTEND_URL}
+ab -c100 -n100000 ${FRONTEND_URL}
 ----
 
 . Apache Bench will take around 100 seconds to complete (you can also hit kbd:[CTRL+c] to kill the `ab` command). Then immediately check the status of Horizontal Pod Autoscaler. To do so, run the following command:

@@ -11,7 +11,7 @@ For this module we will be applying networkpolices to the previously created 'mi
 +
 [source,sh,role=execute]
 ----
- oc new-project networkpolicy-test
+oc new-project networkpolicy-test
 ----
 +
 . Create a new application within this namespace:
