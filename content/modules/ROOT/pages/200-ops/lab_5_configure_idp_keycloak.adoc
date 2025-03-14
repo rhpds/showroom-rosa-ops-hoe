@@ -376,7 +376,7 @@ Your Red Hat SSO is now configured to be used by ROSA.
 
 == Set up OpenShift authentication to use Red Hat SSO
 
-The next step is to tell ROSA to use the Red Hat SSO configuration that you just created. You must do that via the `rosa` command line tool (or the Red Hat Console) - you can not use the usual OpenShift mechanisms for this - Open Cluster Manager would override what you set if you don't set it via the `rosa` command line tool.
+The next step is to tell ROSA to use the Red Hat SSO configuration that you just created. You must do that via the `rosa` command line tool (or the Red Hat Console) - you can not use the usual OpenShift mechanisms for this - the OpenShift Cluster Manager would override what you set if you don't set it via the `rosa` command line tool.
 
 . First retrieve the client secret for your configured Keycloak Client:
 +
