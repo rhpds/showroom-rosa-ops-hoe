@@ -1,8 +1,8 @@
 == Introduction
 
-It's time for us to put our cluster to work and deploy a workload! We're going to build an example Node.js application, https://github.com/rhpds/microsweeper-rosa[microsweeper]. We'll then deploy the application to our ROSA cluster.
+It's time for us to put our cluster to work and deploy a workload! We're going to deploy an example Node.js application, https://github.com/rhpds/microsweeper-rosa[microsweeper].
 
-This lab demonstrates how ROSA (an AWS native service) can easily and securely run applications. We will use both Node.js and Source-to-Image (S2I) - a toolkit for building container images from source code - to deploy the microsweeper application.
+This lab demonstrates how ROSA (an AWS native service) can easily and securely run applications.
 
 :numbered:
 == Create an OpenShift Project
@@ -28,52 +28,87 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
     kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
 ----
 
-== Build and deploy the Microsweeper app
+== Deploy the Microsweeper app
 
-The example application that we use is a Node.js application. You can find the source code for the application at https://github.com/rhpds/microsweeper-rosa. You will build and deploy the application using OpenShift's Source to Image (S2I) process.
+The example application that we use is a Node.js application. You can find the source code for the application at https://github.com/rhpds/microsweeper-rosa. But for the purposes of this experience you will be deploying a pre-built container image.
 
-The magic of the S2I process is that you can just point it at a Git repository and it will attempt to determine the correct build- and runtime options - in your case Node.js.
-
-. Create the *microsweeper-appservice* application:
+. First, create a service account to use for the application. It is usually a good idea to run each application with its own service account in order to manage permissions.
+To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-oc new-app https://github.com/rhpds/microsweeper-rosa \
-  --name=microsweeper-appservice \
-  --labels "app.kubernetes.io/name=microsweeper-appservice"
+oc -n microsweeper-ex create serviceaccount microsweeper
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+serviceaccount/microsweeper created
+----
+
+. Create the *microsweeper-appservice* `Deployment`:
++
+[source,sh,role=execute]
+----
+cat <<EOF | oc apply -f -
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsweeper-appservice
+  namespace: microsweeper-ex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: microsweeper-appservice
+      app.kubernetes.io/name: microsweeper-appservice
+  template:
+    metadata:
+      labels:
+        deployment: microsweeper-appservice
+        app.kubernetes.io/name: microsweeper-appservice
+    spec:
+      serviceAccountName: microsweeper
+      containers:
+      - name: microsweeper-appservice
+        image: quay.io/rhpds/microsweeper-appservice:rosa
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+EOF
 ----
 +
 .Sample Output
 [source,texinfo]
 ----
---> Found image 2488986 (11 months old) in image stream "openshift/nodejs" under tag "16-ubi8" for "nodejs"
-
-    Node.js 16
-    ----------
-    Node.js 16 available as container is a base platform for building and running various Node.js 16 applications and frameworks. Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-
-    Tags: builder, nodejs, nodejs16
-
-    * The source repository appears to match: nodejs
-    * A source build using source code from https://github.com/rhpds/microsweeper-rosa will be created
-      * The resulting image will be pushed to image stream tag "microsweeper-appservice:latest"
-      * Use 'oc start-build' to trigger a new build
-
---> Creating resources ...
-    imagestream.image.openshift.io "microsweeper-appservice" created
-    buildconfig.build.openshift.io "microsweeper-appservice" created
-    deployment.apps "microsweeper-appservice" created
-    service "microsweeper-appservice" created
---> Success
-    Build scheduled, use 'oc logs -f buildconfig/microsweeper-appservice' to track its progress.
-    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
-     'oc expose service/microsweeper-appservice'
-    Run 'oc status' to view your app.
+deployment.apps/microsweeper-appservice created
 ----
++
+[TIP]
+====
+The application is configured using the service account name.
+
+* `serviceAccountName: microsweeper` tells OpenShift to use the service account that you configured previously to run this pod.
+====
 
 . Now that your application is running we need to make the application accessible outside of your OpenShift cluster so that you can test it.
 +
-Create a `Route` that publishes this application. This particular route will have TLS encryption (`edge`) and redirect `http` requests to `https` (`Redirect)`.
+Create the `Service` for the application:
++
+[source,sh,role=execute]
+----
+oc -n microsweeper-ex expose deployment microsweeper-appservice
+----
++
+.Sample Output
+[source,texinfo]
+----
+service/microsweeper-appservice exposed
+----
+
+. And finally create a `Route` that publishes this application. This particular route will have TLS encryption (`edge`) and redirect `http` requests to `https` (`Redirect)`.
 +
 [source,sh,role=execute]
 ----
