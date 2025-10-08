@@ -13,6 +13,11 @@ You can enable autoscaling on your cluster using either the `rosa` CLI or the Re
 
 You will need to set up autoscaling for each MachinePool in the cluster separately.
 
+[WARNING]
+====
+Do not scale your cluster to more nodes than the instructions ask you to do. If you do your cluster may be flagged for immediate deletion!
+====
+
 . To identify the machine pool IDs in a cluster, enter the following command:
 +
 [source,sh,role=execute]
