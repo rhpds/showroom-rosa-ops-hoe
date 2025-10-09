@@ -148,7 +148,7 @@ Here you learned:
 
 [WARNING]
 ====
-This section is for your information only. You do *not* have access to the OpenShift Cluster Manager. Feel free to read through these instructions to understand how to do it via the console - or skip to the next swection.
+This section is for your information only. You do *not* have access to the OpenShift Cluster Manager. Feel free to read through these instructions to understand how to do it via the console - or skip to the next section.
 ====
 
 . Log back into the OpenShift Cluster Manager by https://console.redhat.com/openshift[clicking here,window=_blank].
