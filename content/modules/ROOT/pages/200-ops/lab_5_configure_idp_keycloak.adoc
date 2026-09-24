@@ -233,6 +233,7 @@ spec:
     matchLabels:
       app: sso
   realm:
+    id: rosa
     realm: rosa
     enabled: true
     loginTheme: rh-sso
