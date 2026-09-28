@@ -1,30 +1,27 @@
 == Introduction
 
-In this section you will install the operators that are necessary to deploy Red Hat Service Mesh to your cluster.
+In this section you install the operators required for *OpenShift Service Mesh 3* and the Kiali console used later for observation.
+
+[IMPORTANT]
+====
+Do *not* install *Red Hat OpenShift Service Mesh 2* / Maistra on this cluster.
+Service Mesh 2 and Service Mesh 3 conflict unless carefully isolated.
+This workshop uses package `servicemeshoperator3` (display name *Red Hat OpenShift Service Mesh 3*).
+====
 
 :numbered:
-== Operator Overview
+== Service Mesh 3 Operator install
 
-Red Hat OpenShift Service Mesh requires the following four Operators:
+Install these Operators in order and wait for each CSV to reach *Succeeded* before continuing:
 
-[WARNING]
-====
-Before moving on, ensure you have deployed all four of these operators in the order listed.
-====
+* *Red Hat OpenShift Service Mesh 3* (`servicemeshoperator3`) — provides the Sail Operator APIs (`Istio`, `IstioCNI`, `IstioRevision`, …) and installs Istio CRDs.
+* *Kiali Operator provided by Red Hat* (`kiali-ossm`) — required for the observe lab. Service Mesh 3 does *not* embed Kiali in the control plane CR the way Service Mesh 2 did.
 
-* *OpenShift Elasticsearch Operator* - Provides database storage for tracing and logging with the distributed tracing platform.
-It is based on the open core Elasticsearch project. Use the `stable` channel.
-* *Red Hat OpenShift distributed tracing platform* - Provides distributed tracing to monitor and troubleshoot transactions in complex distributed systems.
-It is based on the open source Jaeger project. Use the `stable` channel.
-* *Kiali Operator* - Provides observability for your service mesh.
-Allows you to view configurations, monitor traffic, and analyze traces in a single console.
-It is based on the open source Kiali project. Use the `stable` channel.
-* *Red Hat OpenShift Service Mesh 2* - Allows you to connect, secure, control, and observe the microservices that comprise your applications.
-The Service Mesh Operator defines and monitors the ServiceMeshControlPlane resources that manage the deployment, updating, and deletion of the Service Mesh components. It is based on the open source Istio project. Use the `stable` channel.
+Optional (not required for this workshop path): Tempo / OpenTelemetry operators for distributed tracing.
 
-=== Operator installation Procedure
+=== Operator installation procedure (console)
 
-. If you are not still there open the OpenShift Container Platform web console. If you need to remind yourself of the URL you can use one of the following two commands in your terminal:
+. Open the OpenShift web console. If you need the URL:
 +
 [source,sh,role=execute]
 ----
@@ -38,31 +35,54 @@ or
 rosa describe cluster --cluster rosa-$GUID --output json | jq -r .console.url
 ----
 
-. In the OpenShift Container Platform web console, click *Operators → OperatorHub.*
+. Switch to the *Administrator* perspective.
+. Open *Ecosystem* → *Software Catalog* (on some clusters this is still labeled *Operators* → *OperatorHub*).
 +
-image::operatorhub.png[operator hub]
+image::operatorhub.png[Software Catalog / OperatorHub]
 
-. For each operator in this list install the operator in the order listed.
+. Install the Operators *in this order*, one at a time:
 
-* OpenShift Elasticsearch Operator
-* Red Hat OpenShift distributed tracing platform (*careful!* There is a second one with a very similar name!)
-* Kiali Operator
-* Red Hat OpenShift Service Mesh 2
+* Red Hat OpenShift Service Mesh *3*
+* Kiali Operator provided by Red Hat
 
-. Repeat the following steps to install the operator:
-.. Type the name of the Operator into the filter box and select the *Red Hat version* of the Operator.
-Community versions of the Operators are not supported.
+. For each Operator:
+.. Type the Operator name in the filter box and select the *Red Hat* catalog entry (not Community / not Service Mesh 2).
 .. Click *Install*.
-.. On the *Install Operator* page for each Operator, double check the *channel* and otherwise accept the default settings.
-.. Click *Install*.
-.. Wait until the Operator has installed before repeating the steps for the next Operator in the list.
+.. On *Install Operator*, keep:
+... *Update channel:* `stable`
+... *Installation mode:* All namespaces on the cluster
+... *Approval strategy:* Automatic
+.. Click *Install* and wait until *Installed Operators* shows *Succeeded* before continuing.
 +
 image::operatorhub-click-install.png[Operator Install]
 
-. After all you have installed all four Operators, click *Operators → Installed Operators* to verify that your Operators installed (you may need to select the *openshift-operators* project to see all operators).
+. Open *Operators* → *Installed Operators* (Project: `openshift-operators` or *All Projects*) and confirm both Operators are healthy.
 +
 image::show-installed-operators.png[Installed Operators]
 
+=== Verify from the CLI
+
+[source,sh,role=execute]
+----
+oc get csv -n openshift-operators
+----
+
+You should see Succeeded entries similar to:
+
+[source,text,options=nowrap]
+----
+NAME                          DISPLAY                            VERSION   PHASE
+kiali-operator.v2.27.4        Kiali Operator                     2.27.4    Succeeded
+servicemeshoperator3.v3.3.7   Red Hat OpenShift Service Mesh 3   3.3.7     Succeeded
+----
+
+Confirm the Sail Operator CRDs exist:
+
+[source,sh,role=execute]
+----
+oc get crd istios.sailoperator.io istiocnis.sailoperator.io
+----
+
 *Congratulations!*
 
-You've successfully deployed the OpenShift Service Mesh operator and it's prerequisite operators to your cluster.
+You installed OpenShift Service Mesh 3 and the Kiali Operator. Next you deploy the Istio control plane and CNI.

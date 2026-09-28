@@ -18,7 +18,7 @@
 * xref:300-apps/lab_3_network_policy.adoc[Secure your applications with Network Policies]
 * xref:300-apps/lab_4_resilient_app.adoc[Make your application resilient]
 
-*Red Hat OpenShift Service Mesh*
+*Red Hat OpenShift Service Mesh 3*
 
 * xref:400-service-mesh/lab_1_service_mesh_introduction.adoc[Service Mesh Introduction]
 * xref:400-service-mesh/lab_2_service_mesh_deploy_operator.adoc[Install Service Mesh Operator]

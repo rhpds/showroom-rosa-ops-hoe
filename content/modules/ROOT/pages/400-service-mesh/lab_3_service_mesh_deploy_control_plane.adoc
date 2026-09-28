@@ -1,127 +1,116 @@
 == Introduction
 
-Based on the open source Istio project, Red Hat OpenShift Service Mesh adds a transparent layer on existing distributed applications without requiring any changes to the service code.
-You add Red Hat OpenShift Service Mesh support to services by deploying a special sidecar proxy to relevant services in the mesh that intercepts all network communication between microservices.
-You configure and manage the Service Mesh using the Service Mesh control plane features.
-To learn more about the OpenShift Service Mesh, review the https://docs.openshift.com/rosa/service_mesh/v2x/ossm-about.html[OpenShift documentation].
+OpenShift Service Mesh 3 deploys Istio through two custom resources:
+
+* `Istio` — control plane (`istiod`) in a project such as `istio-system`
+* `IstioCNI` — CNI DaemonSet in a separate project such as `istio-cni`
+
+The Operator does *not* create ingress/egress gateways for you.
+Gateways are application-layer resources you deploy later (gateway injection + OpenShift Route in this workshop).
+
+Official reference: https://docs.redhat.com/en/documentation/red_hat_openshift_service_mesh/3.3/html/installing/ossm-installing-service-mesh[Installing OpenShift Service Mesh].
 
 :numbered:
-== Deploy Control Plane
+== Deploy the Istio control plane and CNI
 
-. First, let's create a project (namespace) for us to deploy the service mesh control plane into.
-To do so, run the following command:
+. Create the control-plane project (skip if it already exists):
 +
 [source,sh,role=execute]
 ----
 oc new-project istio-system
 ----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-Now using project "istio-system" on server "https://api.rosa-6n4s8.1c1c.p1.openshiftapps.com:6443".
 
-You can add applications to this project with the 'new-app' command. For example, try:
-
-    oc new-app rails-postgresql-example
-
-to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
-
-    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
-----
-
-. Next, let's deploy the service mesh control plane.
-To do so, run the following command:
+. Create the CNI project:
 +
 [source,sh,role=execute]
 ----
-cat << EOF | oc apply -f -
----
-apiVersion: maistra.io/v2
-kind: ServiceMeshControlPlane
+oc new-project istio-cni
+----
+
+. Label the control-plane namespace so it matches the discovery selector used below:
++
+[source,sh,role=execute]
+----
+oc label namespace istio-system istio-discovery=enabled --overwrite
+----
+
+. Create the `Istio` and `IstioCNI` resources.
+Discovery selectors limit which namespaces the control plane configures — only namespaces labeled `istio-discovery=enabled` are included.
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: sailoperator.io/v1
+kind: Istio
 metadata:
-  name: basic
-  namespace: istio-system
+  name: default
 spec:
-  version: v2.6
-  security:
-    identity:
-      type: ThirdParty
-  tracing:
-    type: Jaeger
-    sampling: 10000
-  addons:
-    jaeger:
-      name: jaeger
-      install:
-        storage:
-          type: Memory
-    kiali:
-      enabled: true
-      name: kiali
-    grafana:
-      enabled: true
+  namespace: istio-system
+  values:
+    meshConfig:
+      discoverySelectors:
+        - matchLabels:
+            istio-discovery: enabled
+---
+apiVersion: sailoperator.io/v1
+kind: IstioCNI
+metadata:
+  name: default
+spec:
+  namespace: istio-cni
 EOF
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-servicemeshcontrolplane.maistra.io/basic created
+istio.sailoperator.io/default created
+istiocni.sailoperator.io/default created
 ----
 +
-[WARNING]
+[NOTE]
 ====
-If you receive an error that is similar to the below error, ensure your operators have finished installing and try again:
-
-[source,texinfo]
-----
-Internal error occurred: failed calling webhook "smcp.mutation.maistra.io": failed to call webhook: Post "https://maistra-admission-controller.openshift-operators.svc:443/mutate-smcp?timeout=10s": dial tcp 10.128.2.63:11999: connect: connection refused
-----
+If your cluster nodes run RHEL / RHCOS *10*, set `spec.values.global.nativeNftables: true` on both the `Istio` and `IstioCNI` resources per the product docs.
+This ROSA workshop path was validated on RHCOS 9.x without that field.
 ====
 
-. Next, let's watch the progress of the service mesh control plane rollout.
-To do so, run run the following command:
+. Watch the control plane and CNI until both report `Healthy`:
 +
 [source,sh,role=execute]
 ----
-watch oc get pods -n istio-system
+oc get istio default
+oc get istiocni default
+oc get pods -n istio-system
+oc get pods -n istio-cni
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-Every 2.0s: oc get pods -n istio-system                  bastion.94rr7.internal: Wed Mar 12 16:05:27 2025
+NAME      REVISIONS   READY   IN USE   ACTIVE REVISION   STATUS    VERSION    AGE
+default   1           1       0        default           Healthy   v1.28.10   30s
 
-NAME                                    READY   STATUS    RESTARTS   AGE
-grafana-65595d4c5c-d2b5m                2/2     Running   0          62s
-istio-egressgateway-686db4fbcd-bthzc    1/1     Running   0          62s
-istio-ingressgateway-866997b9d5-64p87   1/1     Running   0          62s
-istiod-basic-59c69d6d65-ff7tt           1/1     Running   0          102s
-jaeger-5994c96f-gbwm4                   2/2     Running   0          61s
-kiali-cc9dfdc56-zbwvj                   0/1     Running   0          14s
-prometheus-5d89c758f8-qnhrx             3/3     Running   0          93s
+NAME      READY   STATUS    VERSION    AGE
+default   True    Healthy   v1.28.10   30s
+
+NAME                    READY   STATUS    RESTARTS   AGE
+istiod-xxxxxxxx-xxxxx   1/1     Running   0          20s
+
+NAME                   READY   STATUS    RESTARTS   AGE
+istio-cni-node-xxxxx   1/1     Running   0          20s
+istio-cni-node-yyyyy   1/1     Running   0          20s
 ----
 +
-Once all the pods are running (like in the example above), hit kbd:[CTRL+c] and proceed to the next step.
+Exact Istio patch versions vary by Operator channel (`stable` currently installs Service Mesh 3.3.x). Proceed when `STATUS` / `state` is `Healthy` and `istiod` is `Running`.
 
-. Next, let's verify that the service mesh control plane is successfully installed.
-To do so, run the following command:
+. Optional: watch until ready:
 +
 [source,sh,role=execute]
 ----
-oc -n istio-system get smcp
+oc wait --for=jsonpath='{.status.state}'=Healthy istio/default --timeout=300s
+oc wait --for=jsonpath='{.status.state}'=Healthy istiocni/default --timeout=300s
 ----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-NAME    READY   STATUS            PROFILES      VERSION   AGE
-basic   9/9     ComponentsReady   ["default"]   2.6.6     90s
-----
-+
-The installation has finished successfully when the STATUS column says `ComponentsReady`.
 
 *Congratulations!*
 
-You've successfully deployed the OpenShift Service Mesh control plane to your cluster.
+The Service Mesh 3 control plane and CNI are deployed. Next you enroll the Bookinfo application in the mesh.
