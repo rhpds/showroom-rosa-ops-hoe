@@ -2,16 +2,28 @@
 
 When deploying your ROSA cluster, you can configure many aspects of your worker nodes, but what happens when you need to change your worker nodes after they've already been created? These activities include scaling the number of nodes, changing the instance type, adding labels or taints, just to name a few.
 
-Many of these changes are done using Machine Pools. Machine Pools ensure that a specified number of Machine replicas are running at any given time. Think of a Machine Pool as a "template" for the kinds of Machines that make up the worker nodes of your cluster. If you'd like to learn more, see the https://docs.openshift.com/rosa/rosa_cluster_admin/rosa_nodes/rosa-managing-worker-nodes.html[Red Hat documentation on worker node management,window=_blank].
+Many of these changes are done using *machine pools*. On ROSA with hosted control planes (ROSA HCP), a machine pool is the supported API for managing worker capacity. Think of a machine pool as the declarative definition of worker node count, instance type, labels, taints, and the subnet/AZ where those workers run.
 
-Here are some of the advantages of using ROSA Machine Pools to manage the size of your cluster
+[NOTE]
+====
+Official product documentation: *Managing compute nodes using machine pools* in *Cluster administration* for Red Hat OpenShift Service on AWS (default / hosted control plane architecture). Key HCP rule: *each machine pool deploys in a single subnet within a single availability zone*. Multi-AZ worker capacity is achieved by creating *multiple* machine pools (one per AZ/subnet), not by spreading one pool across many AZs (that Classic multi-AZ pool model does not apply here).
+====
 
-* Scalability - ROSA Machine Pool enables horizontal scaling of your cluster. It can easily add or remove workers to handle the changes in workload. This flexibility ensures that your cluster can dynamically scale to meet the needs of your applications
-* High Availability - ROSA Machine Pool supports the creation of 3 replicas of workers across different availability zones. This redundancy helps ensure high availability of applications by distributing workloads.
-* Infrastructure Diversity - ROSA Machine Pool allows you to provision worker nodes of different instance type. This enables you you leverage the best kind of instance family for different workloads.
-* Integration with Cluster Autoscaler - ROSA Machine Pool seamlessly integrates with the Cluster Autoscaler feature, which automatically adjusts the number of worker nodes based on the current demand. This integration ensures efficient resource utilization by scaling the cluster up or down as needed, optimizing costs and performance.
+Here are some of the advantages of using ROSA HCP machine pools to manage the size of your cluster:
 
-image::scale_machinepool.png[scale_machinepool]
+* Scalability - Scale worker capacity horizontally by changing machine pool replicas (or enabling autoscaling) without touching individual VMs.
+* Availability zone placement - Each machine pool targets one subnet/AZ. For HA across AZs, create additional machine pools in other subnets.
+* Infrastructure diversity - Provision different instance types in different pools so workloads can target the right capacity with labels or taints.
+* Integration with cluster autoscaler - Enable autoscaling per machine pool so node count follows demand within the min/max you set.
+
+The following official diagram compares machine pools on ROSA Classic and ROSA with hosted control planes. On HCP, each machine pool is bound to a single subnet/AZ (this workshop uses the HCP side of the diagram):
+
+image::hcp-rosa-machine-pools.png[Machine pools on ROSA Classic and ROSA with HCP clusters]
+
+[NOTE]
+====
+Source: Red Hat OpenShift documentation image `hcp-rosa-machine-pools.png` from *Managing compute nodes using machine pools* (Cluster administration, Red Hat OpenShift Service on AWS — default / HCP architecture). On this cluster, `rosa list machinepools` shows a single *AVAILABILITY ZONE* and *SUBNET* per pool, matching the HCP model.
+====
 
 :numbered:
 == Scaling worker nodes
@@ -109,7 +121,7 @@ ifndef::rosa_deploy_hcp[]
 +
 [source,sh,role=execute]
 ----
-rosa update machinepool -c rosa-$GUID --replicas 3 workshop
+rosa edit machinepool -c rosa-$GUID --replicas 3 workshop
 ----
 +
 .Sample Output
@@ -122,7 +134,7 @@ ifeval::["{rosa_deploy_hcp}" == "true"]
 +
 [source,sh,role=execute]
 ----
-rosa update machinepool -c rosa-$GUID --replicas 3 workers
+rosa edit machinepool -c rosa-$GUID --replicas 3 workers
 ----
 +
 .Sample Output
@@ -217,7 +229,7 @@ To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-rosa update machinepool -c rosa-$GUID --replicas 2 workshop
+rosa edit machinepool -c rosa-$GUID --replicas 2 workshop
 ----
 endif::[]
 ifeval::["{rosa_deploy_hcp}" == "true"]
@@ -227,7 +239,7 @@ To do so, run the following command:
 +
 [source,sh,role=execute]
 ----
-rosa update machinepool -c rosa-$GUID --replicas 2 workers
+rosa edit machinepool -c rosa-$GUID --replicas 2 workers
 ----
 +
 If you want to wait until the additional node has been removed repeat the previous command (`oc get nodes`) until you see just two worker nodes again.
