@@ -1,97 +1,43 @@
 == Introduction
 
-Now that your Red Hat Service Mesh has been deployed on your ROSA cluster you can actually use it to connect the microservices of an example application. You will use the standard Service Mesh example application called `Bookinfo`.
+Deploy the standard Istio *Bookinfo* sample into the mesh, add DestinationRules for version subsets, and expose the app on an OpenShift Route (`*.apps.rosa...`).
+
+Service Mesh 3 does *not* deploy an ingress gateway as part of the `Istio` CR.
+This lab uses *gateway injection*: a `ClusterIP` `istio-ingressgateway` Deployment/Service in the app namespace, an Istio `Gateway` + `VirtualService`, then an OpenShift Route so the URL looks like other workshop apps.
+
+Sample manifests are pinned to the OpenShift Service Mesh Istio `release-1.28` branch (matches Service Mesh Operator 3.3.x / Istio v1.28.x on this path). The ingress gateway Deployment comes from the Sail Operator samples.
 
 :numbered:
-== Create and configure a project for the service mesh
+== Create and enroll the Bookinfo project
 
-Now, let's proceed with deploying a workload to test our service mesh.
-
-. First, let's create a project (namespace) for us to deploy our workload into.
-To do so, run the following command:
+. Create the project:
 +
 [source,sh,role=execute]
 ----
 oc new-project bookinfo
 ----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-Now using project "bookinfo" on server "https://api.rosa-6n4s8.1c1c.p1.openshiftapps.com:6443".
 
-You can add applications to this project with the 'new-app' command. For example, try:
-
-    oc new-app rails-postgresql-example
-
-to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
-
-    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
-----
-
-. Next, let's label that project (namespace) to enable the service mesh injection for all applications in the project.
+. Label the namespace for discovery *and* sidecar injection.
+Both labels are required when using discovery selectors on the `Istio` CR (as configured in the previous lab):
 +
 [source,sh,role=execute]
 ----
-oc label namespace bookinfo istio-injection=enabled
+oc label namespace bookinfo istio-discovery=enabled istio-injection=enabled --overwrite
 ----
 +
-.Sample Output
-[source,text,options=nowrap]
-----
-namespace/bookinfo labeled
-----
+[NOTE]
+====
+If your `Istio` resource name is not `default`, use `istio.io/rev=<IstioRevisionName>` instead of `istio-injection=enabled`.
+====
 
-. Even though we've enabled service mesh injection in the project, we also need to add our project (namespace) to the `ServiceMeshMemberRoll`, which limits the scope of the service mesh control plane to only projects in the member roll.
-To add the project to the `ServiceMeshMemberRoll`, run the following command:
-+
-[source,sh,role=execute]
-----
-cat << EOF | oc apply -f -
----
-apiVersion: maistra.io/v1
-kind: ServiceMeshMemberRoll
-metadata:
-  name: default
-  namespace: istio-system
-spec:
-  members:
-  - bookinfo
-EOF
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-servicemeshmemberroll.maistra.io/default created
-----
+=== Deploy Bookinfo workloads
 
-. Next, let's verify the `ServiceMeshMemberRoll` was created successfully.
-To do so, run the following command:
-+
-[source,sh,role=execute]
-----
-oc -n istio-system get smmr -o wide
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-NAME      READY   STATUS       AGE   MEMBERS
-default   1/1     Configured   20s   ["bookinfo"]
-----
-+
-The service mesh member roll was successfully configured when the STATUS column is `Configured` and your project shows up in the MEMBERS column.
-
-=== Deploy our test workload
-
-. Now that we've configured the service mesh for our project, let's deploy our bookinfo workload into our project.
-To do so, run the following command to create the necessary resources:
+. Apply the Bookinfo manifests:
 +
 [source,sh,role=execute]
 ----
 oc -n bookinfo apply -f \
-  https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/bookinfo.yaml
+  https://raw.githubusercontent.com/openshift-service-mesh/istio/release-1.28/samples/bookinfo/platform/kube/bookinfo.yaml
 ----
 +
 .Sample Output
@@ -113,33 +59,14 @@ serviceaccount/bookinfo-productpage created
 deployment.apps/productpage-v1 created
 ----
 +
-Interested in seeing the configuration you're deploying?
-Check it out on GitHub https://github.com/rh-mobb/rosa-workshop-content/blob/main/rosa-content/assets/scripts/bookinfo.yaml[here].
+Source on GitHub: https://github.com/openshift-service-mesh/istio/blob/release-1.28/samples/bookinfo/platform/kube/bookinfo.yaml[bookinfo.yaml].
 
-. Now, let's create the service mesh ingress gateway.
-To do so, run the following command:
+. Apply DestinationRules so version subsets (`v1`/`v2`/`v3`) exist for traffic shifting:
 +
 [source,sh,role=execute]
 ----
 oc -n bookinfo apply -f \
-  https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/bookinfo-gateway.yaml
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-gateway.networking.istio.io/bookinfo-gateway created
-virtualservice.networking.istio.io/bookinfo created
-----
-
-. Next, let's add some destination rules.
-Destination rules define policies that apply to traffic intended for a service after routing has occurred.
-To create the rules, run the following command:
-+
-[source,sh,role=execute]
-----
-oc -n bookinfo apply -f \
-  https://raw.githubusercontent.com/rh-mobb/rosa-workshop-content/main/rosa-content/assets/scripts/destination-rule-all.yaml
+  https://raw.githubusercontent.com/openshift-service-mesh/istio/release-1.28/samples/bookinfo/networking/destination-rule-all.yaml
 ----
 +
 .Sample Output
@@ -151,9 +78,67 @@ destinationrule.networking.istio.io/ratings created
 destinationrule.networking.istio.io/details created
 ----
 
-== Verifying the Bookinfo installation
+=== Deploy an injected ingress gateway and OpenShift Route
 
-. First, let's verify that all pods are running and ready by running the following command:
+. Deploy the gateway injection sample (`ClusterIP` Service + Deployment with `inject.istio.io/templates: gateway`):
++
+[source,sh,role=execute]
+----
+oc -n bookinfo apply -f \
+  https://raw.githubusercontent.com/istio-ecosystem/sail-operator/main/chart/samples/ingress-gateway.yaml
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+service/istio-ingressgateway created
+deployment.apps/istio-ingressgateway created
+role.rbac.authorization.k8s.io/istio-ingressgateway-sds created
+rolebinding.rbac.authorization.k8s.io/istio-ingressgateway-sds created
+----
+
+. Wait for the gateway pod to become Ready (`1/1`):
++
+[source,sh,role=execute]
+----
+oc -n bookinfo rollout status deploy/istio-ingressgateway --timeout=180s
+----
+
+. Apply the Istio `Gateway` and `VirtualService` that route `/productpage` to Bookinfo:
++
+[source,sh,role=execute]
+----
+oc -n bookinfo apply -f \
+  https://raw.githubusercontent.com/openshift-service-mesh/istio/release-1.28/samples/bookinfo/networking/bookinfo-gateway.yaml
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+gateway.networking.istio.io/bookinfo-gateway created
+virtualservice.networking.istio.io/bookinfo created
+----
+
+. Create an OpenShift Route on the gateway Service HTTP port (`http2` → container `8080`):
++
+[source,sh,role=execute]
+----
+oc -n bookinfo create route edge bookinfo \
+  --service=istio-ingressgateway \
+  --port=http2 \
+  --insecure-policy=Redirect
+----
++
+[IMPORTANT]
+====
+Do *not* use `oc expose service` without `--port=http2`.
+On multi-port Services, expose can pick the wrong port and the `*.apps.rosa...` URL will fail.
+Prefer `create route edge ... --port=http2` as shown above.
+====
+
+== Verify the Bookinfo installation
+
+. Confirm application pods are Ready. Sidecar injection succeeded when each Bookinfo workload shows `2/2`:
 +
 [source,sh,role=execute]
 ----
@@ -163,38 +148,51 @@ oc -n bookinfo get pods
 .Sample Output
 [source,text,options=nowrap]
 ----
-NAME                              READY   STATUS    RESTARTS   AGE
-details-v1-7d55897577-gvwm5       2/2     Running   0          98s
-productpage-v1-8648b7c9b5-txfvk   2/2     Running   0          96s
-ratings-v1-84599899df-twc8g       2/2     Running   0          97s
-reviews-v1-59647cf6c-pbrn8        2/2     Running   0          97s
-reviews-v2-5fc469b4ff-fp4fn       2/2     Running   0          97s
-reviews-v3-7d84688cc9-kktpt       2/2     Running   0          97s
+NAME                                    READY   STATUS    RESTARTS   AGE
+details-v1-xxxxxxxxxx-xxxxx             2/2     Running   0          40s
+istio-ingressgateway-xxxxxxxxxx-xxxxx   1/1     Running   0          30s
+productpage-v1-xxxxxxxxxx-xxxxx         2/2     Running   0          40s
+ratings-v1-xxxxxxxxxx-xxxxx             2/2     Running   0          40s
+reviews-v1-xxxxxxxxxx-xxxxx             2/2     Running   0          40s
+reviews-v2-xxxxxxxxxx-xxxxx             2/2     Running   0          40s
+reviews-v3-xxxxxxxxxx-xxxxx             2/2     Running   0          40s
 ----
 
-. Next, let's get the URL for the product page.
-To do so, run the following command:
+. Print the OpenShift Route product page URL:
 +
 [source,sh,role=execute]
 ----
-echo "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage"
+echo "https://$(oc -n bookinfo get route bookinfo -o jsonpath='{.spec.host}')/productpage"
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-http://istio-ingressgateway-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/productpage
+https://bookinfo-bookinfo.apps.rosa.<cluster>.p3.openshiftapps.com/productpage
 ----
 +
 [WARNING]
 ====
-This is a `http` URL. Some browsers convert that automatically to `https` and will not show the page.
+Open the *`/productpage`* path. The Route root (`/`) is not mapped by the Bookinfo VirtualService and returns 404.
 ====
 
-. Copy and paste the URL provided in the previous step into your web browser and verify the Bookinfo product page is successfully deployed.
+. Verify in-cluster that Bookinfo is serving:
 +
-You should see a book review of *"The Comedy of Errors"*. If you see an "Error fetching product reviews!" message wait a little bit and then refresh the browser window. It takes a moment for the reviews service to be fully available.
+[source,sh,role=execute]
+----
+oc -n bookinfo exec "$(oc get pod -l app=ratings -n bookinfo -o jsonpath='{.items[0].metadata.name}')" \
+  -c ratings -- curl -sS productpage:9080/productpage | grep -o '<title>.*</title>'
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+<title>Simple Bookstore App</title>
+----
+
+. Open the Route URL from the earlier step in a browser.
+You should see *"The Comedy of Errors"*. If reviews show an error, wait a few seconds and refresh.
 
 *Congratulations!*
 
-You've successfully deployed the *Bookinfo* example application to your OpenShift cluster and used the Service Mesh capabilities to configure the application.
+Bookinfo is running in the Service Mesh 3 data plane and is reachable on your cluster's `*.apps.rosa...` Route.
