@@ -20,13 +20,36 @@ OpenShift with OpenShift GitOps enables you to:
 :numbered:
 == Deploying your Application with OpenShift GitOps
 
-. From the OpenShift Console Administrator view click through *HOME* \-> *Operators* \-> *Operator Hub*, search for *"openshift gitops"* and click *Install*.
+. From the OpenShift Console Administrator perspective, open *Ecosystem* \-> *Software Catalog*.
 +
-For the update channel select *gitops-1.15.1*. Leave all other defaults and click *Install*.
+In the catalog search box type *gitops*. Select *Red Hat OpenShift GitOps* (Provided by *Red Hat* — do not choose Community operators such as *gitops-primer*).
 +
-image::gitops_operator.png[OpenShift Web Console - OpenShift GitOps in OperatorHub]
+Confirm the side panel shows an update channel such as *latest* (or another current Red Hat channel offered on your cluster), then click *Install*. Leave Installation mode / Approval Strategy at the defaults unless your environment requires otherwise, and complete the install.
++
+image::gitops_operator.png[OpenShift Web Console - Ecosystem Software Catalog showing Red Hat OpenShift GitOps]
 
-. Wait until the operator shows as successfully installed (*Installed operator - ready for use*).
+. Wait until the operator shows as successfully installed (*Installed* / ready for use). You can confirm under *Ecosystem* \-> *Installed Operators* (or the equivalent Installed Operators view on your console version).
++
+Before creating an `ArgoCD` custom resource, confirm the CRDs from the operator are present. The common failure `no matches for kind "ArgoCD" in version "argoproj.io/v1beta1"` means the operator (or CRDs) are not ready yet.
++
+[source,sh,role=execute]
+----
+oc get crd argocds.argoproj.io
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                  CREATED AT
+argocds.argoproj.io   2024-01-01T00:00:00Z
+----
++
+If the CRD is missing, wait and retry until it appears. Optionally also wait for the operator CSV to report Succeeded:
++
+[source,sh,role=execute]
+----
+oc get csv -A | grep -i gitops
+----
 
 . In your terminal create a new project:
 +
@@ -51,7 +74,7 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
 
 . The OpenShift GitOps operator includes the capability to deploy individual instances of Argo CD for developers.
 +
-Deploy your personal Argo CD into your development project:
+Deploy your personal Argo CD into your development project *only after* `oc get crd argocds.argoproj.io` succeeds:
 +
 [source,sh,role=execute]
 ----
