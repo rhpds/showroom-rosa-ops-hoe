@@ -1,8 +1,13 @@
 == Introduction
 
-Labels are a useful way to select which nodes an application will run on. These nodes are provisioned from the *machine pools* we worked with in previous sections of this workshop - on ROSA with hosted control planes (ROSA HCP) the machine pool is the supported API for defining worker node count, instance type, labels and taints. An example use case for labels would be running a memory intensive application only on a specific node type.
+Labels are a useful way to select which nodes an application will run on. On ROSA HCP, worker nodes are managed through *machine pools* (not MachineSets). An example use case for labels would be running a memory intensive application only on a specific node type.
 
-While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the machine pool itself, so that every node the pool provisions inherits the label.
+While you can directly add a label to a node, it is not recommended because nodes can be replaced at any time as part of normal cluster management, which would cause the label to disappear. Therefore label the *machine pool* itself (via `rosa edit machinepool --labels`) so new nodes inherit the labels.
+
+[NOTE]
+====
+Official product documentation: *Managing compute nodes using machine pools* (Red Hat OpenShift Service on AWS, Cluster administration). Machine pool labels overwrite ongoing manual node label changes.
+====
 
 :numbered:
 == Set a label for the Machine Pool

@@ -1,31 +1,23 @@
 == Introduction
 
-In this section you will configure and observe traffic between the micro services that make up the example application.
+Configure weighted traffic between Bookinfo `reviews` versions and observe the mesh with Kiali.
 
-Requests are routed to services within a service mesh with virtual services.
-Each virtual service consists of a set of routing rules that are evaluated in order.
-Red Hat OpenShift Service Mesh matches each given request to the virtual service to a specific real destination within the mesh.
-
-Without virtual services, Red Hat OpenShift Service Mesh distributes traffic using round-robin load balancing between all service instances.
-With a virtual service, you can specify traffic behavior for one or more hostnames.
-Routing rules in the virtual service tell Red Hat OpenShift Service Mesh how to send the traffic for the virtual service to appropriate destinations.
-Route destinations can be versions of the same service or entirely different services.
+In Service Mesh 3, Kiali is *not* created by the `Istio` CR.
+You create a `Kiali` custom resource after installing the Kiali Operator (lab 2).
 
 :numbered:
-== Configuring virtual services with weighted load balancing
+== Configure weighted load balancing
 
-. Weighted load balancing requests are forwarded to instances in the pool according to a specific percentage.
-In this example 80% to v1, 20% to v2.
-To create a virtual service with this configuration, run the following command:
+. Apply a VirtualService that sends 80% of `reviews` traffic to `v1` and 20% to `v2`:
 +
 [source,sh,role=execute]
 ----
-cat << EOF | oc apply -f -
----
-apiVersion: networking.istio.io/v1alpha3
+cat <<'EOF' | oc apply -f -
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: reviews
+  namespace: bookinfo
 spec:
   hosts:
   - reviews
@@ -47,91 +39,130 @@ EOF
 ----
 virtualservice.networking.istio.io/reviews created
 ----
-
-. Refresh your browser tab containing the Bookinfo URL a few times and you'll see that occasionally you'll see the v2 of the book review app which has star ratings.
 +
-Accidentally close out of the tab?
-No problem, run the following command to get the product page URL:
+[NOTE]
+====
+Use the full resource name `virtualservice.networking.istio.io` when checking status if your cluster also has VolumeSnapshot short-name conflicts with `vs`.
+====
+
+. Refresh the Bookinfo product page several times.
+Most responses show reviews without stars (`v1`); some show black stars (`v2`).
++
+Recover the OpenShift Route URL with:
 +
 [source,sh,role=execute]
 ----
-echo "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage"
+echo "https://$(oc -n bookinfo get route bookinfo -o jsonpath='{.spec.host}')/productpage"
+----
+
+== Deploy Kiali and observe traffic
+
+. Enable user-workload metrics scraping used by Kiali against the platform Prometheus stack:
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
+EOF
+----
+
+. Create the Kiali instance in `istio-system`:
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+  namespace: istio-system
+spec:
+  version: default
+  istio_namespace: istio-system
+  auth:
+    strategy: openshift
+  deployment:
+    cluster_wide_access: true
+  external_services:
+    grafana:
+      enabled: false
+    prometheus:
+      auth:
+        type: bearer
+        use_kiali_token: true
+      thanos_proxy:
+        enabled: true
+      url: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
+    tracing:
+      enabled: false
+EOF
+----
+
+. Wait for Kiali to become ready and print the console URL:
++
+[source,sh,role=execute]
+----
+oc -n istio-system rollout status deploy/kiali --timeout=180s
+echo "https://$(oc -n istio-system get route kiali -o jsonpath='{.spec.host}')/console"
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-http://istio-ingressgateway-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/productpage
+deployment "kiali" successfully rolled out
+https://kiali-istio-system.apps.rosa-<guid>.xxxx.p3.openshiftapps.com/console
 ----
 
-== Observe traffic using the Kiali web console
-
-Kiali is an observability console for the OpenShift Service Mesh with service mesh configuration and validation capabilities.
-It helps you understand the structure and health of your service mesh by monitoring traffic flow to infer the topology and report errors.
-
-. First, grab the Kiali web console URL.
-To do so, run the following command:
-+
-[source,sh,role=execute]
-----
-echo "https://$(oc get routes -n istio-system kiali -o jsonpath='{.spec.host}')/console"
-----
-+
-.Sample Output
-[source,text,options=nowrap]
-----
-https://kiali-istio-system.apps.rosa-6n4s8.1c1c.p1.openshiftapps.com/console
-----
-
-. Next, navigate to that URL in your web browser and click the `Login With OpenShift` button.
+. Open the Kiali URL and click *Log in with OpenShift*.
 +
 [subs="attributes"]
 ====
-Remember your credentials:
-
-* *Admin user ID:* rosa-admin
-* *Admin user Password:* {ssh_password}
-
-Also note that if you are logged into OpenShift in another browser tab then single sign on will not even prompt you for credentials after you click the `Login With OpenShift` button.
+Use your OpenShift credentials for this cluster (for example the workshop admin user and password provided in the environment).
+If you already have an authenticated OpenShift console session in another tab, SSO may skip the login prompt.
 ====
 +
 image::kiali-login-with-cluster-credentials.png[Kiali Login]
 +
-Once logged in, the Kiali Overview screen presents tiles for each project namespace.
-+
 image::verify-overiview-bookinfoapp.png[Kiali Console]
 
-. Now, let's generate some traffic against the product page service.
-To do so, run the following command in your terminal:
+. Generate traffic while you explore the graph:
 +
 [source,sh,role=execute]
 ----
-while true; do curl -sSL "http://$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')/productpage" | head -n 5; sleep 1; done
+while true; do
+  curl -k -sS "https://$(oc -n bookinfo get route bookinfo -o jsonpath='{.spec.host}')/productpage" \
+    | head -n 5
+  sleep 1
+done
 ----
 +
-Leave the loop running and proceed to the next steps.
+Leave the loop running and continue in Kiali.
 
-. Return to the Kiali web console and click the _Graph_ option in the sidebar.
-. Next, select _bookinfo_ from the Namespace list, and App graph from the Graph Type list.
+. In Kiali open *Graph*, select the `bookinfo` namespace, and choose an *App* graph.
 +
 image::select-bookinfo-from-kiali-dropdown-graph-tab.png[Kiali Console]
 
-. Next, click on the _Display idle nodes_ button.
+. Enable *Display idle nodes* if some services are quiet.
 +
 image::kiali-click-display-idlenodes-graph-tab.png[Kiali Console]
 
-. Next, view the graph and change the display settings to add or remove information from the graph.
+. Explore display settings and open the *Workloads* view for `details-v1`.
 +
 image::graph-example.png[Kiali Console]
-
-. Next, click the _Workload_ tab and select the _details-v1_ workload.
 +
 image::example-details-workload.png[Kiali Console]
 
-. In your terminal window stop the traffic generation by pressing kbd:[CTRL+c].
+. Stop traffic generation with kbd:[CTRL+c].
 
 *Congratulations!*
 
-You should now see traffic flowing between the various services in your bookinfo application.
+You shifted Bookinfo traffic with a VirtualService and observed the Service Mesh 3 data plane in Kiali.
 
 This concludes the Service Mesh section of this experience.

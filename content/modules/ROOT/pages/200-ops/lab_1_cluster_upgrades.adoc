@@ -1,15 +1,20 @@
-// == Disclaimer
-
-// As of November 14th, 2023, no upgrade is available for OpenShift 4.14.
-// Because of this, it may not be possible to complete the exercises in this module.
-
 == Introduction
 
-Red Hat OpenShift Service on AWS (ROSA) provides fully-managed cluster upgrades. The ROSA Site Reliability Engineering (SRE) Team will monitor and manage all ROSA cluster upgrades. Customers get status emails from the SRE team before, during, and after the upgrade. These updates can be scheduled from the OpenShift Cluster Manager (OCM) or from the ROSA CLI.
+Red Hat OpenShift Service on AWS (ROSA) provides fully-managed cluster upgrades. The ROSA Site Reliability Engineering (SRE) Team monitors and manages ROSA upgrades. Customers get status emails from the SRE team before, during, and after the upgrade. Updates can be scheduled from OpenShift Cluster Manager (OCM) or from the ROSA CLI.
 
-During ROSA upgrades, one node is upgraded at a time. This is done to ensure customer applications are not impacted during the update, when deployed in a highly-available and fault-tolerant method.
+On *ROSA with hosted control planes (ROSA HCP)*, upgrades are split:
 
-There are two ways to upgrade a ROSA cluster - using OpenShift Cluster Manager or using the `rosa` CLI. In this lab environment we do not have access to the OpenShift Cluster Manager so we will use the `rosa` CLI.
+* *Hosted control plane* — upgraded with `rosa upgrade cluster`
+* *Machine pools* (worker nodes) — upgraded separately with `rosa upgrade machinepool`
+
+Control plane and machine pools upgrade independently. Each machine pool must remain within *two minor (Y-stream) versions* of the hosted control plane.
+
+There are two ways to schedule an upgrade — OpenShift Cluster Manager or the `rosa` CLI. In this lab environment you do not have access to OpenShift Cluster Manager, so you will use the `rosa` CLI.
+
+[NOTE]
+====
+Official product documentation: *Updating Red Hat OpenShift Service on AWS clusters* in the *Upgrading* book for Red Hat OpenShift Service on AWS (default / hosted control plane architecture).
+====
 
 :numbered:
 == Upgrade using the `rosa` command line interface
@@ -30,7 +35,7 @@ Server Version: {rosa_version}
 Kubernetes Version: v1.27.6+f67aeb3
 ----
 
-. List available versions for the ROSA upgrade (depending on when you run this command there may not be any upgrades available):
+. List available versions for a hosted control plane upgrade (depending on when you run this command there may not be any upgrades available):
 +
 [source,sh,role=execute]
 ----
@@ -43,33 +48,52 @@ rosa list upgrades -c rosa-$GUID
 VERSION  NOTES
 {rosa_version_next}   recommended
 ----
++
+[TIP]
+====
+`rosa list upgrade` is an alias of `rosa list upgrades`. To list versions available for a machine pool, add `--machinepool workers`.
+====
 
-. Set a variable for the cluster version you want to upgrade to. For the example above this would be:
+. If no upgrade versions are listed, you can still read the rest of this module to learn the HCP upgrade flow, then skip the schedule/cancel steps.
++
+Otherwise set a variable for the cluster version you want to upgrade to. For the example above this would be:
 +
 [source,sh,role=execute,subs="attributes"]
 ----
 export CLUSTER_VERSION="{rosa_version_next}"
 ----
 
-. You probably don't want to actually upgrade the cluster right now since that may disrupt your lab environment. Luckily it is possible to schedule an update at a less inconvenient time.
-+
-Get a date and time that is 24 hours from now:
+. Optional but recommended: run a dry-run to surface any upgrade gates before scheduling:
 +
 [source,sh,role=execute]
 ----
-export UPGRADE_DATE=$(date -d "+24 hours" '+%Y-%m-%d')
-export UPGRADE_TIME=$(date '+%H:%M')
+rosa upgrade cluster -c rosa-$GUID --version $CLUSTER_VERSION --dry-run
+----
 
-echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME
+. You probably do not want to upgrade the cluster immediately in this lab. Schedule an update 24 hours from now instead.
++
+`--schedule-date` / `--schedule-time` are interpreted as *UTC*. On the lab bastion (GNU `date`):
++
+[source,sh,role=execute]
+----
+export UPGRADE_DATE=$(date -u -d "+24 hours" '+%Y-%m-%d')
+export UPGRADE_TIME=$(date -u '+%H:%M')
+
+echo Date: $UPGRADE_DATE, Time: $UPGRADE_TIME UTC
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-Date: 2023-11-10, Time: 09:11
+Date: 2023-11-10, Time: 09:11 UTC
 ----
 
-. Now schedule the cluster upgrade to the latest version that is shown in the list of available versions:
+. Schedule the *hosted control plane* upgrade to the selected version.
++
+[IMPORTANT]
+====
+Do *not* pass `--control-plane`. That flag is deprecated on current `rosa` CLI releases and can be omitted; `rosa upgrade cluster` already targets the hosted control plane on ROSA HCP.
+====
 +
 [source,sh,role=execute]
 ----
@@ -79,7 +103,6 @@ rosa upgrade cluster \
   --mode auto \
   --schedule-date $UPGRADE_DATE \
   --schedule-time $UPGRADE_TIME \
-  --control-plane \
   --yes
 ----
 +
@@ -93,38 +116,80 @@ I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgr
 I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
 ----
 
+. Verify the scheduled upgrade:
++
+[source,sh,role=execute]
+----
+rosa describe upgrade -c rosa-$GUID
+----
+
+. On ROSA HCP, worker nodes are *not* upgraded by `rosa upgrade cluster`. After the control plane supports the target version, schedule a machine pool upgrade (default pool name on single-AZ HCP is `workers`):
++
+[source,sh,role=execute]
+----
+rosa list upgrades -c rosa-$GUID --machinepool workers
+----
++
+[source,sh,role=execute]
+----
+rosa upgrade machinepool workers \
+  -c rosa-$GUID \
+  --version $CLUSTER_VERSION \
+  --schedule-date $UPGRADE_DATE \
+  --schedule-time $UPGRADE_TIME \
+  --yes
+----
++
+[NOTE]
+====
+In this short lab you may skip actually scheduling the machine pool upgrade if no pool upgrade versions are listed, or if you already scheduled the control plane and want to cancel everything before the environment expires.
+====
+
+. Cancel the scheduled upgrade(s) so the lab environment is not left with a pending update (the environment will be deleted before the +24h window anyway):
++
+[source,sh,role=execute]
+----
+rosa delete upgrade -c rosa-$GUID --yes
+----
++
+To cancel a machine pool schedule (if you created one):
++
+[source,sh,role=execute]
+----
+rosa delete upgrade -c rosa-$GUID --machinepool workers --yes
+----
+
 *Congratulations!*
 
-You've successfully scheduled an upgrade of your cluster for tomorrow at this time. While the hands-on environment will be deleted before then, you now have the experience to schedule upgrades in the future.
+You've successfully practiced scheduling (and canceling) a ROSA HCP control plane upgrade with the `rosa` CLI, and learned that machine pools upgrade separately.
 
 == Additional Resources
 
 === Red Hat OpenShift Upgrade Graph Tool
 
-Occasionally, you may be not be able to go directly from your current version to a desired version. In these cases, you must first upgrade your cluster from your current version, to an intermediary version, and then to your desired version. To help you navigate these decisions, you can take advantage of the https://access.redhat.com/labs/ocpupgradegraph/update_path_rosa[Red Hat OpenShift Upgrade Graph Tool,window=_blank].
+Occasionally you may not be able to go directly from your current version to a desired version. In these cases you must first upgrade to an intermediary version. Use the https://access.redhat.com/labs/ocpupgradegraph/update_path_rosa[Red Hat OpenShift Upgrade Graph Tool,window=_blank] to navigate supported paths.
 
 image::rosa_upgrade_graph.png[ROSA Upgrade Graph Tool Screenshot]
 
-In this scenario to upgrade your cluster from version 4.11.0 to 4.12.15, you must first upgrade to 4.11.39, then you can upgrade to 4.12.15. The ROSA Upgrade Graph Tool helps you easily see which version you should upgrade to.
+=== Documentation
 
-=== Links to Documentation
-
-* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html[Upgrading ROSA clusters with STS,window=_blank]
-* https://docs.openshift.com/rosa/upgrading/rosa-upgrading-sts.html#rosa-upgrade-ocm_rosa-upgrading-sts[Scheduling individual upgrades through the OpenShift Cluster Manager console,window=_blank]
+* Updating Red Hat OpenShift Service on AWS clusters (Upgrading book — hosted control plane / default architecture)
+* Scheduling upgrades with the ROSA CLI (`rosa upgrade cluster`, `rosa upgrade machinepool`)
 
 == Summary
 
 Here you learned:
 
-* All upgrades are monitored and managed by the ROSA SRE Team
-* Use OpenShift Cluster Manager (OCM) to schedule an upgrade for your ROSA cluster
-* Explore the OpenShift Upgrade Graph Tool to see available upgrade paths
+* ROSA upgrades are monitored and managed by the ROSA SRE team
+* On ROSA HCP, upgrade the hosted control plane with `rosa upgrade cluster` (no `--control-plane` flag)
+* Upgrade worker capacity separately with `rosa upgrade machinepool`
+* Schedule, describe, and delete upgrades from the `rosa` CLI; schedule times are UTC
 
 == Upgrade using the OpenShift Cluster Manager
 
 [WARNING]
 ====
-This section is for your information only. You do *not* have access to the OpenShift Cluster Manager. Feel free to read through these instructions to understand how to do it via the console - or skip to the next section.
+This section is for your information only. You do *not* have access to the OpenShift Cluster Manager. Feel free to read through these instructions to understand how to do it via the console — or skip to the next section. Console labels and screenshots may change over time; prefer the ROSA CLI steps above for this workshop.
 ====
 
 . Log back into the OpenShift Cluster Manager by https://console.redhat.com/openshift[clicking here,window=_blank].

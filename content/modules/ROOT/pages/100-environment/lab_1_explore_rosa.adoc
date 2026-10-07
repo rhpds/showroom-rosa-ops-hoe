@@ -4,7 +4,7 @@ In this Hands on experience ROSA has already been pre-installed for you.
 
 This was done both for speed of deployment but also for security reasons because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions
 
-If you are interested and would like to know more about the installation there is a https://youtu.be/roiCLvcR8fE?si=0F92hdKpO-ibPeKi[video,window=_blank] explaining the process.
+If you are interested and would like to know more about the installation there is a https://www.youtube.com/watch?v=roiCLvcR8fE[video explaining the process,window=_blank].
 
 All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
@@ -26,7 +26,7 @@ ID                                NAME        STATE  TOPOLOGY
 ====
 The ID of your cluster will be different than in the sample output above.
 
-Also notice the Topology and state. State should be *ready* and Topology should be *Hosted CP* which stands for Hosted Control Plane - a resource saving way of deploying a ROSA cluster where Red Hat hosts and manages the control plane for you.
+Also notice the Topology and state. State should be *ready*. For this workshop Topology is *Hosted CP* (Hosted Control Plane / ROSA HCP). The control plane is managed by Red Hat; your AWS account hosts the worker machine pools.
 ====
 
 . Now let's examine this cluster a bit more by describing the cluster (the `$GUID` environment variable is already set for you so you can immediately describe your individual cluster):

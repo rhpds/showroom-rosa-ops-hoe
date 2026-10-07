@@ -1,57 +1,64 @@
 == Introduction
 
-As your applications evolve into collections of decentralized microservices, monitoring and managing the network communications and security among those multiple services becomes more challenging.
+As applications evolve into collections of decentralized microservices, monitoring and managing network communication and security among those services becomes more challenging.
 
-Red Hat OpenShift Service Mesh is based on the open source project Istio.
-It provides a uniform way to connect, manage, and observe microservices based applications.
-It provides behavioral insight into and control of the networked microservices in your service mesh.
+Red Hat OpenShift Service Mesh *3* is based on the upstream Istio project and is managed by the Red Hat OpenShift Service Mesh Operator (Sail Operator API).
+It provides a uniform way to connect, manage, and observe microservices-based applications without requiring application code changes.
 
-== Why Red Hat Service Mesh?
+[IMPORTANT]
+====
+OpenShift Service Mesh *2* (Maistra / `ServiceMeshControlPlane`) is deprecated for new work.
+This workshop uses *OpenShift Service Mesh 3* with `Istio` and `IstioCNI` custom resources.
+Official docs: https://docs.redhat.com/en/documentation/red_hat_openshift_service_mesh/3.3/html/installing/ossm-installing-service-mesh[Installing OpenShift Service Mesh 3].
+====
 
-Applications are changing from monoliths into collections of small, independent, and loosely coupled services often referred to as cloud-native applications.
-These services are organized in a microservices architecture.
+== Why Red Hat OpenShift Service Mesh?
 
-Managing the communication between different services, and analyzing and maintaining security, can be a challenge.
-This can be greatly simplified and optimized by using a service mesh to route requests from one service to another, and optimizing how the different services work with one another.
+Applications are changing from monoliths into collections of small, independent, loosely coupled services.
+Managing communication, security, and observability across those services is difficult without a dedicated data plane.
 
-With Red Hat OpenShift Service Mesh, you get a uniform way to connect, manage, and observe your microservices, without requiring you to redesign your application.
-As your containers and services evolve, Service Mesh allows you control of the networked microservices through the use of a sidecar proxy that intercepts network communication between microservices.
-OpenShift Service Mesh provides integrated metrics, logging, and tracing, traditionally available only deep within the application or service.
+With OpenShift Service Mesh 3 you get:
 
-== Red Hat Service Mesh Benefits
+* A production-supported Istio control plane on OpenShift (`istiod`)
+* Automatic sidecar injection for labeled namespaces
+* Traffic management with VirtualServices, DestinationRules, and an injected ingress gateway exposed via OpenShift Routes
+* Optional observability through Kiali (installed separately in Service Mesh 3)
 
-image::servicemeshp11.png[service mesh benefits diagram]
+== Architecture changes in Service Mesh 3
+
+| Feature | Service Mesh 2 (deprecated) | Service Mesh 3 |
+| --- | --- | --- |
+| Operator | Red Hat OpenShift Service Mesh 2 | Red Hat OpenShift Service Mesh *3* |
+| Control plane CR | `ServiceMeshControlPlane` (`maistra.io`) | `Istio` (`sailoperator.io`) |
+| CNI CR | bundled with SMCP | `IstioCNI` (separate project, typically `istio-cni`) |
+| Gateways | often created by SMCP | *not* created by the Operator — deploy gateway injection (or Gateway API) yourself |
+| Kiali / tracing | add-ons on the SMCP | install and configure separately (Kiali Operator, Tempo/OTEL as needed) |
+| Namespace membership | `ServiceMeshMemberRoll` | discovery selectors + injection labels (`istio-discovery`, `istio-injection`) |
+
+== Benefits
 
 === Ready for production
 
-Installs easily on Red Hat OpenShift, the hybrid cloud enterprise Kubernetes platform trusted by thousands of organizations around the globe.
-Red Hat OpenShift Service Mesh is pre-validated and fully supported to work on Red Hat OpenShift, straight out of the box.
+OpenShift Service Mesh is validated and supported on Red Hat OpenShift, including ROSA.
 
 === Security-focused
 
-Red Hat OpenShift Service Mesh provides comprehensive application networking security.
-This is achieved through transparent mTLS encryption and fine-grained policies that facilitate zero-trust networking.
+Transparent mTLS options and fine-grained authorization policies support zero-trust networking patterns.
 
 === Based on open source
 
-Based on the open source Istio project, Red Hat OpenShift Service Mesh provides additional functionality with the inclusion of other open source projects like Kiali (Istio console) and Jaeger (distributed tracing), which supports collaboration with leading members of the Istio community.
+Service Mesh 3 tracks upstream Istio more closely than Service Mesh 2, while remaining a Red Hat supported product.
 
-== Use Cases
+== Use cases
 
-* Connectivity: Connect Traffic Flow, Blue/Green Deployments, Circuit Breaking, Virtual Services
-* Security: Data-in-transit Encryption, Authentication, Authorization, Secure Naming
-* Control: Configuration, Apply/Enforce Policies, Fair Resource Distribution
-* Observability: Layer 7 Visibility, Monitoring, Logging, Distributed Tracing
+* Connectivity: traffic shifting, canary / blue-green, circuit breaking, VirtualServices
+* Security: encryption in transit, authentication, authorization
+* Control: policy enforcement and configuration lifecycle
+* Observability: Layer 7 metrics, graphs, and tracing (with optional Kiali / Tempo stack)
 
-== Differences to Istio
+== What you will do in this module
 
-* OpenShift Service Mesh installs a multi-tenant control plane by default
-* OpenShift Service Mesh extends Role Based Access Control (RBAC) features
-* OpenShift Service Mesh replaces BoringSSL with OpenSSL
-* Kiali and Jaeger are enabled by default in OpenShift Service Mesh
-
-== What is the advantage of choosing Red Hat Service Mesh?
-
-* Red Hat helps you get started faster because OpenShift Service Mesh is engineered to be ready for production.
-* With OpenShift Service Mesh developers can increase productivity by integrating communication policies without changing application code or integrating language-specific libraries.
-* OpenShift Service Mesh can also make things easier for operations because it installs easily on Red Hat OpenShift, has been tested with other Red Hat products, and comes with access to award-winning support.
+. Install the OpenShift Service Mesh 3 Operator (and Kiali Operator for the observe lab).
+. Deploy the Istio control plane (`Istio`) and CNI plugin (`IstioCNI`).
+. Deploy the Bookinfo sample, DestinationRules, an injected ingress gateway, and an OpenShift Route (`*.apps.rosa...`).
+. Shift traffic with a weighted VirtualService and observe the mesh in Kiali.
