@@ -1,8 +1,8 @@
 == Introduction
 
-Labels are a useful way to select which nodes an application will run on. These nodes are created by machines which are defined by the MachineSets we worked with in previous sections of this workshop. An example use case for labels would be running a memory intensive application only on a specific node type.
+Labels are a useful way to select which nodes an application will run on. These nodes are provisioned from the *machine pools* we worked with in previous sections of this workshop - on ROSA with hosted control planes (ROSA HCP) the machine pool is the supported API for defining worker node count, instance type, labels and taints. An example use case for labels would be running a memory intensive application only on a specific node type.
 
-While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the Machine pool itself.
+While you can directly add a label to a node, it is not recommended because nodes can be recreated, which would cause the label to disappear. Therefore we need to label the machine pool itself, so that every node the pool provisions inherits the label.
 
 :numbered:
 == Set a label for the Machine Pool
@@ -10,19 +10,6 @@ While you can directly add a label to a node, it is not recommended because node
 . Just like the last section, let's use the default machine pool to add our label.
 To do so, run the following command:
 +
-ifndef::rosa_deploy_hcp[]
-[source,sh,role=execute]
-----
-rosa edit machinepool -c rosa-$GUID --labels tier=frontend worker
-----
-+
-.Sample Output
-[source,text,options=nowrap,subs="attributes"]
-----
-I: Updated machine pool 'worker' on cluster 'rosa-{guid}'
-----
-endif::[]
-ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
 ----
 rosa edit machinepool -c rosa-$GUID --labels tier=frontend workers 
@@ -33,9 +20,6 @@ rosa edit machinepool -c rosa-$GUID --labels tier=frontend workers
 ----
 I: Updated machine pool 'workers' on hosted cluster 'rosa-{guid}'
 ----
-endif::[]
-
-ifeval::["{rosa_deploy_hcp}" == "true"]
 +
 [WARNING]
 ====
@@ -57,7 +41,6 @@ node/ip-10-0-0-85.us-east-2.compute.internal labeled
 ----
 +
 You may see between two and four nodes depending if you did the autoscaling lab or not - or depending how long it's been since you finished the autoscaling lab.
-endif::[]
 
 . Now, let's verify the nodes are properly labeled.
 To do so, run the following command:
@@ -77,13 +60,6 @@ node/ip-10-0-249-69.us-east-2.compute.internal
 ----
 +
 You may see between two and four nodes - depending if you did the autoscaling lab recently (if you did the cluster has probably not scaled down yet). This demonstrates that our machine pool and associated nodes are properly annotated!
-ifndef::rosa_deploy_hcp[]
-+
-[TIP]
-====
-If you don't see any nodes yet when you run the previous command then wait a minute and try it again - until you see the nodes. It takes a while for the labels to be applied to the nodes.
-====
-endif::[]
 
 == Deploy an app to the labeled nodes
 

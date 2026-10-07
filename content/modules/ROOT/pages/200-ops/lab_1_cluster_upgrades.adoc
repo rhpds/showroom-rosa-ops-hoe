@@ -71,7 +71,6 @@ Date: 2023-11-10, Time: 09:11
 
 . Now schedule the cluster upgrade to the latest version that is shown in the list of available versions:
 +
-ifeval::["{rosa_deploy_hcp}" == "true"]
 [source,sh,role=execute]
 ----
 rosa upgrade cluster \
@@ -93,29 +92,6 @@ I: Cluster 'rosa-{guid}' operator roles have attached managed policies. An upgra
 I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
 I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
 ----
-endif::[]
-ifndef::rosa_deploy_hcp[]
-[source,sh,role=execute]
-----
-rosa upgrade cluster \
-  -c rosa-$GUID \
-  --version $CLUSTER_VERSION \
-  --mode auto \
-  --schedule-date $UPGRADE_DATE \
-  --schedule-time $UPGRADE_TIME \
-  --yes
-----
-+
-.Sample Output
-[source,text,options=nowrap,subs="attributes"]
-----
-I: Ensuring account and operator role policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are compatible with upgrade.
-I: Account roles/policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
-I: Operator roles/policies associated with the cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
-I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
-I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
-----
-endif::[]
 
 *Congratulations!*
 

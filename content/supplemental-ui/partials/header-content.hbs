@@ -1,0 +1,34 @@
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="{{uiRootPath}}/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="{{{or site.url (or siteRootUrl siteRootPath)}}}">{{site.title}}</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Resources</a>
+          <div class="navbar-dropdown is-right">
+            <a class="navbar-item" href="https://www.redhat.com/en/resources/4-reasons-run-apps-on-aws-checklist"
+              target="_blank" rel="noopener">4 reasons to run applications on ROSA</a>
+            <a class="navbar-item"
+              href="https://www.youtube.com/playlist?list=PLaR6Rq6Z4Iqfq6uYRDjJ6_AwKL_EerbWO" target="_blank"
+              rel="noopener">ROSA Lightboard demo videos</a>
+            <a class="navbar-item"
+              href="https://www.redhat.com/en/technologies/cloud-computing/openshift/aws/learn" target="_blank"
+              rel="noopener">ROSA Learning Hub</a>
+            <a class="navbar-item"
+              href="https://docs.redhat.com/en/documentation/red_hat_openshift_service_on_aws/4" target="_blank"
+              rel="noopener">ROSA Documentation</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

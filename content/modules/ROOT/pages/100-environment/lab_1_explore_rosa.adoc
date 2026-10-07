@@ -4,7 +4,7 @@ In this Hands on experience ROSA has already been pre-installed for you.
 
 This was done both for speed of deployment but also for security reasons because your AWS user does not have sufficient permissions to deploy a new ROSA cluster - only enough to follow these lab instructions
 
-If you are interested and would like to know more about the installation there is a https://youtu.be/gAMr3sI5bdY?si=eD12Ab0XUJvCBrHR[video] explaining the process.
+If you are interested and would like to know more about the installation there is a https://youtu.be/roiCLvcR8fE?si=0F92hdKpO-ibPeKi[video,window=_blank] explaining the process.
 
 All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Console web page - to which you also do not have access). So let's use the CLI to explore what you have.
 
@@ -15,28 +15,18 @@ All interactions with ROSA happen through the `rosa` CLI (or on the Red Hat Cons
 rosa list clusters
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,options=nowrap,subs="attributes"]
 ----
 ID                                NAME        STATE  TOPOLOGY
 26rb36mq3avdbitdo3qv3t7sc7s4ui16  rosa-{guid}  ready  Hosted CP
 ----
-endif::[]
-ifndef::rosa_deploy_hcp[]
-.Sample Output
-[source,texinfo,options=nowrap,subs=attributes]
-----
-ID                                NAME        STATE  TOPOLOGY
-26rate9v2s9k7mjgtag8gcoh3kkdl6qj  rosa-{guid}  ready  Classic (STS)
-----
-endif::[]
 +
 [TIP]
 ====
 The ID of your cluster will be different than in the sample output above.
 
-Also notice the Topology and state. State should be *ready* and Topology could be either *Classic (STS)* or *Hosted CP* which stands for Hosted Control Plane - a new, resource saving way of deploying a ROSA cluster.
+Also notice the Topology and state. State should be *ready* and Topology should be *Hosted CP* which stands for Hosted Control Plane - a resource saving way of deploying a ROSA cluster where Red Hat hosts and manages the control plane for you.
 ====
 
 . Now let's examine this cluster a bit more by describing the cluster (the `$GUID` environment variable is already set for you so you can immediately describe your individual cluster):
@@ -46,56 +36,6 @@ Also notice the Topology and state. State should be *ready* and Topology could b
 rosa describe cluster --cluster rosa-$GUID
 ----
 +
-ifndef::rosa_deploy_hcp[]
-.Sample Output
-[source,texinfo,subs="attributes"]
-----
-Name:                       rosa-{guid}
-ID:                         26rate9v2s9k7mjgtag8gcoh3kkdl6qj
-External ID:                ef03828c-43bb-4e49-b8fc-20f0be436154
-Control Plane:              Customer Hosted
-OpenShift Version:          {rosa_version}
-Channel Group:              stable
-DNS:                        rosa-{guid}.z6qe.p1.openshiftapps.com
-AWS Account:                {rosa_aws_student_user_account_id}
-API URL:                    {rosa_openshift_api_url}
-Console URL:                {rosa_openshift_console_url}
-Region:                     us-east-2
-Multi-AZ:                   false
-Nodes:
- - Control plane:           3
- - Infra:                   2
- - Compute:                 2
-Network:
- - Type:                    OVNKubernetes
- - Service CIDR:            172.30.0.0/16
- - Machine CIDR:            10.0.0.0/16
- - Pod CIDR:                10.128.0.0/14
- - Host Prefix:             /23
-Workload Monitoring:        Enabled
-Infra ID:                   rosa-{guid}-dw6cz
-Ec2 Metadata Http Tokens:   optional
-STS Role ARN:               arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Installer-Role
-Support Role ARN:           arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Support-Role
-Instance IAM Roles:
- - Control plane:           arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-ControlPlane-Role
- - Worker:                  arn:aws:iam::{rosa_aws_student_user_account_id}:role/ManagedOpenShift-Worker-Role
-Operator IAM Roles:
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-network-config-controller-cloud-
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-machine-api-aws-cloud-credentials
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cloud-credential-operator-cloud-creden
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-image-registry-installer-cloud-credent
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-ingress-operator-cloud-credentials
- - arn:aws:iam::{rosa_aws_student_user_account_id}:role/rosa-{guid}-r8e0-openshift-cluster-csi-drivers-ebs-cloud-credenti
-Managed Policies:           No
-State:                      ready
-Private:                    No
-Created:                    Nov  9 2023 08:59:12 UTC
-Details Page:               https://console.redhat.com/openshift/details/s/2WhVmXVt37Zln8gcdLq3eadaYeS
-OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26rate9v2s9k7mjgtag8gcoh3kkdl6qj (Classic)
-----
-endif::[]
-ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,subs="attributes"]
 ----
@@ -145,7 +85,6 @@ Details Page:               https://console.redhat.com/openshift/details/s/2WhXG
 OIDC Endpoint URL:          https://rh-oidc.s3.us-east-1.amazonaws.com/26rb33og2cncnmb2t98q90jf9fr359nb (Managed)
 Audit Log Forwarding:       disabled
 ----
-endif::[]
 +
 Note that not all values in the sample output will match exactly your environment.
 
@@ -197,7 +136,6 @@ For this environment your admin user has already been created.
 oc login --username {rosa_openshift_admin_user} --password {rosa_openshift_admin_password} {rosa_openshift_api_url}
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "true"]
 .Sample Output
 [source,texinfo,options=nowrap]
 ----
@@ -208,19 +146,6 @@ You have access to 79 projects, the list has been suppressed. You can list all p
 Using project "default".
 Welcome! See 'oc help' to get started.
 ----
-endif::[]
-ifndef::rosa_deploy_hcp[]
-.Sample Output
-[source,texinfo,options=nowrap]
-----
-Login successful.
-
-You have access to 101 projects, the list has been suppressed. You can list all projects with 'oc projects'
-
-Using project "default".
-Welcome! See 'oc help' to get started.
-----
-endif::[]
 
 . To check that you are logged in as the admin user you can run `oc whoami`:
 +
@@ -262,3 +187,8 @@ oc whoami --show-console
 * Password: `{rosa_openshift_admin_password}`
 
 If you don't see an error, congratulations! You're now logged into the cluster and ready to move on to the workshop content.
+
+[NOTE]
+====
+If you have trouble or issues during the experience reach out to mailto:openshift-rosa@redhat.com[openshift-rosa@redhat.com].
+====
