@@ -10,10 +10,15 @@ Take the next step and https://console.redhat.com/openshift/create/rosa/getstart
 
 Our onboarding specialists are here to help. If you have any questions or need help getting started with ROSA, send us a chat in the console at any time by clicking the blue hat icon in the bottom right corner.
 
+If you have additional questions on ROSA, reach out to mailto:openshift-rosa@redhat.com[openshift-rosa@redhat.com].
+
 Additional resources to help you get started:
 
+* https://docs.redhat.com/en/documentation/red_hat_openshift_service_on_aws/4[ROSA Documentation,window=_blank]
+* https://www.youtube.com/playlist?list=PLaR6Rq6Z4Iqfq6uYRDjJ6_AwKL_EerbWO[ROSA Lightboard demo videos,window=_blank]
+* https://www.redhat.com/en/technologies/cloud-computing/openshift/aws/learn[ROSA Learning Hub,window=_blank]
+* https://www.redhat.com/en/resources/4-reasons-run-apps-on-aws-checklist[4 reasons to run applications on ROSA,window=_blank]
 * ROSA https://youtu.be/roiCLvcR8fE[install video,window=_blank]
-* ROSA https://www.redhat.com/en/technologies/cloud-computing/openshift/aws/learn[Learning Hub,window=_blank]
 * ROSA https://docs.aws.amazon.com/ROSA/latest/userguide/getting-started.html[user guide,window=_blank]
 
 *Thank you for taking the time to explore ROSA!*

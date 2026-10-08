@@ -90,7 +90,6 @@ Date: 2023-11-10, Time: 09:11 UTC
 
 . Schedule the *hosted control plane* upgrade to the selected version.
 +
-ifeval::["{rosa_deploy_hcp}" == "true"]
 [IMPORTANT]
 ====
 Do *not* pass `--control-plane`. That flag is deprecated on current `rosa` CLI releases and can be omitted; `rosa upgrade cluster` already targets the hosted control plane on ROSA HCP.
@@ -116,29 +115,6 @@ I: Cluster 'rosa-{guid}' operator roles have attached managed policies. An upgra
 I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
 I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
 ----
-endif::[]
-ifndef::rosa_deploy_hcp[]
-[source,sh,role=execute]
-----
-rosa upgrade cluster \
-  -c rosa-$GUID \
-  --version $CLUSTER_VERSION \
-  --mode auto \
-  --schedule-date $UPGRADE_DATE \
-  --schedule-time $UPGRADE_TIME \
-  --yes
-----
-+
-.Sample Output
-[source,text,options=nowrap,subs="attributes"]
-----
-I: Ensuring account and operator role policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are compatible with upgrade.
-I: Account roles/policies for cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
-I: Operator roles/policies associated with the cluster '27ck9crvtjhtahhr1g5etu1i54n4ce2v' are already up-to-date.
-I: Account and operator roles for cluster 'rosa-{guid}' are compatible with upgrade
-I: Upgrade successfully scheduled for cluster 'rosa-{guid}'
-----
-endif::[]
 
 . Verify the scheduled upgrade:
 +
@@ -147,7 +123,6 @@ endif::[]
 rosa describe upgrade -c rosa-$GUID
 ----
 
-ifeval::["{rosa_deploy_hcp}" == "true"]
 . On ROSA HCP, worker nodes are *not* upgraded by `rosa upgrade cluster`. After the control plane supports the target version, schedule a machine pool upgrade (default pool name on single-AZ HCP is `workers`):
 +
 [source,sh,role=execute]
@@ -169,7 +144,6 @@ rosa upgrade machinepool workers \
 ====
 In this short lab you may skip actually scheduling the machine pool upgrade if no pool upgrade versions are listed, or if you already scheduled the control plane and want to cancel everything before the environment expires.
 ====
-endif::[]
 
 . Cancel the scheduled upgrade(s) so the lab environment is not left with a pending update (the environment will be deleted before the +24h window anyway):
 +
@@ -178,14 +152,12 @@ endif::[]
 rosa delete upgrade -c rosa-$GUID --yes
 ----
 +
-ifeval::["{rosa_deploy_hcp}" == "true"]
 To cancel a machine pool schedule (if you created one):
 +
 [source,sh,role=execute]
 ----
 rosa delete upgrade -c rosa-$GUID --machinepool workers --yes
 ----
-endif::[]
 
 *Congratulations!*
 
