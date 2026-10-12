@@ -5,6 +5,11 @@ Configure weighted traffic between Bookinfo `reviews` versions and observe the m
 In Service Mesh 3, Kiali is *not* created by the `Istio` CR.
 You create a `Kiali` custom resource after installing the Kiali Operator (lab 2).
 
+Kiali builds the traffic graph from Istio metrics in the OpenShift monitoring stack (Thanos Querier).
+You must enable user-workload monitoring, scrape Istio metrics, and grant Kiali permission to query Prometheus before the graph loads.
+
+Official reference: https://docs.redhat.com/en/documentation/red_hat_openshift_service_mesh/3.3/html/observability/metrics-and-service-mesh[Configuring OpenShift Monitoring with Service Mesh].
+
 :numbered:
 == Configure weighted load balancing
 
@@ -55,9 +60,9 @@ Recover the OpenShift Route URL with:
 echo "https://$(oc -n bookinfo get route bookinfo -o jsonpath='{.spec.host}')/productpage"
 ----
 
-== Deploy Kiali and observe traffic
+== Configure OpenShift monitoring for the mesh
 
-. Enable user-workload metrics scraping used by Kiali against the platform Prometheus stack:
+. Enable user-workload monitoring so Prometheus scrapes mesh namespaces:
 +
 [source,sh,role=execute]
 ----
@@ -71,6 +76,186 @@ data:
   config.yaml: |
     enableUserWorkload: true
 EOF
+----
+
+. Wait until the user-workload monitoring stack is running:
++
+[source,sh,role=execute]
+----
+oc -n openshift-user-workload-monitoring get pods
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+NAME                                   READY   STATUS    RESTARTS   AGE
+prometheus-operator-xxxxxxxx-xxxxx     2/2     Running   0          1m
+prometheus-user-workload-0             6/6     Running   0          1m
+prometheus-user-workload-1             6/6     Running   0          1m
+thanos-ruler-user-workload-0           3/3     Running   0          1m
+thanos-ruler-user-workload-1           3/3     Running   0          1m
+----
++
+[NOTE]
+====
+Pods can take one to two minutes to appear after you enable user-workload monitoring. Re-run the command until `prometheus-user-workload-*` pods are `Running`.
+====
+
+. Create a mesh-wide `Telemetry` resource so Istio exports Prometheus metrics:
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: enable-prometheus-metrics
+  namespace: istio-system
+spec:
+  metrics:
+  - providers:
+    - name: prometheus
+EOF
+----
+
+. Create a `ServiceMonitor` that scrapes the Istio control plane (`istiod`):
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istiod-monitor
+  namespace: istio-system
+spec:
+  targetLabels:
+  - app
+  selector:
+    matchLabels:
+      istio: pilot
+  endpoints:
+  - port: http-monitoring
+    interval: 30s
+EOF
+----
+
+. Create a `PodMonitor` in each mesh namespace so Envoy sidecars are scraped.
+OpenShift user-workload monitoring ignores `namespaceSelector` on `PodMonitor` / `ServiceMonitor`, so you must apply the monitor in *both* `istio-system` and `bookinfo`:
++
+[source,sh,role=execute]
+----
+for ns in istio-system bookinfo; do
+cat <<EOF | oc apply -f -
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-proxies-monitor
+  namespace: ${ns}
+spec:
+  selector:
+    matchExpressions:
+    - key: istio-prometheus-ignore
+      operator: DoesNotExist
+  podMetricsEndpoints:
+  - path: /stats/prometheus
+    interval: 30s
+    relabelings:
+    - action: keep
+      sourceLabels: [__meta_kubernetes_pod_container_name]
+      regex: "istio-proxy"
+    - action: keep
+      sourceLabels: [__meta_kubernetes_pod_annotationpresent_prometheus_io_scrape]
+    - action: replace
+      regex: (\\d+);(([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})
+      replacement: '[\$2]:\$1'
+      sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_ip]
+      targetLabel: __address__
+    - action: replace
+      regex: (\\d+);((([0-9]+?)(\.|$)){4})
+      replacement: \$2:\$1
+      sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_ip]
+      targetLabel: __address__
+    - sourceLabels: ["__meta_kubernetes_pod_label_app_kubernetes_io_name", "__meta_kubernetes_pod_label_app"]
+      separator: ";"
+      targetLabel: "app"
+      action: replace
+      regex: "(.+);.*|.*;(.+)"
+      replacement: "\${1}\${2}"
+    - sourceLabels: ["__meta_kubernetes_pod_label_app_kubernetes_io_version", "__meta_kubernetes_pod_label_version"]
+      separator: ";"
+      targetLabel: "version"
+      action: replace
+      regex: "(.+);.*|.*;(.+)"
+      replacement: "\${1}\${2}"
+    - sourceLabels: [__meta_kubernetes_namespace]
+      action: replace
+      targetLabel: namespace
+    - action: replace
+      replacement: "cluster.local"
+      targetLabel: mesh_id
+EOF
+done
+----
++
+.Sample Output
+[source,text,options=nowrap]
+----
+podmonitor.monitoring.coreos.com/istio-proxies-monitor created
+podmonitor.monitoring.coreos.com/istio-proxies-monitor created
+----
+
+. Generate a short burst of Bookinfo traffic so metrics appear, then confirm `istio_requests_total` exists in the OpenShift console under *Observe* → *Metrics* (it can take a few minutes):
++
+[source,sh,role=execute]
+----
+for i in $(seq 1 20); do
+  curl -k -sS "https://$(oc -n bookinfo get route bookinfo -o jsonpath='{.spec.host}')/productpage" \
+    | head -n 2
+  sleep 1
+done
+----
++
+[IMPORTANT]
+====
+Workshop terminals often run a restricted shell (`rbash`) that blocks redirects such as `>/dev/null`.
+Use `| head` (as shown) instead of redirecting output to `/dev/null`.
+====
+
+== Deploy Kiali and observe traffic
+
+. Grant the Kiali service account permission to query Thanos / Prometheus.
+Without this binding, the Kiali UI shows *Cannot load graph*:
++
+[source,sh,role=execute]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kiali-monitoring-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-monitoring-view
+subjects:
+- kind: ServiceAccount
+  name: kiali-service-account
+  namespace: istio-system
+EOF
+----
++
+[NOTE]
+====
+If the Kiali service account name differs on your cluster, list it with `oc -n istio-system get sa | grep kiali` and update the `subjects` entry before applying.
+The service account is created when you apply the `Kiali` CR in the next step; if the binding is applied first, Kubernetes still accepts it and Kiali picks up the permissions when its SA appears.
+====
+
+. Also grant your logged-in user `cluster-monitoring-view` so OpenShift SSO tokens can query metrics if needed:
++
+[source,sh,role=execute]
+----
+oc adm policy add-cluster-role-to-user cluster-monitoring-view "$(oc whoami)"
 ----
 
 . Create the Kiali instance in `istio-system`:
@@ -145,19 +330,28 @@ done
 +
 Leave the loop running and continue in Kiali.
 
-. In Kiali open *Graph*, select the `bookinfo` namespace, and choose an *App* graph.
+. In Kiali open *Traffic Graph*, select the `bookinfo` namespace, and choose an *App* graph.
 +
 image::select-bookinfo-from-kiali-dropdown-graph-tab.png[Kiali Console]
++
+[NOTE]
+====
+An *Empty Graph* message is normal until measurable traffic exists for the selected time window (keep the curl loop running).
+If you see *Cannot load graph* instead, confirm the `kiali-monitoring-rbac` binding exists and that `istio_requests_total` returns data under *Observe* → *Metrics*. Wait another minute after creating the `PodMonitor` resources, then hard-refresh the Kiali browser tab.
+====
 
-. Enable *Display idle nodes* if some services are quiet.
+. Click *Display idle nodes* if the graph is empty or some services are quiet, then wait for edges to appear while traffic generates.
 +
 image::kiali-click-display-idlenodes-graph-tab.png[Kiali Console]
-
-. Explore display settings and open the *Workloads* view for `details-v1`.
 +
 image::graph-example.png[Kiali Console]
+
+. Open *Services* → `details` in the `bookinfo` namespace.
+Inspect the overview (sidecar mode, related workload) and the *Inbound Metrics* tab.
 +
 image::example-details-workload.png[Kiali Console]
++
+image::kiali-details-inbound-metrics.png[Kiali Console]
 
 . Stop traffic generation with kbd:[CTRL+c].
 
