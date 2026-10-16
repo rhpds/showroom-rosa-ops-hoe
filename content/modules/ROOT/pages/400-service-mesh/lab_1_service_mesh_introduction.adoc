@@ -5,12 +5,7 @@ As applications evolve into collections of decentralized microservices, monitori
 Red Hat OpenShift Service Mesh *3* is based on the upstream Istio project and is managed by the Red Hat OpenShift Service Mesh Operator (Sail Operator API).
 It provides a uniform way to connect, manage, and observe microservices-based applications without requiring application code changes.
 
-[IMPORTANT]
-====
-OpenShift Service Mesh *2* (Maistra / `ServiceMeshControlPlane`) is deprecated for new work.
-This workshop uses *OpenShift Service Mesh 3* with `Istio` and `IstioCNI` custom resources.
 Official docs: https://docs.redhat.com/en/documentation/red_hat_openshift_service_mesh/3.3/html/installing/ossm-installing-service-mesh[Installing OpenShift Service Mesh 3].
-====
 
 == Why Red Hat OpenShift Service Mesh?
 
@@ -22,18 +17,18 @@ With OpenShift Service Mesh 3 you get:
 * A production-supported Istio control plane on OpenShift (`istiod`)
 * Automatic sidecar injection for labeled namespaces
 * Traffic management with VirtualServices, DestinationRules, and an injected ingress gateway exposed via OpenShift Routes
-* Optional observability through Kiali (installed separately in Service Mesh 3)
+* Observability through Kiali (plus OpenShift user-workload monitoring for Istio metrics)
 
-== Architecture changes in Service Mesh 3
+== Service Mesh 3 architecture
 
-| Feature | Service Mesh 2 (deprecated) | Service Mesh 3 |
-| --- | --- | --- |
-| Operator | Red Hat OpenShift Service Mesh 2 | Red Hat OpenShift Service Mesh *3* |
-| Control plane CR | `ServiceMeshControlPlane` (`maistra.io`) | `Istio` (`sailoperator.io`) |
-| CNI CR | bundled with SMCP | `IstioCNI` (separate project, typically `istio-cni`) |
-| Gateways | often created by SMCP | *not* created by the Operator — deploy gateway injection (or Gateway API) yourself |
-| Kiali / tracing | add-ons on the SMCP | install and configure separately (Kiali Operator, Tempo/OTEL as needed) |
-| Namespace membership | `ServiceMeshMemberRoll` | discovery selectors + injection labels (`istio-discovery`, `istio-injection`) |
+OpenShift Service Mesh 3 is assembled from a small set of custom resources and add-ons you install explicitly:
+
+* *Operator* — Red Hat OpenShift Service Mesh 3 (`servicemeshoperator3`) provides the Sail Operator APIs and Istio CRDs.
+* *Control plane* — an `Istio` resource (`sailoperator.io`) deploys `istiod`, typically in `istio-system`.
+* *CNI* — an `IstioCNI` resource runs the mesh CNI DaemonSet in a separate project (typically `istio-cni`).
+* *Namespace membership* — discovery selectors on the `Istio` CR plus labels such as `istio-discovery=enabled` and `istio-injection=enabled` enroll application projects.
+* *Gateways* — not created by the Operator; you deploy gateway injection (or Gateway API) yourself and expose traffic with an OpenShift Route when needed.
+* *Kiali / tracing* — install and configure separately (Kiali Operator; Tempo / OpenTelemetry if you want distributed tracing).
 
 == Benefits
 
@@ -47,7 +42,7 @@ Transparent mTLS options and fine-grained authorization policies support zero-tr
 
 === Based on open source
 
-Service Mesh 3 tracks upstream Istio more closely than Service Mesh 2, while remaining a Red Hat supported product.
+Service Mesh 3 tracks upstream Istio closely while remaining a Red Hat supported product.
 
 == Use cases
 
@@ -61,4 +56,4 @@ Service Mesh 3 tracks upstream Istio more closely than Service Mesh 2, while rem
 . Install the OpenShift Service Mesh 3 Operator (and Kiali Operator for the observe lab).
 . Deploy the Istio control plane (`Istio`) and CNI plugin (`IstioCNI`).
 . Deploy the Bookinfo sample, DestinationRules, an injected ingress gateway, and an OpenShift Route (`*.apps.rosa...`).
-. Shift traffic with a weighted VirtualService and observe the mesh in Kiali.
+. Shift traffic with a weighted VirtualService, wire OpenShift user-workload monitoring for Istio metrics, and observe the mesh in Kiali.
